@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoginController API 문서</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            color: #7f8c8d;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .api-section {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+        .method {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #fff;
+            margin-right: 10px;
+        }
+        .method.post { background-color: #27ae60; }
+        .method.get { background-color: #3498db; }
+        .method.put { background-color: #f39c12; }
+        .method.delete { background-color: #e74c3c; }
+        .url {
+            font-family: 'Courier New', monospace;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px 15px;
+            border-radius: 3px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .required { color: #e74c3c; font-weight: bold; }
+        .optional { color: #27ae60; }
+        .description-box {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .description-box h4 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+        .description-box ul, .description-box ol {
+            margin-left: 20px;
+        }
+        .description-box li {
+            margin-bottom: 5px;
+        }
+        .exception-section { margin: 15px 0; }
+        .exception-type {
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .exception-type.biz { background-color: #f39c12; color: #fff; }
+        .exception-type.system { background-color: #e74c3c; color: #fff; }
+        .exception-table { margin-top: 10px; }
+        .note {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .security-note {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .security-note h4 { color: #721c24; margin-bottom: 10px; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .error-response {
+            background-color: #fdf2f2;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .usage-guide {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .usage-guide h4 { color: #0c5460; margin-bottom: 10px; }
+        .usage-guide ol { margin-left: 20px; }
+        .usage-guide li { margin-bottom: 8px; }
+        .auth-table { margin: 15px 0; }
+        .auth-table th { background-color: #6c757d; width: 150px; }
+        .typescript-interface {
+            background-color: #1e1e1e;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .interface-header {
+            background-color: #333;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .interface-header span { color: #fff; font-weight: bold; }
+        .copy-btn {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover { background-color: #2980b9; }
+        .typescript-interface pre {
+            margin: 0;
+            padding: 15px;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            font-size: 13px;
+        }
+        .all-interfaces {
+            background-color: #f8f9fa;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        .all-interfaces h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">&larr; 목록으로 돌아가기</a>
+
+        <h1>LoginController API 문서</h1>
+        <p><strong>소스 경로:</strong> <code>biz/login/controller/LoginController.java</code></p>
+
+        <div class="note">
+            <strong>참고:</strong> 모든 API는 Gateway를 통해 접근합니다. <code>{clientType}</code>은 클라이언트 유형에 따라 <code>app</code> 또는 <code>web</code>으로 대체합니다.
+        </div>
+
+        <div class="security-note">
+            <h4>보안 요구사항</h4>
+            <ul>
+                <li>비밀번호는 반드시 <strong>RSA 공개키</strong>로 암호화하여 전송해야 합니다</li>
+                <li>평문 비밀번호 전송 시 복호화 오류가 발생합니다</li>
+                <li>RSA 공개키는 <a href="../auth/authController.html">AuthController</a>의 <code>getPublicKey</code> API를 통해 조회합니다</li>
+            </ul>
+        </div>
+
+        <div class="usage-guide">
+            <h4>2단계 로그인 프로세스 가이드</h4>
+            <ol>
+                <li><code>POST /{clientType}/{version}/auth/getPublicKey</code> API를 호출하여 RSA 공개키를 조회합니다</li>
+                <li>조회된 공개키로 비밀번호를 RSA 암호화합니다 (JSEncrypt 또는 WebCrypto API 사용)</li>
+                <li><code>POST /{clientType}/{version}/login</code> API를 호출합니다
+                    <ul>
+                        <li><strong>단일 고객사:</strong> type=LOGIN_COMPLETE, JWT 토큰 직접 발급</li>
+                        <li><strong>복수 고객사:</strong> type=CLIENT_SELECT, tempToken + clientList 반환</li>
+                    </ul>
+                </li>
+                <li>복수 고객사인 경우, <code>POST /{clientType}/{version}/login/selectClient</code> API로 고객사 선택 후 JWT 토큰 발급</li>
+                <li><strong>약관 재동의 체크:</strong> 응답의 <code>termsReagreeRequired</code>가 true인 경우, <code>reagreeTermsList</code>에 있는 약관에 대해 재동의 필요
+                    <ul>
+                        <li>약관 동의 API: <code>POST /{clientType}/{version}/terms/agreeTerms</code></li>
+                        <li>약관 상세 조회: <a href="../terms/termsController.html">TermsController</a> 참조</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 1. Login API -->
+        <!-- ========================================== -->
+        <div class="api-section" id="login">
+            <h2>1. 로그인 (login)</h2>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/login</div>
+            <p style="margin-top: 10px;">
+                <strong>URL 예시:</strong> <code>POST /app/v1/login</code>, <code>POST /web/v1/login</code>
+            </p>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>NONE</td></tr>
+                <tr><th>권한</th><td>PUBLIC</td></tr>
+                <tr><th>Header</th><td>-</td></tr>
+            </table>
+
+            <h3>Request Body</h3>
+            <table>
+                <thead>
+                    <tr><th>필드명</th><th>타입</th><th>필수</th><th>검증</th><th>설명</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>email</td><td>String</td><td class="required">Y</td>
+                        <td>@NotBlank, @Email</td><td>이메일</td>
+                    </tr>
+                    <tr>
+                        <td>encryptedPassword</td><td>String</td><td class="required">Y</td>
+                        <td>@NotBlank</td><td>암호화된 비밀번호 (RSA 공개키로 암호화, Base64 인코딩)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Response (LoginResultDtoV1)</h3>
+            <table>
+                <thead>
+                    <tr><th>필드명</th><th>타입</th><th>필수</th><th>설명</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>type</td><td>String</td><td class="required">Y</td><td>로그인 결과 타입 (LOGIN_COMPLETE / CLIENT_SELECT)</td></tr>
+                    <tr><td>userNo</td><td>Long</td><td>-</td><td>사용자 번호</td></tr>
+                    <tr><td>userCode</td><td>String</td><td>-</td><td>사용자 코드 (S + 7자리 숫자)</td></tr>
+                    <tr><td>email</td><td>String</td><td>-</td><td>이메일</td></tr>
+                    <tr><td>userName</td><td>String</td><td>-</td><td>사용자명</td></tr>
+                    <tr><td>tempToken</td><td>String</td><td>-</td><td>임시 토큰 (CLIENT_SELECT 시)</td></tr>
+                    <tr><td>tempTokenExpiresInSeconds</td><td>Long</td><td>-</td><td>임시 토큰 만료 시간(초)</td></tr>
+                    <tr><td>clientList</td><td>Array</td><td>-</td><td>고객사 목록 (CLIENT_SELECT 시)</td></tr>
+                    <tr><td>userClientNo</td><td>Long</td><td>-</td><td>사용자-고객사 관계번호 (LOGIN_COMPLETE 시)</td></tr>
+                    <tr><td>clientNo</td><td>Long</td><td>-</td><td>고객사 번호 (LOGIN_COMPLETE 시)</td></tr>
+                    <tr><td>clientCode</td><td>String</td><td>-</td><td>고객사 코드 (LOGIN_COMPLETE 시)</td></tr>
+                    <tr><td>clientName</td><td>String</td><td>-</td><td>고객사명 (LOGIN_COMPLETE 시)</td></tr>
+                    <tr><td>userRole</td><td>String</td><td>-</td><td>권한 (LOGIN_COMPLETE 시)</td></tr>
+                    <tr><td>accessToken</td><td>String</td><td>-</td><td>액세스 토큰 (LOGIN_COMPLETE 시)</td></tr>
+                    <tr><td>refreshToken</td><td>String</td><td>-</td><td>리프레시 토큰 (LOGIN_COMPLETE 시)</td></tr>
+                    <tr><td>expiresInSeconds</td><td>Long</td><td>-</td><td>만료 시간(초) (LOGIN_COMPLETE 시)</td></tr>
+                    <tr><td>issuedAt</td><td>String</td><td>-</td><td>발급 일시 (ISO 8601 형식)</td></tr>
+                    <tr><td>termsReagreeRequired</td><td>Boolean</td><td>-</td><td>약관 재동의 필요 여부 (LOGIN_COMPLETE 시)</td></tr>
+                    <tr><td>reagreeTermsList</td><td>Array</td><td>-</td><td>재동의 필요 약관 목록 (있는 경우만)</td></tr>
+                    <tr><td>reagreeTermsList[].termsNo</td><td>Long</td><td>-</td><td>약관 번호</td></tr>
+                    <tr><td>reagreeTermsList[].termsCode</td><td>String</td><td>-</td><td>약관 코드</td></tr>
+                    <tr><td>reagreeTermsList[].termsName</td><td>String</td><td>-</td><td>약관 명</td></tr>
+                    <tr><td>reagreeTermsList[].version</td><td>String</td><td>-</td><td>약관 버전</td></tr>
+                    <tr><td>reagreeTermsList[].requiredYn</td><td>String</td><td>-</td><td>필수 여부</td></tr>
+                    <tr><td>reagreeTermsList[].contentYn</td><td>String</td><td>-</td><td>약관 전문 여부 (Y: 전문 있음, N: 제목만)</td></tr>
+                </tbody>
+            </table>
+
+            <h4>응답 예시 - 단일 고객사 (LOGIN_COMPLETE)</h4>
+            <pre>{
+    "code": 1,
+    "message": "OK",
+    "data": {
+        "type": "LOGIN_COMPLETE",
+        "userNo": 12345,
+        "userCode": "S0000001",
+        "email": "user@example.com",
+        "userName": "홍길동",
+        "userClientNo": 100,
+        "clientNo": 1,
+        "clientCode": "E0000001",
+        "clientName": "테스트 고객사",
+        "userRole": "ADMIN",
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "expiresInSeconds": 3600,
+        "issuedAt": "2026-01-26T10:30:00+09:00",
+        "termsReagreeRequired": false
+    }
+}</pre>
+
+            <h4>응답 예시 - 약관 재동의 필요 (LOGIN_COMPLETE)</h4>
+            <pre>{
+    "code": 1,
+    "message": "OK",
+    "data": {
+        "type": "LOGIN_COMPLETE",
+        "userNo": 12345,
+        "userCode": "S0000001",
+        "email": "user@example.com",
+        "userName": "홍길동",
+        "userClientNo": 100,
+        "clientNo": 1,
+        "clientCode": "E0000001",
+        "clientName": "테스트 고객사",
+        "userRole": "ADMIN",
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "expiresInSeconds": 3600,
+        "issuedAt": "2026-01-26T10:30:00+09:00",
+        "termsReagreeRequired": true,
+        "reagreeTermsList": [
+            {
+                "termsNo": 4,
+                "termsCode": "T002",
+                "termsName": "서비스 이용 약관",
+                "version": "2.0",
+                "requiredYn": "Y",
+                "contentYn": "Y"
+            }
+        ]
+    }
+}</pre>
+
+            <h4>응답 예시 - 복수 고객사 (CLIENT_SELECT)</h4>
+            <pre>{
+    "code": 1,
+    "message": "OK",
+    "data": {
+        "type": "CLIENT_SELECT",
+        "userNo": 12345,
+        "userCode": "S0000001",
+        "email": "user@example.com",
+        "userName": "홍길동",
+        "tempToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "tempTokenExpiresInSeconds": 1800,
+        "clientList": [
+            {
+                "clientNo": 1,
+                "clientCode": "E0000001",
+                "clientName": "A 고객사",
+                "userRole": "OWNER"
+            },
+            {
+                "clientNo": 2,
+                "clientCode": "E0000002",
+                "clientName": "B 고객사",
+                "userRole": "ADMIN"
+            }
+        ]
+    }
+}</pre>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-login')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-login">/** 로그인 요청 */
+interface LoginRequest {
+  /** 이메일 */
+  email: string;
+  /** 암호화된 비밀번호 (RSA 공개키로 암호화, Base64 인코딩) */
+  encryptedPassword: string;
+}
+
+/** 로그인 결과 타입 */
+type LoginResultType = 'LOGIN_COMPLETE' | 'CLIENT_SELECT';
+
+/** 고객사 목록 아이템 */
+interface LoginClientItem {
+  /** 사용자-고객사 관계번호 */
+  userClientNo: number;
+  /** 사용자 번호 */
+  userNo: number;
+  /** 사용자 코드 */
+  userCode: string;
+  /** 고객사 번호 */
+  clientNo: number;
+  /** 고객사 코드 */
+  clientCode: string;
+  /** 고객사명 */
+  clientName: string;
+  /** 사용자 역할 */
+  userRole: string;
+}
+
+/** 재동의 필요 약관 항목 */
+interface TermsReagreeItem {
+  /** 약관 번호 */
+  termsNo: number;
+  /** 약관 코드 */
+  termsCode: string;
+  /** 약관 명 */
+  termsName: string;
+  /** 약관 버전 */
+  version: string;
+  /** 필수 여부 */
+  requiredYn: string;
+  /** 약관 전문 여부 (Y: 전문 있음, N: 제목만) */
+  contentYn: string;
+}
+
+/** 로그인 응답 */
+interface LoginResponse {
+  /** 로그인 결과 타입 */
+  type: LoginResultType;
+  /** 사용자 번호 */
+  userNo?: number;
+  /** 사용자 코드 */
+  userCode?: string;
+  /** 이메일 */
+  email?: string;
+  /** 사용자명 */
+  userName?: string;
+  /** 임시 토큰 (CLIENT_SELECT 시) */
+  tempToken?: string;
+  /** 임시 토큰 만료 시간(초) */
+  tempTokenExpiresInSeconds?: number;
+  /** 고객사 목록 (CLIENT_SELECT 시) */
+  clientList?: LoginClientItem[];
+  /** 사용자-고객사 관계번호 (LOGIN_COMPLETE 시) */
+  userClientNo?: number;
+  /** 고객사 번호 (LOGIN_COMPLETE 시) */
+  clientNo?: number;
+  /** 고객사 코드 (LOGIN_COMPLETE 시) */
+  clientCode?: string;
+  /** 고객사명 (LOGIN_COMPLETE 시) */
+  clientName?: string;
+  /** 권한 (LOGIN_COMPLETE 시) */
+  userRole?: string;
+  /** 액세스 토큰 (LOGIN_COMPLETE 시) */
+  accessToken?: string;
+  /** 리프레시 토큰 (LOGIN_COMPLETE 시) */
+  refreshToken?: string;
+  /** 만료 시간(초) (LOGIN_COMPLETE 시) */
+  expiresInSeconds?: number;
+  /** 발급 일시 */
+  issuedAt?: string;
+  /** 약관 재동의 필요 여부 (LOGIN_COMPLETE 시) */
+  termsReagreeRequired?: boolean;
+  /** 재동의 필요 약관 목록 (있는 경우만) */
+  reagreeTermsList?: TermsReagreeItem[];
+}</pre>
+            </div>
+
+            <h3>Error Cases</h3>
+            <div class="exception-section">
+                <span class="exception-type biz">BizException</span>
+                <table class="exception-table">
+                    <thead><tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr></thead>
+                    <tbody>
+                        <tr><td>3001</td><td>USER_NOT_FOUND</td><td>등록되지 않은 사용자입니다.</td><td>이메일로 사용자를 찾을 수 없는 경우</td></tr>
+                        <tr><td>3002</td><td>INVALID_PASSWORD</td><td>비밀번호가 일치하지 않습니다.</td><td>비밀번호가 일치하지 않는 경우</td></tr>
+                        <tr><td>3003</td><td>ACCOUNT_LOCKED</td><td>계정이 잠겼습니다.</td><td>로그인 시도 횟수 초과</td></tr>
+                        <tr><td>3004</td><td>ACCOUNT_DISABLED</td><td>비활성화된 계정입니다.</td><td>계정 비활성화</td></tr>
+                        <tr><td>4002</td><td>RSA_DECRYPTION_FAILED</td><td>복호화에 실패했습니다.</td><td>평문 비밀번호 전송 또는 잘못된 암호화</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Description</h3>
+            <div class="description-box">
+                <h4>목적</h4>
+                <p>1단계 로그인 API입니다. 이메일과 RSA로 암호화된 비밀번호로 사용자를 인증합니다.</p>
+                <ul>
+                    <li><strong>단일 고객사 소속:</strong> JWT 토큰 직접 발급 (LOGIN_COMPLETE)</li>
+                    <li><strong>복수 고객사 소속:</strong> TEMP 토큰 + 고객사 목록 반환 (CLIENT_SELECT)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 2. SelectClient API -->
+        <!-- ========================================== -->
+        <div class="api-section" id="selectClient">
+            <h2>2. 고객사 선택 (selectClient)</h2>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/login/selectClient</div>
+            <p style="margin-top: 10px;">
+                <strong>URL 예시:</strong> <code>POST /app/v1/login/selectClient</code>
+            </p>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>TEMP_TOKEN</td></tr>
+                <tr><th>권한</th><td>USER (임시 인증)</td></tr>
+                <tr><th>Header</th><td><code>Authorization: Bearer {tempToken}</code></td></tr>
+            </table>
+
+            <h3>Request Body</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>검증</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>clientNo</td><td>Long</td><td class="required">Y</td>
+                        <td>@NotNull</td><td>선택한 고객사 번호</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>요청 예시</h4>
+            <pre>{
+    "clientNo": 1
+}</pre>
+
+            <h3>Response (LoginResultDtoV1)</h3>
+            <p>1번 API (login)의 LOGIN_COMPLETE 응답과 동일한 구조입니다.</p>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-selectClient')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-selectClient">/** 고객사 선택 요청 */
+interface ClientSelectRequest {
+  /** 선택한 고객사 번호 */
+  clientNo: number;
+}
+
+/** 고객사 선택 응답 (LoginResponse와 동일, type=LOGIN_COMPLETE) */
+type ClientSelectResponse = LoginResponse;</pre>
+            </div>
+
+            <h3>Error Cases</h3>
+            <div class="exception-section">
+                <span class="exception-type biz">BizException</span>
+                <table class="exception-table">
+                    <thead><tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr></thead>
+                    <tbody>
+                        <tr><td>31001</td><td>USER_NOT_FOUND</td><td>등록되지 않은 사용자입니다.</td><td>TEMP 토큰의 userNo가 유효하지 않음</td></tr>
+                        <tr><td>31005</td><td>INVALID_CLIENT_SELECTION</td><td>유효하지 않은 고객사 선택입니다.</td><td>사용자가 소속되지 않은 고객사 선택</td></tr>
+                        <tr><td>4001</td><td>TEMP_TOKEN_EXPIRED</td><td>임시 토큰이 만료되었습니다.</td><td>TEMP 토큰 만료 (30분)</td></tr>
+                        <tr><td>4003</td><td>INVALID_TOKEN</td><td>유효하지 않은 토큰입니다.</td><td>TEMP 토큰 형식 오류</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Description</h3>
+            <div class="description-box">
+                <h4>목적</h4>
+                <p>2단계 로그인 API입니다. 1단계에서 복수 고객사 사용자로 확인된 경우, 고객사를 선택하여 JWT 토큰을 발급받습니다.</p>
+                <h4>선행 조건</h4>
+                <ul>
+                    <li>1단계 로그인 API (login) 호출 완료</li>
+                    <li>1단계 응답의 type이 CLIENT_SELECT인 경우에만 호출</li>
+                    <li>Authorization 헤더에 tempToken 필수</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 3. GetUserContext API -->
+        <!-- ========================================== -->
+        <div class="api-section" id="context">
+            <h2>3. 사용자 컨텍스트 조회 (getUserContext)</h2>
+
+            <h3>API URL</h3>
+            <span class="method get">GET</span>
+            <div class="url">/{clientType}/{version}/login/context</div>
+            <p style="margin-top: 10px;">
+                <strong>URL 예시:</strong> <code>GET /app/v1/login/context</code>
+            </p>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>ACCESS_TOKEN</td></tr>
+                <tr><th>권한</th><td>USER</td></tr>
+                <tr><th>Header</th><td><code>Authorization: Bearer {accessToken}</code></td></tr>
+            </table>
+
+            <h3>Request Parameters</h3>
+            <p>없음</p>
+
+            <h3>Response (UserContextDtoV1)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>currentUser</td><td>Object</td><td class="required">Y</td><td>현재 로그인 사용자 정보</td></tr>
+                    <tr><td>currentUser.userNo</td><td>Long</td><td class="required">Y</td><td>사용자 번호</td></tr>
+                    <tr><td>currentUser.userClientNo</td><td>Long</td><td class="required">Y</td><td>사용자-고객사 관계번호</td></tr>
+                    <tr><td>currentUser.userCode</td><td>String</td><td class="required">Y</td><td>사용자 코드</td></tr>
+                    <tr><td>currentUser.email</td><td>String</td><td class="required">Y</td><td>이메일</td></tr>
+                    <tr><td>currentUser.userName</td><td>String</td><td class="required">Y</td><td>사용자명</td></tr>
+                    <tr><td>currentUser.gender</td><td>String</td><td>-</td><td>성별</td></tr>
+                    <tr><td>currentUser.userRole</td><td>String</td><td class="required">Y</td><td>권한 (OWNER/ADMIN/USER/PARTNER)</td></tr>
+                    <tr><td>currentClient</td><td>Object</td><td class="required">Y</td><td>현재 선택된 고객사 정보</td></tr>
+                    <tr><td>currentClient.clientNo</td><td>Long</td><td class="required">Y</td><td>고객사 번호</td></tr>
+                    <tr><td>currentClient.clientCode</td><td>String</td><td class="required">Y</td><td>고객사 코드</td></tr>
+                    <tr><td>currentClient.clientName</td><td>String</td><td class="required">Y</td><td>고객사명</td></tr>
+                    <tr><td>clientList</td><td>Array</td><td class="required">Y</td><td>사용자가 속한 고객사 목록</td></tr>
+                    <tr><td>clientList[].clientNo</td><td>Long</td><td class="required">Y</td><td>고객사 번호</td></tr>
+                    <tr><td>clientList[].clientCode</td><td>String</td><td class="required">Y</td><td>고객사 코드</td></tr>
+                    <tr><td>clientList[].clientName</td><td>String</td><td class="required">Y</td><td>고객사명</td></tr>
+                    <tr><td>clientList[].current</td><td>Boolean</td><td class="required">Y</td><td>현재 선택된 고객사 여부</td></tr>
+                </tbody>
+            </table>
+
+            <h4>응답 예시</h4>
+            <pre>{
+    "code": 1,
+    "message": "OK",
+    "data": {
+        "currentUser": {
+            "userNo": 12345,
+            "userClientNo": 100,
+            "userCode": "S0000001",
+            "email": "user@example.com",
+            "userName": "홍길동",
+            "gender": "M",
+            "userRole": "ADMIN"
+        },
+        "currentClient": {
+            "clientNo": 1,
+            "clientCode": "E0000001",
+            "clientName": "테스트 고객사"
+        },
+        "clientList": [
+            {
+                "clientNo": 1,
+                "clientCode": "E0000001",
+                "clientName": "테스트 고객사",
+                "current": true
+            },
+            {
+                "clientNo": 2,
+                "clientCode": "E0000002",
+                "clientName": "다른 고객사",
+                "current": false
+            }
+        ]
+    }
+}</pre>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-context')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-context">/** 현재 로그인 사용자 정보 */
+interface CurrentUser {
+  /** 사용자 번호 */
+  userNo: number;
+  /** 사용자-고객사 관계번호 */
+  userClientNo: number;
+  /** 사용자 코드 */
+  userCode: string;
+  /** 이메일 */
+  email: string;
+  /** 사용자명 */
+  userName: string;
+  /** 성별 */
+  gender?: string;
+  /** 권한 */
+  userRole: string;
+}
+
+/** 현재 선택된 고객사 정보 */
+interface CurrentClient {
+  /** 고객사 번호 */
+  clientNo: number;
+  /** 고객사 코드 */
+  clientCode: string;
+  /** 고객사명 */
+  clientName: string;
+}
+
+/** 고객사 목록 아이템 */
+interface ClientItem {
+  /** 고객사 번호 */
+  clientNo: number;
+  /** 고객사 코드 */
+  clientCode: string;
+  /** 고객사명 */
+  clientName: string;
+  /** 현재 선택된 고객사 여부 */
+  current: boolean;
+}
+
+/** 사용자 컨텍스트 응답 */
+interface UserContextResponse {
+  /** 현재 로그인 사용자 정보 */
+  currentUser: CurrentUser;
+  /** 현재 선택된 고객사 정보 */
+  currentClient: CurrentClient;
+  /** 사용자가 속한 고객사 목록 */
+  clientList: ClientItem[];
+}</pre>
+            </div>
+
+            <h3>Description</h3>
+            <div class="description-box">
+                <h4>목적</h4>
+                <p>로그인 후 최초 화면 진입 시 프론트엔드 초기화에 필요한 정보를 반환합니다.</p>
+                <ul>
+                    <li>현재 로그인한 사용자 정보</li>
+                    <li>현재 선택된 고객사 정보</li>
+                    <li>사용자가 속한 고객사 목록 (고객사 전환 셀렉트박스용)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 4. SwitchClient API -->
+        <!-- ========================================== -->
+        <div class="api-section" id="switchClient">
+            <h2>4. 고객사 전환 (switchClient)</h2>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/login/switchClient</div>
+            <p style="margin-top: 10px;">
+                <strong>URL 예시:</strong> <code>POST /app/v1/login/switchClient</code>
+            </p>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>ACCESS_TOKEN</td></tr>
+                <tr><th>권한</th><td>USER</td></tr>
+                <tr><th>Header</th><td><code>Authorization: Bearer {accessToken}</code></td></tr>
+            </table>
+
+            <h3>Request Body</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>검증</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr>
+                        <td>clientNo</td><td>Long</td><td class="required">Y</td>
+                        <td>@NotNull, @Positive</td><td>전환할 대상 고객사 번호</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>요청 예시</h4>
+            <pre>{
+    "clientNo": 2
+}</pre>
+
+            <h3>Response (LoginResultDtoV1)</h3>
+            <p>1번 API (login)의 LOGIN_COMPLETE 응답과 동일한 구조입니다. 새 JWT 토큰이 발급됩니다.</p>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-switchClient')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-switchClient">/** 고객사 전환 요청 */
+interface ClientSwitchRequest {
+  /** 전환할 대상 고객사 번호 */
+  clientNo: number;
+}
+
+/** 고객사 전환 응답 (LoginResponse와 동일, type=LOGIN_COMPLETE) */
+type ClientSwitchResponse = LoginResponse;</pre>
+            </div>
+
+            <h3>Error Cases</h3>
+            <div class="exception-section">
+                <span class="exception-type biz">BizException</span>
+                <table class="exception-table">
+                    <thead><tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr></thead>
+                    <tbody>
+                        <tr><td>31006</td><td>SAME_CLIENT_SWITCH</td><td>현재 고객사와 동일한 고객사로 전환할 수 없습니다.</td><td>현재 선택된 고객사와 동일한 clientNo로 전환 시도</td></tr>
+                        <tr><td>31005</td><td>INVALID_CLIENT_SELECTION</td><td>유효하지 않은 고객사 선택입니다.</td><td>사용자가 소속되지 않은 고객사로 전환 시도</td></tr>
+                        <tr><td>4001</td><td>TOKEN_EXPIRED</td><td>토큰이 만료되었습니다.</td><td>ACCESS 토큰 만료</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Description</h3>
+            <div class="description-box">
+                <h4>목적</h4>
+                <p>이미 로그인된 사용자가 다른 고객사로 전환합니다.</p>
+                <h4>토큰 처리</h4>
+                <ul>
+                    <li>기존 ACCESS 토큰은 블랙리스트에 등록됩니다</li>
+                    <li>기존 REFRESH 토큰은 Redis에서 삭제됩니다</li>
+                    <li>새로운 ACCESS/REFRESH 토큰이 발급됩니다</li>
+                </ul>
+                <h4>주의사항</h4>
+                <ul>
+                    <li>TEMP 토큰으로는 호출 불가 (Gateway에서 거부)</li>
+                    <li>프론트엔드에서 토큰 교체 필수</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 전체 TypeScript Interface -->
+        <!-- ========================================== -->
+        <section class="all-interfaces" id="all-interfaces">
+            <h2>전체 TypeScript Interface</h2>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>LoginController 전체 Interface</span>
+                    <button onclick="copyToClipboard('all-interfaces-code')" class="copy-btn">전체 복사</button>
+                </div>
+                <pre id="all-interfaces-code">// ============================================
+// LoginController API Interfaces
+// Generated from: biz/login/controller/LoginController.java
+// ============================================
+
+// ---------- Request Interfaces ----------
+
+/** 로그인 요청 */
+interface LoginRequest {
+  /** 이메일 */
+  email: string;
+  /** 암호화된 비밀번호 (RSA 공개키로 암호화, Base64 인코딩) */
+  encryptedPassword: string;
+}
+
+/** 고객사 선택 요청 */
+interface ClientSelectRequest {
+  /** 선택한 고객사 번호 */
+  clientNo: number;
+}
+
+/** 고객사 전환 요청 */
+interface ClientSwitchRequest {
+  /** 전환할 대상 고객사 번호 */
+  clientNo: number;
+}
+
+// ---------- Response Interfaces ----------
+
+/** 로그인 결과 타입 */
+type LoginResultType = 'LOGIN_COMPLETE' | 'CLIENT_SELECT';
+
+/** 고객사 목록 아이템 (로그인 응답용) */
+interface LoginClientItem {
+  /** 사용자-고객사 관계번호 */
+  userClientNo: number;
+  /** 사용자 번호 */
+  userNo: number;
+  /** 사용자 코드 */
+  userCode: string;
+  /** 고객사 번호 */
+  clientNo: number;
+  /** 고객사 코드 */
+  clientCode: string;
+  /** 고객사명 */
+  clientName: string;
+  /** 사용자 역할 */
+  userRole: string;
+}
+
+/** 재동의 필요 약관 항목 */
+interface TermsReagreeItem {
+  /** 약관 번호 */
+  termsNo: number;
+  /** 약관 코드 */
+  termsCode: string;
+  /** 약관 명 */
+  termsName: string;
+  /** 약관 버전 */
+  version: string;
+  /** 필수 여부 */
+  requiredYn: string;
+  /** 약관 전문 여부 (Y: 전문 있음, N: 제목만) */
+  contentYn: string;
+}
+
+/** 로그인 응답 */
+interface LoginResponse {
+  /** 로그인 결과 타입 */
+  type: LoginResultType;
+  /** 사용자 번호 */
+  userNo?: number;
+  /** 사용자 코드 */
+  userCode?: string;
+  /** 이메일 */
+  email?: string;
+  /** 사용자명 */
+  userName?: string;
+  /** 임시 토큰 (CLIENT_SELECT 시) */
+  tempToken?: string;
+  /** 임시 토큰 만료 시간(초) */
+  tempTokenExpiresInSeconds?: number;
+  /** 고객사 목록 (CLIENT_SELECT 시) */
+  clientList?: LoginClientItem[];
+  /** 사용자-고객사 관계번호 (LOGIN_COMPLETE 시) */
+  userClientNo?: number;
+  /** 고객사 번호 (LOGIN_COMPLETE 시) */
+  clientNo?: number;
+  /** 고객사 코드 (LOGIN_COMPLETE 시) */
+  clientCode?: string;
+  /** 고객사명 (LOGIN_COMPLETE 시) */
+  clientName?: string;
+  /** 권한 (LOGIN_COMPLETE 시) */
+  userRole?: string;
+  /** 액세스 토큰 (LOGIN_COMPLETE 시) */
+  accessToken?: string;
+  /** 리프레시 토큰 (LOGIN_COMPLETE 시) */
+  refreshToken?: string;
+  /** 만료 시간(초) (LOGIN_COMPLETE 시) */
+  expiresInSeconds?: number;
+  /** 발급 일시 */
+  issuedAt?: string;
+  /** 약관 재동의 필요 여부 (LOGIN_COMPLETE 시) */
+  termsReagreeRequired?: boolean;
+  /** 재동의 필요 약관 목록 (있는 경우만) */
+  reagreeTermsList?: TermsReagreeItem[];
+}
+
+/** 고객사 선택 응답 */
+type ClientSelectResponse = LoginResponse;
+
+/** 고객사 전환 응답 */
+type ClientSwitchResponse = LoginResponse;
+
+/** 현재 로그인 사용자 정보 */
+interface CurrentUser {
+  /** 사용자 번호 */
+  userNo: number;
+  /** 사용자-고객사 관계번호 */
+  userClientNo: number;
+  /** 사용자 코드 */
+  userCode: string;
+  /** 이메일 */
+  email: string;
+  /** 사용자명 */
+  userName: string;
+  /** 성별 */
+  gender?: string;
+  /** 권한 */
+  userRole: string;
+}
+
+/** 현재 선택된 고객사 정보 */
+interface CurrentClient {
+  /** 고객사 번호 */
+  clientNo: number;
+  /** 고객사 코드 */
+  clientCode: string;
+  /** 고객사명 */
+  clientName: string;
+}
+
+/** 고객사 목록 아이템 (컨텍스트용) */
+interface ClientItem {
+  /** 고객사 번호 */
+  clientNo: number;
+  /** 고객사 코드 */
+  clientCode: string;
+  /** 고객사명 */
+  clientName: string;
+  /** 현재 선택된 고객사 여부 */
+  current: boolean;
+}
+
+/** 사용자 컨텍스트 응답 */
+interface UserContextResponse {
+  /** 현재 로그인 사용자 정보 */
+  currentUser: CurrentUser;
+  /** 현재 선택된 고객사 정보 */
+  currentClient: CurrentClient;
+  /** 사용자가 속한 고객사 목록 */
+  clientList: ClientItem[];
+}</pre>
+            </div>
+        </section>
+    </div>
+
+    <script>
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.innerText;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('클립보드에 복사되었습니다.');
+            }).catch(() => {
+                fallbackCopy(text);
+            });
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    function fallbackCopy(text) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            alert('클립보드에 복사되었습니다.');
+        } catch (err) {
+            alert('복사에 실패했습니다.');
+        }
+        document.body.removeChild(textArea);
+    }
+    </script>
+</body>
+</html>

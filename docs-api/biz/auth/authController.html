@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuthController API 문서</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            color: #7f8c8d;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .api-section {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+        .method {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #fff;
+            margin-right: 10px;
+        }
+        .method.post { background-color: #27ae60; }
+        .method.get { background-color: #3498db; }
+        .url {
+            font-family: 'Courier New', monospace;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px 15px;
+            border-radius: 3px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .required { color: #e74c3c; font-weight: bold; }
+        .description-box {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .description-box h4 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+        .description-box ul, .description-box ol {
+            margin-left: 20px;
+        }
+        .description-box li {
+            margin-bottom: 5px;
+        }
+        .exception-section { margin: 15px 0; }
+        .exception-type {
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .exception-type.biz { background-color: #f39c12; color: #fff; }
+        .exception-type.system { background-color: #e74c3c; color: #fff; }
+        .exception-table { margin-top: 10px; }
+        .note {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .security-note {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .security-note h4 { color: #721c24; margin-bottom: 10px; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .error-response {
+            background-color: #fdf2f2;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .usage-guide {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .usage-guide h4 { color: #0c5460; margin-bottom: 10px; }
+        .usage-guide ol { margin-left: 20px; }
+        .usage-guide li { margin-bottom: 8px; }
+        .auth-table { margin: 15px 0; }
+        .auth-table th { background-color: #6c757d; width: 150px; }
+        .typescript-interface {
+            background-color: #1e1e1e;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        .interface-header {
+            background-color: #333;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .interface-header span { color: #fff; font-weight: bold; }
+        .copy-btn {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover { background-color: #2980b9; }
+        .typescript-interface pre {
+            margin: 0;
+            padding: 15px;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
+            font-size: 13px;
+        }
+        .all-interfaces {
+            background-color: #f8f9fa;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        .all-interfaces h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">&larr; 목록으로 돌아가기</a>
+
+        <h1>AuthController API 문서</h1>
+        <p><strong>소스 경로:</strong> <code>biz/auth/controller/AuthController.java</code></p>
+
+        <div class="note">
+            <strong>참고:</strong> 모든 API는 Gateway를 통해 접근합니다. <code>{clientType}</code>은 클라이언트 유형에 따라 <code>app</code> 또는 <code>web</code>으로 대체합니다. 인증 관련 API는 공개 API로 JWT 인증이 필요하지 않습니다.
+        </div>
+
+        <div class="security-note">
+            <h4>보안 주의사항</h4>
+            <ul>
+                <li>이 API들은 인증 없이 접근 가능합니다 (Gateway에서 public-paths로 설정됨)</li>
+                <li>공개키만 제공하며, 개인키는 절대 노출되지 않습니다</li>
+                <li>공개키를 LocalStorage에 장기 저장하지 마세요</li>
+                <li>세션당 또는 로그인 시도당 새로 조회하는 것을 권장합니다</li>
+            </ul>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- getPublicKey API -->
+        <!-- ========================================== -->
+        <div class="api-section" id="getPublicKey">
+            <h2>1. RSA 공개키 조회 (getPublicKey)</h2>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/auth/getPublicKey</div>
+            <p style="margin-top: 10px;">
+                <strong>URL 예시:</strong> <code>POST /app/v1/auth/getPublicKey</code>, <code>POST /web/v1/auth/getPublicKey</code>
+            </p>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>NONE</td></tr>
+                <tr><th>권한</th><td>PUBLIC</td></tr>
+                <tr><th>Header</th><td>-</td></tr>
+            </table>
+
+            <h3>Request Body</h3>
+            <p>요청 파라미터가 없습니다. (빈 body 또는 <code>{}</code>로 호출)</p>
+
+            <h3>Response (PublicKeyDto)</h3>
+            <table>
+                <thead>
+                    <tr><th>필드명</th><th>타입</th><th>필수</th><th>설명</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>publicKey</td><td>String</td><td class="required">Y</td>
+                        <td>RSA 공개키 (Base64 인코딩)</td>
+                    </tr>
+                    <tr>
+                        <td>algorithm</td><td>String</td><td class="required">Y</td>
+                        <td>키 알고리즘 (RSA-OAEP)</td>
+                    </tr>
+                    <tr>
+                        <td>padding</td><td>String</td><td class="required">Y</td>
+                        <td>패딩 방식 (OAEPWithSHA-256AndMGF1Padding)</td>
+                    </tr>
+                    <tr>
+                        <td>keySize</td><td>int</td><td class="required">Y</td>
+                        <td>키 크기 (비트)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>응답 예시</h4>
+            <pre>{
+    "code": 1,
+    "message": "OK",
+    "data": {
+        "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA...",
+        "algorithm": "RSA-OAEP",
+        "padding": "OAEPWithSHA-256AndMGF1Padding",
+        "keySize": 2048
+    }
+}</pre>
+
+            <div class="usage-guide">
+                <h4>사용 가이드</h4>
+                <ol>
+                    <li>로그인 페이지 진입 시 이 API를 호출하여 RSA 공개키를 조회합니다</li>
+                    <li>조회된 공개키로 비밀번호를 RSA 암호화합니다 (JSEncrypt 또는 WebCrypto API 사용)</li>
+                    <li>암호화된 비밀번호(Base64)를 로그인 API의 <code>encryptedPassword</code> 필드에 설정하여 전송합니다</li>
+                </ol>
+            </div>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-getPublicKey')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-getPublicKey">/** RSA 공개키 응답 */
+interface PublicKeyResponse {
+  /** RSA 공개키 (Base64 인코딩) */
+  publicKey: string;
+  /** 키 알고리즘 */
+  algorithm: string;
+  /** 패딩 방식 */
+  padding: string;
+  /** 키 크기 (비트) */
+  keySize: number;
+}</pre>
+            </div>
+
+            <h3>Error Cases</h3>
+            <div class="exception-section">
+                <span class="exception-type biz">BizException</span>
+                <table class="exception-table">
+                    <thead>
+                        <tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>4001</td><td>RSA_KEY_LOAD_FAILED</td>
+                            <td>RSA 키 로딩에 실패했습니다.</td>
+                            <td>서버에서 RSA 키 파일을 로드하지 못한 경우</td>
+                        </tr>
+                        <tr>
+                            <td>1005</td><td>UNSUPPORTED_VERSION</td>
+                            <td>지원하지 않는 API 버전입니다.</td>
+                            <td>지원하지 않는 버전으로 요청한 경우</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="exception-section">
+                <span class="exception-type system">Exception (시스템 예외)</span>
+                <table class="exception-table">
+                    <thead>
+                        <tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>500</td><td>INTERNAL_SERVER_ERROR</td>
+                            <td>서버 내부 오류가 발생했습니다.</td>
+                            <td>서버 내부 처리 중 예기치 않은 오류 발생</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Description</h3>
+            <div class="description-box">
+                <h4>목적</h4>
+                <p>RSA 공개키 조회 API입니다. 프론트엔드에서 로그인 시 비밀번호 암호화에 사용할 공개키를 반환합니다.</p>
+            </div>
+
+            <div class="description-box">
+                <h4>선행 조건</h4>
+                <ul>
+                    <li>로그인이 필요하지 않음 (공개 API)</li>
+                    <li>Gateway에서 JWT 인증을 요구하지 않음</li>
+                </ul>
+            </div>
+
+            <div class="description-box">
+                <h4>기대 효과</h4>
+                <ul>
+                    <li>클라이언트에서 비밀번호를 안전하게 암호화하여 전송 가능</li>
+                    <li>네트워크 전송 중 비밀번호 노출 방지</li>
+                    <li>HTTPS와 함께 이중 보안 제공</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 전체 TypeScript Interface -->
+        <!-- ========================================== -->
+        <section class="all-interfaces" id="all-interfaces">
+            <h2>전체 TypeScript Interface</h2>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>AuthController 전체 Interface</span>
+                    <button onclick="copyToClipboard('all-interfaces-code')" class="copy-btn">전체 복사</button>
+                </div>
+                <pre id="all-interfaces-code">// ============================================
+// AuthController API Interfaces
+// Generated from: biz/auth/controller/AuthController.java
+// ============================================
+
+// ---------- Response Interfaces ----------
+
+/** RSA 공개키 응답 */
+interface PublicKeyResponse {
+  /** RSA 공개키 (Base64 인코딩) */
+  publicKey: string;
+  /** 키 알고리즘 */
+  algorithm: string;
+  /** 패딩 방식 */
+  padding: string;
+  /** 키 크기 (비트) */
+  keySize: number;
+}</pre>
+            </div>
+        </section>
+    </div>
+
+    <script>
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.innerText;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('클립보드에 복사되었습니다.');
+            }).catch(() => {
+                fallbackCopy(text);
+            });
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    function fallbackCopy(text) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            alert('클립보드에 복사되었습니다.');
+        } catch (err) {
+            alert('복사에 실패했습니다.');
+        }
+        document.body.removeChild(textArea);
+    }
+    </script>
+</body>
+</html>

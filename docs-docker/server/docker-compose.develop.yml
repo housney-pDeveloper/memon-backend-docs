@@ -1,0 +1,56 @@
+name: platform-ef-develop
+
+services:
+  platform-ef-develop-redis:
+    image: redis:7-alpine
+    container_name: platform-ef-develop-redis
+    restart: unless-stopped
+    command: ["redis-server","--appendonly","yes","--save","60","1000","--requirepass","fingate!234"]
+    networks:
+      platform-ef-develop-network:
+        aliases:
+          - platform-ef-redis
+      edge: {}
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=edge
+      # 6379(TLS) 포트에서 SNI로 분기
+      - traefik.tcp.routers.redis-platform-ef-develop.entrypoints=redis-tls
+      - traefik.tcp.routers.redis-platform-ef-develop.rule=HostSNI(`eventflow-dev.redis.fingate.kr`)
+      - traefik.tcp.routers.redis-platform-ef-develop.tls=true
+      - traefik.tcp.services.redis-platform-ef-develop.loadbalancer.server.port=6379
+
+  platform-ef-develop-rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: platform-ef-develop-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: pf_ef_admin
+      RABBITMQ_DEFAULT_PASS: pf_ef_admin
+    volumes:
+      - /home/fingate/docker/volumes/rabbitmq/platform/ef-develop/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+      - /home/fingate/docker/volumes/rabbitmq/platform/ef-develop/definitions.json:/etc/rabbitmq/definitions.json:ro
+    networks:
+      platform-ef-develop-network:
+        aliases:
+          - platform-ef-rabbitmq
+      edge: {}
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=edge
+      # 5671(TLS) 포트에서 SNI로 분기
+      - traefik.tcp.routers.amqp-platform-ef-develop.entrypoints=amqp-tls
+      - traefik.tcp.routers.amqp-platform-ef-develop.rule=HostSNI(`eventflow-dev.mq.fingate.kr`)
+      - traefik.tcp.routers.amqp-platform-ef-develop.tls=true
+      - traefik.tcp.services.amqp-platform-ef-develop.loadbalancer.server.port=5672
+      # (선택) RabbitMQ UI는 HTTP 80에서 Host로 분기
+      - traefik.http.routers.rabbitui-platform-ef-develop.entrypoints=web
+      - traefik.http.routers.rabbitui-platform-ef-develop.rule=Host(`eventflow-web-dev.mq.fingate.kr`)
+      - traefik.http.services.rabbitui-platform-ef-develop.loadbalancer.server.port=15672
+
+networks:
+  edge:
+    external: true
+  platform-ef-develop-network:
+    external: true
+

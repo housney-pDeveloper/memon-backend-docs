@@ -1,0 +1,57 @@
+name: platform-ef
+
+services:
+  platform-ef-gateway:
+    image: gitlab.fingate.kr/platform/ef/backend/gateway:latest
+    container_name: platform-ef-gateway
+    restart: unless-stopped
+
+    working_dir: /home/ec2-user
+
+    environment:
+      SPRING_PROFILES_ACTIVE: production
+      DOCKER_FOREGROUND: "true"
+      APP_TZ: Asia/Seoul
+
+      AWS_PROFILE: epk-dev
+      AWS_REGION: ap-northeast-2
+      AWS_SHARED_CREDENTIALS_FILE: /aws-creds/credentials
+      AWS_CONFIG_FILE: /aws-creds/config
+
+    volumes:
+      - /root/.aws:/aws-creds:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home/fingate/docker/volumes/platform/ef:/home/ec2-user
+
+    entrypoint:
+      - /bin/bash
+      - -lc
+      - |
+        chmod +x /home/ec2-user/deploy/gateway/scripts/*.sh 2>/dev/null || true
+        exec /home/ec2-user/deploy/gateway/scripts/deploy.sh
+
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9999/actuator"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+    networks:
+      - edge
+      - platform-ef-network
+
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=edge
+      - traefik.http.routers.platform-ef-gateway.rule=Host(`eventflow-gw.fingate.kr`)
+      - traefik.http.routers.platform-ef-gateway.entrypoints=web
+      - traefik.http.services.platform-ef-gateway.loadbalancer.server.port=9999
+      # - traefik.http.routers.platform-ef-gateway.tls=true
+      # - traefik.http.routers.platform-ef-gateway.tls.certresolver=letsencrypt
+
+networks:
+  edge:
+    external: true
+  platform-ef-network:
+    external: true

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MobileAuthController API 문서</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; margin-bottom: 30px; }
+        h2 { color: #34495e; margin-top: 30px; margin-bottom: 15px; }
+        h3 { color: #7f8c8d; margin-top: 20px; margin-bottom: 10px; }
+        .api-section { background-color: #ecf0f1; padding: 20px; border-radius: 5px; margin-bottom: 30px; border-left: 4px solid #3498db; }
+        .api-section.auth-required { border-left: 4px solid #e74c3c; }
+        .api-section.new-api { border-left: 4px solid #9b59b6; }
+        .method { display: inline-block; padding: 5px 15px; border-radius: 3px; font-weight: bold; color: #fff; margin-right: 10px; }
+        .method.post { background-color: #27ae60; }
+        .url { font-family: 'Courier New', monospace; background-color: #2c3e50; color: #ecf0f1; padding: 10px 15px; border-radius: 3px; display: inline-block; margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #bdc3c7; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: #fff; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .required { color: #e74c3c; font-weight: bold; }
+        .optional { color: #27ae60; }
+        .description-box { background-color: #fff; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .description-box h4 { color: #2980b9; margin-bottom: 10px; }
+        .description-box ul { margin-left: 20px; }
+        .description-box li { margin-bottom: 5px; }
+        .exception-section { margin: 15px 0; }
+        .exception-type { font-weight: bold; padding: 8px 12px; border-radius: 3px; margin-bottom: 10px; display: inline-block; }
+        .exception-type.biz { background-color: #f39c12; color: #fff; }
+        .note { background-color: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .security-note { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .security-note h4 { color: #721c24; margin-bottom: 10px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        code { background-color: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+        pre { background-color: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; margin: 10px 0; }
+        .auth-badge { display: inline-block; padding: 5px 10px; border-radius: 3px; font-size: 12px; font-weight: bold; margin-left: 10px; }
+        .auth-badge.public { background-color: #27ae60; color: #fff; }
+        .auth-badge.required { background-color: #e74c3c; color: #fff; }
+        .auth-badge.new { background-color: #9b59b6; color: #fff; }
+        .usage-guide { background-color: #d1ecf1; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .usage-guide h4 { color: #0c5460; margin-bottom: 10px; }
+        .usage-guide ol { margin-left: 20px; }
+        .usage-guide li { margin-bottom: 8px; }
+        .auth-table { margin: 15px 0; }
+        .auth-table th { background-color: #6c757d; width: 150px; }
+        .typescript-interface { background-color: #1e1e1e; border-radius: 5px; margin: 15px 0; overflow: hidden; }
+        .interface-header { background-color: #333; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .interface-header span { color: #fff; font-weight: bold; }
+        .copy-btn { background-color: #3498db; color: #fff; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-size: 12px; }
+        .copy-btn:hover { background-color: #2980b9; }
+        .typescript-interface pre { margin: 0; padding: 15px; background-color: #1e1e1e; color: #d4d4d4; font-size: 13px; }
+        .all-interfaces { background-color: #f8f9fa; border: 2px solid #3498db; border-radius: 5px; padding: 20px; margin-top: 40px; }
+        .all-interfaces h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 0; }
+        .toc { background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 30px; }
+        .toc h3 { margin-top: 0; margin-bottom: 15px; }
+        .toc ul { list-style-type: none; padding-left: 0; }
+        .toc li { margin-bottom: 8px; }
+        .toc a { color: #3498db; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .new-badge { background-color: #9b59b6; color: #fff; padding: 2px 8px; border-radius: 3px; font-size: 11px; margin-left: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">&larr; 목록으로 돌아가기</a>
+
+        <h1>MobileAuthController API 문서</h1>
+        <p><strong>소스 경로:</strong> <code>biz/mobileAuth/controller/MobileAuthController.java</code></p>
+
+        <div class="note">
+            <strong>참고:</strong> 모든 API는 Gateway를 통해 접근합니다. <code>{clientType}</code>은 <code>app</code> 또는 <code>web</code>으로 대체합니다.
+        </div>
+
+        <div class="toc">
+            <h3>목차</h3>
+            <ul>
+                <li><a href="#insSmsAuth">1. SMS 인증번호 발송 (insSmsAuth)</a> - 회원가입용</li>
+                <li><a href="#insFindIdSmsAuth">2. 아이디 찾기 SMS 발송 (insFindIdSmsAuth)</a> <span class="new-badge">NEW</span></li>
+                <li><a href="#insFindPwSmsAuth">3. 비밀번호 찾기 SMS 발송 (insFindPwSmsAuth)</a> <span class="new-badge">NEW</span></li>
+                <li><a href="#updSmsAuthVerify">4. SMS 인증번호 검증 (updSmsAuthVerify)</a></li>
+                <li><a href="#insAuthSmsAuth">5. SMS 인증번호 발송 - 인증 필수 (insAuthSmsAuth)</a></li>
+                <li><a href="#updAuthSmsAuthVerify">6. SMS 인증번호 검증 - 인증 필수 (updAuthSmsAuthVerify)</a></li>
+                <li><a href="#all-interfaces">7. 전체 TypeScript Interface</a></li>
+            </ul>
+        </div>
+
+        <div class="usage-guide">
+            <h4>아이디 찾기 프로세스 가이드</h4>
+            <ol>
+                <li><code>insFindIdSmsAuth</code> API를 호출하여 이름+휴대전화번호 확인 후 인증번호를 발송합니다</li>
+                <li>사용자가 수신한 인증번호를 입력합니다</li>
+                <li><code>updSmsAuthVerify</code> API를 호출하여 인증번호를 검증합니다 (authType: "FIND_ID")</li>
+                <li><code>getFindId</code> API를 호출하여 이메일 목록을 조회합니다</li>
+            </ol>
+        </div>
+
+        <div class="usage-guide">
+            <h4>비밀번호 찾기 프로세스 가이드</h4>
+            <ol>
+                <li><code>insFindPwSmsAuth</code> API를 호출하여 이메일+휴대전화번호 확인 후 인증번호를 발송합니다</li>
+                <li>사용자가 수신한 인증번호를 입력합니다</li>
+                <li><code>updSmsAuthVerify</code> API를 호출하여 인증번호를 검증합니다 (authType: "FIND_PW")</li>
+                <li><code>resetPassword</code> API를 호출하여 비밀번호를 재설정합니다</li>
+            </ol>
+        </div>
+
+        <div class="note">
+            <strong>authType 종류:</strong><br>
+            - 공개 API: <code>SIGNUP</code>(회원가입), <code>FIND_ID</code>(아이디찾기), <code>FIND_PW</code>(비밀번호찾기)<br>
+            - 인증 필수 API: <code>CHANGE_PHONE</code>(휴대전화변경), <code>CHANGE_PW</code>(비밀번호변경)
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 1. insSmsAuth API -->
+        <!-- ========================================== -->
+        <div class="api-section" id="insSmsAuth">
+            <h2>1. SMS 인증번호 발송 (insSmsAuth) <span class="auth-badge public">공개 API</span></h2>
+            <p>회원가입 시 사용합니다. 아이디/비밀번호 찾기는 별도 API를 사용하세요.</p>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/mobileAuth/insSmsAuth</div>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>NONE</td></tr>
+                <tr><th>권한</th><td>PUBLIC</td></tr>
+                <tr><th>Header</th><td>-</td></tr>
+            </table>
+
+            <h3>Request Body (SendSmsAuthDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>검증</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>phoneNumber</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>휴대전화번호</td></tr>
+                    <tr><td>authType</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>인증 요청 구분 (SIGNUP)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response (SendSmsAuthResultDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>authKey</td><td>String</td><td class="required">Y</td><td>인증 키</td></tr>
+                    <tr><td>expireSeconds</td><td>int</td><td class="required">Y</td><td>인증번호 만료 시간 (초) - 기본 300초</td></tr>
+                    <tr><td>resendWaitSeconds</td><td>int</td><td class="required">Y</td><td>재전송 대기 시간 (초) - 기본 60초</td></tr>
+                </tbody>
+            </table>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-insSmsAuth')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-insSmsAuth">/** SMS 인증번호 발송 요청 (회원가입) */
+interface SendSmsAuthRequest {
+  /** 휴대전화번호 */
+  phoneNumber: string;
+  /** 인증 요청 구분 */
+  authType: 'SIGNUP';
+}
+
+/** SMS 인증번호 발송 응답 */
+interface SendSmsAuthResponse {
+  /** 인증 키 */
+  authKey: string;
+  /** 인증번호 만료 시간 (초) */
+  expireSeconds: number;
+  /** 재전송 대기 시간 (초) */
+  resendWaitSeconds: number;
+}</pre>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 2. insFindIdSmsAuth API (NEW) -->
+        <!-- ========================================== -->
+        <div class="api-section new-api" id="insFindIdSmsAuth">
+            <h2>2. 아이디 찾기 SMS 발송 (insFindIdSmsAuth) <span class="auth-badge new">NEW</span> <span class="auth-badge public">공개 API</span></h2>
+            <p>아이디 찾기 시 사용합니다. 이름+휴대전화번호로 계정 존재 여부를 확인한 후 SMS를 발송합니다.</p>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/mobileAuth/insFindIdSmsAuth</div>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>NONE</td></tr>
+                <tr><th>권한</th><td>PUBLIC</td></tr>
+                <tr><th>Header</th><td>-</td></tr>
+            </table>
+
+            <h3>Request Body (SendFindIdSmsAuthDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>검증</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>name</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>이름</td></tr>
+                    <tr><td>phoneNumber</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>휴대전화번호</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response (SendSmsAuthResultDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>authKey</td><td>String</td><td class="required">Y</td><td>인증 키</td></tr>
+                    <tr><td>expireSeconds</td><td>int</td><td class="required">Y</td><td>인증번호 만료 시간 (초) - 기본 300초</td></tr>
+                    <tr><td>resendWaitSeconds</td><td>int</td><td class="required">Y</td><td>재전송 대기 시간 (초) - 기본 60초</td></tr>
+                </tbody>
+            </table>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-insFindIdSmsAuth')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-insFindIdSmsAuth">/** 아이디 찾기 SMS 인증번호 발송 요청 */
+interface SendFindIdSmsAuthRequest {
+  /** 이름 */
+  name: string;
+  /** 휴대전화번호 */
+  phoneNumber: string;
+}
+
+/** SMS 인증번호 발송 응답 */
+interface SendSmsAuthResponse {
+  /** 인증 키 */
+  authKey: string;
+  /** 인증번호 만료 시간 (초) */
+  expireSeconds: number;
+  /** 재전송 대기 시간 (초) */
+  resendWaitSeconds: number;
+}</pre>
+            </div>
+
+            <h3>Error Cases</h3>
+            <div class="exception-section">
+                <span class="exception-type biz">BizException</span>
+                <table>
+                    <thead><tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr></thead>
+                    <tbody>
+                        <tr><td>31401</td><td>NAME_EMPTY</td><td>이름을 입력해 주세요.</td><td>이름이 빈 값인 경우</td></tr>
+                        <tr><td>31201</td><td>PHONE_NUMBER_EMPTY</td><td>휴대전화번호를 입력해 주세요.</td><td>휴대전화번호가 빈 값인 경우</td></tr>
+                        <tr><td>31202</td><td>PHONE_NUMBER_INVALID</td><td>휴대전화번호를 확인해 주세요.</td><td>휴대전화번호 형식이 올바르지 않은 경우</td></tr>
+                        <tr><td>31403</td><td>ACCOUNT_NOT_FOUND_BY_NAME</td><td>입력하신 이름으로 가입된 계정을 찾을 수 없습니다.</td><td>이름+휴대전화번호로 등록된 계정이 없는 경우</td></tr>
+                        <tr><td>31208</td><td>SMS_RESEND_TOO_EARLY</td><td>잠시 후 다시 시도해 주세요.</td><td>재전송 1분 제한 이내 재시도</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Description</h3>
+            <div class="description-box">
+                <h4>목적</h4>
+                <p>아이디 찾기 시 이름과 휴대전화번호로 계정 존재 여부를 확인한 후 SMS 인증번호를 발송합니다.</p>
+                <h4>특징</h4>
+                <ul>
+                    <li>계정이 존재하지 않으면 SMS를 발송하지 않고 에러를 반환합니다</li>
+                    <li>재전송은 1분 후에 가능합니다</li>
+                    <li>인증번호 유효시간은 5분입니다</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 3. insFindPwSmsAuth API (NEW) -->
+        <!-- ========================================== -->
+        <div class="api-section new-api" id="insFindPwSmsAuth">
+            <h2>3. 비밀번호 찾기 SMS 발송 (insFindPwSmsAuth) <span class="auth-badge new">NEW</span> <span class="auth-badge public">공개 API</span></h2>
+            <p>비밀번호 찾기 시 사용합니다. 이메일+휴대전화번호로 계정 존재 여부를 확인한 후 SMS를 발송합니다.</p>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/mobileAuth/insFindPwSmsAuth</div>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>NONE</td></tr>
+                <tr><th>권한</th><td>PUBLIC</td></tr>
+                <tr><th>Header</th><td>-</td></tr>
+            </table>
+
+            <h3>Request Body (SendFindPwSmsAuthDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>검증</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>email</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>이메일</td></tr>
+                    <tr><td>phoneNumber</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>휴대전화번호</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response (SendSmsAuthResultDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>authKey</td><td>String</td><td class="required">Y</td><td>인증 키</td></tr>
+                    <tr><td>expireSeconds</td><td>int</td><td class="required">Y</td><td>인증번호 만료 시간 (초) - 기본 300초</td></tr>
+                    <tr><td>resendWaitSeconds</td><td>int</td><td class="required">Y</td><td>재전송 대기 시간 (초) - 기본 60초</td></tr>
+                </tbody>
+            </table>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-insFindPwSmsAuth')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-insFindPwSmsAuth">/** 비밀번호 찾기 SMS 인증번호 발송 요청 */
+interface SendFindPwSmsAuthRequest {
+  /** 이메일 */
+  email: string;
+  /** 휴대전화번호 */
+  phoneNumber: string;
+}
+
+/** SMS 인증번호 발송 응답 */
+interface SendSmsAuthResponse {
+  /** 인증 키 */
+  authKey: string;
+  /** 인증번호 만료 시간 (초) */
+  expireSeconds: number;
+  /** 재전송 대기 시간 (초) */
+  resendWaitSeconds: number;
+}</pre>
+            </div>
+
+            <h3>Error Cases</h3>
+            <div class="exception-section">
+                <span class="exception-type biz">BizException</span>
+                <table>
+                    <thead><tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr></thead>
+                    <tbody>
+                        <tr><td>31405</td><td>EMAIL_EMPTY</td><td>이메일 주소를 다시 확인해 주세요.</td><td>이메일이 빈 값인 경우</td></tr>
+                        <tr><td>31201</td><td>PHONE_NUMBER_EMPTY</td><td>휴대전화번호를 입력해 주세요.</td><td>휴대전화번호가 빈 값인 경우</td></tr>
+                        <tr><td>31202</td><td>PHONE_NUMBER_INVALID</td><td>휴대전화번호를 확인해 주세요.</td><td>휴대전화번호 형식이 올바르지 않은 경우</td></tr>
+                        <tr><td>31404</td><td>ACCOUNT_NOT_FOUND_BY_EMAIL</td><td>입력하신 이메일 주소로 가입된 계정을 찾을 수 없습니다.</td><td>이메일+휴대전화번호로 등록된 계정이 없는 경우</td></tr>
+                        <tr><td>31208</td><td>SMS_RESEND_TOO_EARLY</td><td>잠시 후 다시 시도해 주세요.</td><td>재전송 1분 제한 이내 재시도</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Description</h3>
+            <div class="description-box">
+                <h4>목적</h4>
+                <p>비밀번호 찾기 시 이메일과 휴대전화번호로 계정 존재 여부를 확인한 후 SMS 인증번호를 발송합니다.</p>
+                <h4>특징</h4>
+                <ul>
+                    <li>계정이 존재하지 않으면 SMS를 발송하지 않고 에러를 반환합니다</li>
+                    <li>재전송은 1분 후에 가능합니다</li>
+                    <li>인증번호 유효시간은 5분입니다</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 4. updSmsAuthVerify API -->
+        <!-- ========================================== -->
+        <div class="api-section" id="updSmsAuthVerify">
+            <h2>4. SMS 인증번호 검증 (updSmsAuthVerify) <span class="auth-badge public">공개 API</span></h2>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/mobileAuth/updSmsAuthVerify</div>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>NONE</td></tr>
+                <tr><th>권한</th><td>PUBLIC</td></tr>
+                <tr><th>Header</th><td>-</td></tr>
+            </table>
+
+            <h3>Request Body (VerifySmsAuthDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>검증</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>authKey</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>인증 키</td></tr>
+                    <tr><td>authCode</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>인증번호</td></tr>
+                    <tr><td>authType</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>인증 요청 구분 (SIGNUP/FIND_ID/FIND_PW)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response (VerifySmsAuthResultDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>verified</td><td>boolean</td><td class="required">Y</td><td>인증 성공 여부</td></tr>
+                </tbody>
+            </table>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-updSmsAuthVerify')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-updSmsAuthVerify">/** 인증 타입 (공개 API) */
+type PublicAuthType = 'SIGNUP' | 'FIND_ID' | 'FIND_PW';
+
+/** SMS 인증번호 검증 요청 (공개) */
+interface VerifySmsAuthRequest {
+  /** 인증 키 */
+  authKey: string;
+  /** 인증번호 */
+  authCode: string;
+  /** 인증 요청 구분 */
+  authType: PublicAuthType;
+}
+
+/** SMS 인증번호 검증 응답 */
+interface VerifySmsAuthResponse {
+  /** 인증 성공 여부 */
+  verified: boolean;
+}</pre>
+            </div>
+
+            <h3>Error Cases</h3>
+            <div class="exception-section">
+                <span class="exception-type biz">BizException</span>
+                <table>
+                    <thead><tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr></thead>
+                    <tbody>
+                        <tr><td>31204</td><td>AUTH_KEY_INVALID</td><td>유효하지 않은 인증 키입니다.</td><td>인증키가 존재하지 않거나 유효하지 않은 경우</td></tr>
+                        <tr><td>31206</td><td>AUTH_CODE_EXPIRED</td><td>인증 시간이 만료되었습니다. 재확인해 주세요.</td><td>인증번호 유효 시간 초과</td></tr>
+                        <tr><td>31207</td><td>AUTH_NOT_MATCH</td><td>인증번호를 다시 확인해 주세요.</td><td>인증번호 불일치</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 5. insAuthSmsAuth API -->
+        <!-- ========================================== -->
+        <div class="api-section auth-required" id="insAuthSmsAuth">
+            <h2>5. SMS 인증번호 발송 - 인증 필수 (insAuthSmsAuth) <span class="auth-badge required">JWT 인증 필요</span></h2>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/mobileAuth/insAuthSmsAuth</div>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>ACCESS_TOKEN</td></tr>
+                <tr><th>권한</th><td>USER</td></tr>
+                <tr><th>Header</th><td><code>Authorization: Bearer {accessToken}</code></td></tr>
+            </table>
+
+            <h3>Request Body (SendAuthSmsAuthDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>검증</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>phoneNumber</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>휴대전화번호</td></tr>
+                    <tr><td>authType</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>인증 요청 구분 (CHANGE_PHONE/CHANGE_PW)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response (SendSmsAuthResultDto)</h3>
+            <p>1번 API와 동일한 응답 구조입니다.</p>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-insAuthSmsAuth')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-insAuthSmsAuth">/** 인증 타입 (인증 필수 API) */
+type AuthRequiredAuthType = 'CHANGE_PHONE' | 'CHANGE_PW';
+
+/** SMS 인증번호 발송 요청 (인증 필수) */
+interface SendAuthSmsAuthRequest {
+  /** 휴대전화번호 */
+  phoneNumber: string;
+  /** 인증 요청 구분 */
+  authType: AuthRequiredAuthType;
+}
+
+/** SMS 인증번호 발송 응답 (인증 필수) */
+type SendAuthSmsAuthResponse = SendSmsAuthResponse;</pre>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 6. updAuthSmsAuthVerify API -->
+        <!-- ========================================== -->
+        <div class="api-section auth-required" id="updAuthSmsAuthVerify">
+            <h2>6. SMS 인증번호 검증 - 인증 필수 (updAuthSmsAuthVerify) <span class="auth-badge required">JWT 인증 필요</span></h2>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/mobileAuth/updAuthSmsAuthVerify</div>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>ACCESS_TOKEN</td></tr>
+                <tr><th>권한</th><td>USER</td></tr>
+                <tr><th>Header</th><td><code>Authorization: Bearer {accessToken}</code></td></tr>
+            </table>
+
+            <h3>Request Body (VerifyAuthSmsAuthDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>검증</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>authKey</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>인증 키</td></tr>
+                    <tr><td>authCode</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>인증번호</td></tr>
+                    <tr><td>authType</td><td>String</td><td class="required">Y</td><td>@NotBlank</td><td>인증 요청 구분 (CHANGE_PHONE/CHANGE_PW)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response (VerifySmsAuthResultDto)</h3>
+            <p>4번 API와 동일한 응답 구조입니다.</p>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-updAuthSmsAuthVerify')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-updAuthSmsAuthVerify">/** SMS 인증번호 검증 요청 (인증 필수) */
+interface VerifyAuthSmsAuthRequest {
+  /** 인증 키 */
+  authKey: string;
+  /** 인증번호 */
+  authCode: string;
+  /** 인증 요청 구분 */
+  authType: AuthRequiredAuthType;
+}
+
+/** SMS 인증번호 검증 응답 (인증 필수) */
+type VerifyAuthSmsAuthResponse = VerifySmsAuthResponse;</pre>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 전체 TypeScript Interface -->
+        <!-- ========================================== -->
+        <section class="all-interfaces" id="all-interfaces">
+            <h2>전체 TypeScript Interface</h2>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>MobileAuthController 전체 Interface</span>
+                    <button onclick="copyToClipboard('all-interfaces-code')" class="copy-btn">전체 복사</button>
+                </div>
+                <pre id="all-interfaces-code">// ============================================
+// MobileAuthController API Interfaces
+// Generated from: biz/mobileAuth/controller/MobileAuthController.java
+// ============================================
+
+// ---------- Common Types ----------
+
+/** 인증 타입 (공개 API) */
+type PublicAuthType = 'SIGNUP' | 'FIND_ID' | 'FIND_PW';
+
+/** 인증 타입 (인증 필수 API) */
+type AuthRequiredAuthType = 'CHANGE_PHONE' | 'CHANGE_PW';
+
+// ---------- Request Interfaces ----------
+
+/** SMS 인증번호 발송 요청 (회원가입) */
+interface SendSmsAuthRequest {
+  /** 휴대전화번호 */
+  phoneNumber: string;
+  /** 인증 요청 구분 */
+  authType: 'SIGNUP';
+}
+
+/** 아이디 찾기 SMS 인증번호 발송 요청 */
+interface SendFindIdSmsAuthRequest {
+  /** 이름 */
+  name: string;
+  /** 휴대전화번호 */
+  phoneNumber: string;
+}
+
+/** 비밀번호 찾기 SMS 인증번호 발송 요청 */
+interface SendFindPwSmsAuthRequest {
+  /** 이메일 */
+  email: string;
+  /** 휴대전화번호 */
+  phoneNumber: string;
+}
+
+/** SMS 인증번호 검증 요청 (공개) */
+interface VerifySmsAuthRequest {
+  /** 인증 키 */
+  authKey: string;
+  /** 인증번호 */
+  authCode: string;
+  /** 인증 요청 구분 */
+  authType: PublicAuthType;
+}
+
+/** SMS 인증번호 발송 요청 (인증 필수) */
+interface SendAuthSmsAuthRequest {
+  /** 휴대전화번호 */
+  phoneNumber: string;
+  /** 인증 요청 구분 */
+  authType: AuthRequiredAuthType;
+}
+
+/** SMS 인증번호 검증 요청 (인증 필수) */
+interface VerifyAuthSmsAuthRequest {
+  /** 인증 키 */
+  authKey: string;
+  /** 인증번호 */
+  authCode: string;
+  /** 인증 요청 구분 */
+  authType: AuthRequiredAuthType;
+}
+
+// ---------- Response Interfaces ----------
+
+/** SMS 인증번호 발송 응답 */
+interface SendSmsAuthResponse {
+  /** 인증 키 */
+  authKey: string;
+  /** 인증번호 만료 시간 (초) */
+  expireSeconds: number;
+  /** 재전송 대기 시간 (초) */
+  resendWaitSeconds: number;
+}
+
+/** SMS 인증번호 검증 응답 */
+interface VerifySmsAuthResponse {
+  /** 인증 성공 여부 */
+  verified: boolean;
+}
+
+/** SMS 인증번호 발송 응답 (인증 필수) */
+type SendAuthSmsAuthResponse = SendSmsAuthResponse;
+
+/** SMS 인증번호 검증 응답 (인증 필수) */
+type VerifyAuthSmsAuthResponse = VerifySmsAuthResponse;</pre>
+            </div>
+        </section>
+    </div>
+
+    <script>
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.innerText;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('클립보드에 복사되었습니다.');
+            }).catch(() => { fallbackCopy(text); });
+        } else {
+            fallbackCopy(text);
+        }
+    }
+    function fallbackCopy(text) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            alert('클립보드에 복사되었습니다.');
+        } catch (err) {
+            alert('복사에 실패했습니다.');
+        }
+        document.body.removeChild(textArea);
+    }
+    </script>
+</body>
+</html>

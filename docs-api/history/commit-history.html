@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>문서 변경 이력 - EF Backend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #6c757d;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .commit-list {
+            list-style: none;
+        }
+        .commit-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .commit-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        .commit-header:hover {
+            background-color: #e9ecef;
+        }
+        .commit-date {
+            font-size: 0.9em;
+            color: #6c757d;
+            font-weight: bold;
+            min-width: 100px;
+        }
+        .commit-title {
+            flex: 1;
+            margin-left: 20px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .commit-toggle {
+            color: #6c757d;
+            font-size: 1.2em;
+            transition: transform 0.3s;
+        }
+        .commit-item.active .commit-toggle {
+            transform: rotate(180deg);
+        }
+        .commit-body {
+            display: none;
+            padding: 20px;
+            background-color: #fff;
+            border-top: 1px solid #e0e0e0;
+        }
+        .commit-item.active .commit-body {
+            display: block;
+        }
+        .commit-body pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .commit-type {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .commit-type.docs {
+            background-color: #17a2b8;
+            color: #fff;
+        }
+        .commit-type.feat {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .commit-type.fix {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .commit-type.refactor {
+            background-color: #6f42c1;
+            color: #fff;
+        }
+        .commit-type.chore {
+            background-color: #6c757d;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">&larr; API 문서로 돌아가기</a>
+
+        <header>
+            <h1>문서 변경 이력</h1>
+            <p style="color: #6c757d;">API 문서의 변경 내역을 확인할 수 있습니다.</p>
+        </header>
+
+        <ul class="commit-list">
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026.03.06</span>
+                    <span class="commit-title">
+                        <span class="commit-type feat">Feat</span>
+                        API 팝업 모달 전환 및 확정 배지 시스템 구현
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>[팝업 모달 시스템]
+- 모든 API 링크(56개)를 페이지 이동 방식에서 팝업 모달로 전환
+- iframe 기반 스타일 격리로 팝업 닫기 시 스타일 충돌 해결
+
+[API 확정 배지 시스템]
+- api-status.json 생성: 버전별 API 확정 상태 관리
+- v1확정 배지 동적 표시 (녹색 그라데이션)
+- 현재 확정 API: signup/insClient (고객사 및 사용자 회원가입)
+
+[API 정리]
+- MypageController: 존재하지 않는 API 2개 삭제 (5→3 APIs)
+- SignupController: 존재하지 않는 API 3개 삭제 (4→1 API)
+- LoginController: 누락된 API 2개 추가 (context, switchClient)
+
+[필드 검증 강화]
+- zipCode, gender 필수값 변경
+- 전화번호/사업자번호 숫자만 입력 검증 추가</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026.01.26 21:22:58</span>
+                    <span class="commit-title">
+                        <span class="commit-type docs">Docs</span>
+                        Add API documentation for code and client packages
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>- CommonCodeController 문서 생성 (tb_code_mngmn, tb_code CRUD 9개 API)
+- HrCodeController 문서 생성 (직책/직급 관리 10개 API)
+- ClientController 문서 생성 (고객사 조회/수정 3개 API)
+- LoginController에 selectClient API 섹션 추가 (2단계 로그인)
+- index.html 업데이트: Application Server 44→45 APIs, login 패키지 1→2 APIs</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026.01.26 17:30:00</span>
+                    <span class="commit-title">
+                        <span class="commit-type feat">Feat</span>
+                        Add ClientManageController API documentation
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>ClientManageController API 문서 추가 (Back-office 고객사 관리)
+
+[신규 파일]
+- docs/biz/client/clientManageController.html 생성
+  - getClientManageList: 고객사 목록 조회 (페이징)
+  - getClientManage: 고객사 상세 조회
+  - updClientManage: 고객사 정보 수정 (변경 이력 저장)
+
+[권한 정책]
+- OWNER: 모든 고객사 조회/수정 가능
+- ADMIN: 소속 고객사만 조회/수정 가능
+- 그 외 권한: 접근 불가
+
+[에러 코드 체계]
+- 31501: CLIENT_NOT_FOUND (고객사 정보를 찾을 수 없습니다)
+- 31502: CLIENT_ACCESS_DENIED (해당 고객사에 접근 권한이 없습니다)
+- 31503: CLIENT_MODIFY_DENIED (해당 고객사를 수정할 권한이 없습니다)
+
+[index.html 업데이트]
+- client 패키지에 ClientManageController 섹션 추가
+- Controller 수: 1 → 2 Controllers
+- API 수: 3 → 6 APIs</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026.01.21 14:13:29</span>
+                    <span class="commit-title">
+                        <span class="commit-type docs">Docs</span>
+                        Update AccountController API documentation
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>AccountController API 문서 업데이트
+
+[getFindId API 변경]
+- 응답 구조 변경: List&lt;String&gt; → List&lt;EmailInfoDto&gt;
+- emailInfoList 각 항목에 regDate(가입일, YYYYMMDD) 필드 추가
+- 동일 휴대전화번호로 가입된 복수 계정 구분 가능
+
+[resetPassword API 신규 추가]
+- 비밀번호 재설정 기능 (비밀번호 찾기 완료 단계)
+- 사전 조건: MobileAuthController에서 SMS 인증 완료 (authType=FIND_PW)
+- RSA 암호화된 새 비밀번호 + 확인 비밀번호 전송
+- 비밀번호 정책 검증, 기존 비밀번호 동일 여부 확인
+
+[API 수 변경]
+- AccountController: 1 API → 2 APIs
+- Application Server: 40 APIs → 41 APIs</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026.01.18 21:30:00</span>
+                    <span class="commit-title">
+                        <span class="commit-type refactor">Refactor</span>
+                        Apply Controller hierarchy structure (Server-Package-Controller)
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>Controller 목록 계층 구조 적용
+
+[계층 구조 변경]
+- 기존: Server → Subproject (api/biz) → Controller (flat)
+- 변경: Server → Package → Controller → API
+
+[Application Server]
+- 8 Packages, 8 Controllers, 37 APIs
+- 패키지별 구조화: account, auth, commoncode, hrcode, login, mobileAuth, mypage, signup
+
+[System Server]
+- 3 Packages, 4 Controllers, 15 APIs
+- 패키지별 구조화: health, commoncode, notification
+
+[count-badge 표기]
+- Server Level: [N Packages][N Controllers][N APIs]
+- Package Level: [N Controller(s)][N APIs]
+- Controller Level: [N APIs]</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026.01.18 20:45:00</span>
+                    <span class="commit-title">
+                        <span class="commit-type docs">Docs</span>
+                        Update docs with CommonCodeController, HrCodeController
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>API 문서 최신화 및 디자인 개선
+
+[디자인 변경]
+- 'Controller 목록' → 'Application Server API' 섹션으로 변경
+- System Server API와 동일한 그라데이션 헤더 디자인 적용 (어두운 톤)
+
+[Application Server - 신규 컨트롤러 추가]
+- CommonCodeController (9 APIs)
+  - 코드 그룹/항목 CRUD (조회: 인증필수, CUD: OWNER 전용)
+  - getCodeGroupList, getCodeGroup, getCodeItemList
+  - insCodeGroup, updCodeGroup, delCodeGroup
+  - insCodeItem, updCodeItem, delCodeItem
+- HrCodeController (12 APIs)
+  - 직책/직급 관리 (조회: 인증필수, CUD: OWNER+ADMIN)
+  - 직책: getOfficeDutyGroup, getOfficeDutyList, ins/upd/delOfficeDuty
+  - 직급: getPositionGroup, getPositionList, ins/upd/delPosition
+
+[System Server - API 구조 업데이트]
+- NotificationController → NotificationSseController + NotificationPollingController 분리
+- CommonCodeController API POST 방식으로 변경 반영
+  - 신규: /common-code/query (clientNo 기반 일괄 조회)
+  - 레거시: /common-codes/getByGroupCode, getByGroupCodeAndCode 등
+
+[컨트롤러 수 업데이트]
+- Application: 6 → 8 Controllers
+- System: 3 → 4 Controllers</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026.01.18 15:31:09</span>
+                    <span class="commit-title">
+                        <span class="commit-type feat">Feat</span>
+                        Add System API and exception documentation
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>System 서버 API 문서 및 예외 코드 페이지 추가
+
+[신규 디렉토리]
+- system/: System 서버 API 문서
+  - commoncode/: 공통코드 조회 API
+  - health/: 헬스체크 API
+  - notification/: 알림 API (SSE/Polling)
+- exception/: 예외 코드 문서
+  - exception.html: 전체 에러 코드 체계 문서
+- design/: 설계 문서
+  - redis-common-code-strategy.md: Redis 공통코드 캐시 전략
+
+[수정 파일]
+- index.html 대규모 업데이트
+  - Gateway 에러 섹션 아코디언(펼치기) 방식으로 변경
+  - Controller 계층 구조 표시 개선
+  - System 서버 API 섹션 추가
+  - 에러 코드 체계 1XXXX (Gateway), 3XXXX (Application) 반영</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026.01.16 10:16:10</span>
+                    <span class="commit-title">
+                        <span class="commit-type docs">Docs</span>
+                        Add MobileAuthController documentation
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>MobileAuthController API 문서 추가
+
+[신규 파일]
+- docs/biz/mobileAuth/mobileAuthController.html 생성
+  - insSmsAuth: SMS 인증번호 발송 (공개 API)
+  - updSmsAuthVerify: SMS 인증번호 검증 (공개 API)
+  - insAuthSmsAuth: SMS 인증번호 발송 (JWT 인증 필수)
+  - updAuthSmsAuthVerify: SMS 인증번호 검증 (JWT 인증 필수)
+
+- docs/README.md 생성
+  - 문서 프로젝트 개요 및 구조 설명
+  - URL 표기 규칙, 응답 구조, 오류 코드 체계 안내
+
+[수정 파일]
+- docs/index.html에 MobileAuthController 섹션 추가
+  - 4개 API 네비게이션 링크 추가
+  - "공개" + "일부 인증필수" 배지로 표시</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026.01.15 23:43:33</span>
+                    <span class="commit-title">
+                        <span class="commit-type docs">Docs</span>
+                        Rename getSmsAuthVerify to updSmsAuthVerify
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>SMS 인증번호 확인 API 이름 변경 반영
+
+[변경 사항]
+- accountController.html
+  - 아이디 찾기 프로세스 가이드의 API 참조 수정
+  - 인증키 안내 섹션의 API 참조 수정
+
+- signupController.html
+  - API 목차 링크 수정 (#getSmsAuthVerify → #updSmsAuthVerify)
+  - API 섹션 id 변경 (getSmsAuthVerify → updSmsAuthVerify)
+  - API URL 변경 (getSmsAuthVerify → updSmsAuthVerify)
+  - 회원가입 프로세스 가이드의 API 참조 수정
+  - 인증키 설명 텍스트 수정
+
+- index.html
+  - API 목록의 링크 및 URL 수정</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026-01-16</span>
+                    <span class="commit-title">
+                        <span class="commit-type docs">Docs</span>
+                        Add MypageController API documentation
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>마이페이지 API 문서 추가
+
+[신규 파일]
+- docs/biz/mypage/mypageController.html 생성
+  - 회원정보 변경 (updProfile) API
+  - 휴대전화번호 변경 3단계 API (insChangePhoneRequest, updChangePhoneVerify, updChangePhone)
+  - 비밀번호 변경 (updChangePassword) API
+  - 모든 API는 JWT 인증 필수 (로그인 상태에서만 호출 가능)
+
+[수정 파일]
+- docs/index.html에 MypageController 섹션 추가
+  - 5개 API 네비게이션 링크 추가
+  - "인증필수" 배지로 표시</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026-01-16</span>
+                    <span class="commit-title">
+                        <span class="commit-type docs">Docs</span>
+                        Unify response structure: {code, message, data}
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>Gateway와 Application의 응답 구조를 완전히 통일
+
+[통일된 응답 구조]
+- 성공: {"code": 1, "message": "OK", "data": {...}}
+- 실패: {"code": [오류코드], "message": "[오류메시지]", "data": null}
+
+[Frontend 처리 방식]
+- code == 1 이면 성공, 다음 단계 진행
+- code != 1 이면 실패, message를 사용자에게 노출
+
+[변경 내용]
+- 공통 응답 구조 설명 섹션 전면 수정
+- 모든 에러 응답 예시를 {code, message, data} 형식으로 업데이트
+- JWT/정책/라우팅/서버 오류 총 14건 응답 예시 수정</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026-01-15</span>
+                    <span class="commit-title">
+                        <span class="commit-type docs">Docs</span>
+                        Add AccountController API documentation
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>아이디 찾기(getFindId) API 문서 추가
+
+[신규 파일]
+- docs/biz/account/accountController.html 생성
+  - API URL, Method, Parameter, Response 정의
+  - BizException/Exception 에러 응답 케이스 문서화
+  - 아이디 찾기 프로세스 가이드 포함 (SMS 인증 연동)
+  - 복수 계정 조회 지원 안내
+
+[수정 파일]
+- docs/index.html에 AccountController 섹션 추가
+  - getFindId API 네비게이션 링크 추가
+  - 최종 수정일 2026-01-15로 업데이트</pre>
+                </div>
+            </li>
+            <li class="commit-item">
+                <div class="commit-header" onclick="toggleCommit(this)">
+                    <span class="commit-date">2026-01-14</span>
+                    <span class="commit-title">
+                        <span class="commit-type docs">Docs</span>
+                        Update Gateway error response to unified structure
+                    </span>
+                    <span class="commit-toggle">&#9660;</span>
+                </div>
+                <div class="commit-body">
+                    <pre>Gateway 오류 응답 문서를 통일된 JSON 구조로 업데이트
+
+[응답 구조 변경]
+- 기존: {result: "FAIL", error: {code, message}}
+- 변경: {code, message, data}
+- Application과 동일한 응답 구조로 통일
+
+[변경 내용]
+- 공통 응답 구조 설명 섹션 수정
+- JWT 인증 오류 (8001-8006) 응답 예시 업데이트
+- API 버전 정책 오류 (8101-8103) 응답 예시 업데이트
+- 라우팅 오류 (8201) 응답 예시 업데이트
+- 서버 오류 (8901, 8999) 응답 예시 업데이트</pre>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        function toggleCommit(element) {
+            const item = element.parentElement;
+            item.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthController - System Server API</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #27ae60;
+        }
+        h1 { color: #2c3e50; margin-bottom: 10px; }
+        .subtitle { color: #7f8c8d; font-size: 1.1em; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .api-section {
+            margin-bottom: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+        }
+        .api-section h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .api-info { margin-bottom: 20px; }
+        .api-info-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .api-info-label {
+            width: 120px;
+            font-weight: bold;
+            color: #7f8c8d;
+        }
+        .api-info-value {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+        }
+        .method {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #fff;
+            font-size: 0.9em;
+        }
+        .method.get { background-color: #3498db; }
+        .description { margin: 20px 0; }
+        .description h3 { color: #34495e; margin-bottom: 10px; }
+        .description ul { margin-left: 20px; }
+        .description li { margin-bottom: 5px; }
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            white-space: pre;
+            margin: 10px 0;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.75em;
+            margin-left: 5px;
+        }
+        .badge.public { background-color: #28a745; color: #fff; }
+        .badge.k8s { background-color: #326ce5; color: #fff; }
+        .info-box {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .info-box h4 { color: #155724; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">&larr; API 목록으로 돌아가기</a>
+
+        <header>
+            <h1>HealthController</h1>
+            <p class="subtitle">헬스체크 API - System Server</p>
+            <p style="margin-top: 10px; color: #7f8c8d;">
+                패키지: kr.fingate.ef.system.api.health<br>
+                Base Path: /health
+            </p>
+        </header>
+
+        <div class="info-box">
+            <h4>Kubernetes 연동</h4>
+            <p>이 API들은 Kubernetes의 Liveness/Readiness Probe에서 사용됩니다:</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li><strong>/health/live:</strong> livenessProbe - 컨테이너 재시작 여부 결정</li>
+                <li><strong>/health/ready:</strong> readinessProbe - 트래픽 수신 가능 여부 결정</li>
+            </ul>
+        </div>
+
+        <!-- 1. 기본 헬스체크 -->
+        <div class="api-section" id="health">
+            <h2>1. 서버 상태 확인 <span class="badge public">공개</span></h2>
+
+            <div class="api-info">
+                <div class="api-info-row">
+                    <span class="api-info-label">URL</span>
+                    <span class="api-info-value">/health</span>
+                </div>
+                <div class="api-info-row">
+                    <span class="api-info-label">Method</span>
+                    <span class="api-info-value"><span class="method get">GET</span></span>
+                </div>
+            </div>
+
+            <div class="description">
+                <h3>API 설명</h3>
+                <ul>
+                    <li><strong>목적:</strong> 서버의 기본 상태 및 정보 확인</li>
+                    <li><strong>선행 조건:</strong> 없음 (공개 API, Gateway 인증 불필요)</li>
+                    <li><strong>기대 효과:</strong> 서버 동작 여부와 기본 정보 확인</li>
+                </ul>
+            </div>
+
+            <h3>성공 응답</h3>
+            <div class="code-block">{
+    "code": 1,
+    "message": "OK",
+    "data": {
+        "status": "UP",
+        "timestamp": "2026-01-18T12:00:00",
+        "service": "platform"
+    }
+}</div>
+        </div>
+
+        <!-- 2. Readiness 체크 -->
+        <div class="api-section" id="readiness">
+            <h2>2. Readiness 체크 <span class="badge public">공개</span> <span class="badge k8s">K8s</span></h2>
+
+            <div class="api-info">
+                <div class="api-info-row">
+                    <span class="api-info-label">URL</span>
+                    <span class="api-info-value">/health/ready</span>
+                </div>
+                <div class="api-info-row">
+                    <span class="api-info-label">Method</span>
+                    <span class="api-info-value"><span class="method get">GET</span></span>
+                </div>
+            </div>
+
+            <div class="description">
+                <h3>API 설명</h3>
+                <ul>
+                    <li><strong>목적:</strong> 서버가 요청을 처리할 준비가 되었는지 확인</li>
+                    <li><strong>선행 조건:</strong> 없음</li>
+                    <li><strong>Kubernetes:</strong> readinessProbe에서 사용</li>
+                    <li><strong>기대 효과:</strong> READY가 아닌 경우 로드밸런서에서 트래픽 제외</li>
+                </ul>
+            </div>
+
+            <h3>성공 응답</h3>
+            <div class="code-block">{
+    "code": 1,
+    "message": "OK",
+    "data": {
+        "status": "READY"
+    }
+}</div>
+        </div>
+
+        <!-- 3. Liveness 체크 -->
+        <div class="api-section" id="liveness">
+            <h2>3. Liveness 체크 <span class="badge public">공개</span> <span class="badge k8s">K8s</span></h2>
+
+            <div class="api-info">
+                <div class="api-info-row">
+                    <span class="api-info-label">URL</span>
+                    <span class="api-info-value">/health/live</span>
+                </div>
+                <div class="api-info-row">
+                    <span class="api-info-label">Method</span>
+                    <span class="api-info-value"><span class="method get">GET</span></span>
+                </div>
+            </div>
+
+            <div class="description">
+                <h3>API 설명</h3>
+                <ul>
+                    <li><strong>목적:</strong> 서버가 살아있는지 확인</li>
+                    <li><strong>선행 조건:</strong> 없음</li>
+                    <li><strong>Kubernetes:</strong> livenessProbe에서 사용</li>
+                    <li><strong>기대 효과:</strong> ALIVE가 아닌 경우 컨테이너 재시작</li>
+                </ul>
+            </div>
+
+            <h3>성공 응답</h3>
+            <div class="code-block">{
+    "code": 1,
+    "message": "OK",
+    "data": {
+        "status": "ALIVE"
+    }
+}</div>
+        </div>
+
+        <footer style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center; color: #7f8c8d;">
+            <p>EF Backend - System Server API Documentation</p>
+        </footer>
+    </div>
+</body>
+</html>

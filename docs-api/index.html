@@ -1,0 +1,2058 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API 문서 - EF Backend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #3498db;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        .overview {
+            background-color: #e8f4f8;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .overview h2 {
+            color: #2980b9;
+            margin-bottom: 15px;
+        }
+        .overview ul {
+            margin-left: 20px;
+        }
+        .overview li {
+            margin-bottom: 8px;
+        }
+        .api-index {
+            margin-top: 30px;
+        }
+        .api-index h2 {
+            color: #34495e;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        .method {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #fff;
+            font-size: 0.85em;
+            min-width: 60px;
+            text-align: center;
+        }
+        .method.post {
+            background-color: #27ae60;
+        }
+        .method.get {
+            background-color: #3498db;
+        }
+        .api-list a:visited .method {
+            color: #fff;
+        }
+        .server-divider {
+            margin: 50px 0 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            color: #fff;
+            text-align: center;
+        }
+        .server-divider h2 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .server-divider p {
+            margin-top: 5px;
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.75em;
+            margin-left: 5px;
+        }
+        .badge.k8s {
+            background-color: #326ce5;
+            color: #fff;
+        }
+        .badge.sse {
+            background-color: #9b59b6;
+            color: #fff;
+        }
+        .api-url {
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+            flex: 1;
+        }
+        .api-list a:visited .api-url {
+            color: #2c3e50;
+        }
+        .api-desc {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .api-list a:visited .api-desc {
+            color: #7f8c8d;
+        }
+        .gateway-info {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .gateway-info h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        .gateway-info code {
+            background-color: #ffeeba;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+        .version-info {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .version-info h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f8f9fa;
+        }
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .public-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: #28a745;
+            color: #fff;
+            border-radius: 3px;
+            font-size: 0.75em;
+            margin-left: 10px;
+        }
+        .security-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: #dc3545;
+            color: #fff;
+            border-radius: 3px;
+            font-size: 0.75em;
+            margin-left: 10px;
+        }
+        .gateway-error-section {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+        .gateway-error-section h2 {
+            color: #c0392b;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e74c3c;
+        }
+        .error-category {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .error-category-header {
+            padding: 12px 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: filter 0.2s ease;
+        }
+        .error-category-header:hover {
+            filter: brightness(1.1);
+        }
+        .error-category-header.auth {
+            background-color: #e74c3c;
+        }
+        .error-category-header.policy {
+            background-color: #9b59b6;
+        }
+        .error-category-header.route {
+            background-color: #3498db;
+        }
+        .error-category-header.server {
+            background-color: #34495e;
+        }
+        .error-category-header h3 {
+            margin: 0;
+            font-size: 1em;
+        }
+        .error-category-header .toggle-icon {
+            margin-left: auto;
+            font-size: 1em;
+            transition: transform 0.3s ease;
+        }
+        .error-category-header.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+        .http-status {
+            display: inline-block;
+            padding: 3px 8px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+        .error-category-body {
+            padding: 20px;
+            display: none;
+        }
+        .error-category-body.show {
+            display: block;
+        }
+        .error-case {
+            background-color: #f8f9fa;
+            border-left: 4px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+        }
+        .error-case:last-child {
+            margin-bottom: 0;
+        }
+        .error-case h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .error-case p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .error-case .response-example {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px 15px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+        }
+        .error-case-number {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background-color: #3498db;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        .solution-tip {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        .solution-tip strong {
+            color: #155724;
+        }
+        .history-link {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 12px 20px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .history-link.recent {
+            background-color: #fff3cd;
+            border: 2px solid #ffc107;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.3);
+        }
+        .history-link.recent::before {
+            content: "NEW";
+            background-color: #dc3545;
+            color: #fff;
+            font-size: 0.7em;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-right: 10px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .history-link a {
+            color: #495057;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .history-link.recent a {
+            color: #856404;
+            font-weight: 600;
+        }
+        .history-link a:hover {
+            color: #3498db;
+        }
+        .history-link.recent a:hover {
+            color: #d39e00;
+        }
+        .history-link .history-icon {
+            font-size: 1.2em;
+        }
+        .history-link .history-date {
+            color: #6c757d;
+            font-size: 0.85em;
+        }
+        .history-link.recent .history-date {
+            color: #856404;
+            font-weight: bold;
+        }
+        .history-link .history-title {
+            font-weight: 500;
+        }
+        .history-link .history-arrow {
+            color: #6c757d;
+        }
+        .history-link.recent .history-arrow {
+            color: #856404;
+        }
+
+        /* Exception Link */
+        .exception-link {
+            background: linear-gradient(135deg, #ff6b6b 0%, #c0392b 100%);
+            border: none;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(192, 57, 43, 0.3);
+        }
+        .exception-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(192, 57, 43, 0.4);
+        }
+        .exception-link a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+        .exception-link .exception-icon {
+            font-size: 1.5em;
+        }
+        .exception-link .exception-title {
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+        .exception-link .exception-desc {
+            font-size: 0.85em;
+            opacity: 0.9;
+            margin-left: 10px;
+        }
+        .exception-link .exception-arrow {
+            color: #fff;
+            font-size: 1.2em;
+        }
+
+        /* Hierarchical Controller Structure */
+        .project-block {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .project-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #fff;
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+        .project-header:hover {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+        }
+        .project-header h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .project-header .count-badge {
+            background-color: rgba(255,255,255,0.2);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: normal;
+        }
+        .project-header .toggle-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+        .project-header.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+        .project-content {
+            display: none;
+            padding: 0;
+        }
+        .project-content.show {
+            display: block;
+        }
+        .project-link {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 2px 8px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            font-size: 0.75em;
+            color: #fff;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .project-link:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        .subproject-block {
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .subproject-block:last-child {
+            border-bottom: none;
+        }
+        .subproject-header {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            padding: 12px 20px;
+            padding-left: 40px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+        .subproject-header:hover {
+            background-color: #d5dbdb;
+        }
+        .subproject-header h4 {
+            margin: 0;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .subproject-header .count-badge {
+            background-color: #3498db;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75em;
+            font-weight: normal;
+        }
+        .subproject-header .toggle-icon {
+            font-size: 1em;
+            color: #7f8c8d;
+            transition: transform 0.3s ease;
+        }
+        .subproject-header.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+        .subproject-content {
+            display: none;
+            background-color: #fff;
+        }
+        .subproject-content.show {
+            display: block;
+        }
+        .subproject-link {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 1px 6px;
+            background-color: #bdc3c7;
+            border-radius: 3px;
+            font-size: 0.7em;
+            color: #2c3e50;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .subproject-link:hover {
+            background-color: #95a5a6;
+            color: #fff;
+        }
+
+        .biz-block {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .biz-block:last-child {
+            border-bottom: none;
+        }
+        .biz-header {
+            background-color: #f8f9fa;
+            padding: 10px 20px;
+            padding-left: 60px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s ease;
+        }
+        .biz-header:hover {
+            background-color: #e9ecef;
+        }
+        .biz-header h5 {
+            margin: 0;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .biz-header .count-badge {
+            background-color: #27ae60;
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 0.7em;
+            font-weight: normal;
+        }
+        .biz-header .toggle-icon {
+            font-size: 0.9em;
+            color: #adb5bd;
+            transition: transform 0.3s ease;
+        }
+        .biz-header.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+        .biz-content {
+            display: none;
+            background-color: #fff;
+            padding-left: 60px;
+        }
+        .biz-content.show {
+            display: block;
+        }
+
+        .api-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .api-list li {
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .api-list li:last-child {
+            border-bottom: none;
+        }
+        .api-list a {
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+            transition: background-color 0.2s;
+        }
+        .api-list a:visited {
+            color: inherit;
+        }
+        .api-list a:hover {
+            background-color: #e8f4f8;
+        }
+        .api-list a::after {
+            content: '\2192';
+            margin-left: auto;
+            color: #3498db;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .api-list a:hover::after {
+            opacity: 1;
+        }
+
+        .controller-detail-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.85em;
+            margin: 10px 15px 15px 15px;
+            transition: background-color 0.3s;
+        }
+        .controller-detail-link:hover {
+            background-color: #2980b9;
+        }
+
+        /* Modal Popup Styles */
+        .api-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .api-modal-overlay.show {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .api-modal {
+            background-color: #fff;
+            border-radius: 10px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            margin: 20px 0;
+            position: relative;
+        }
+        .api-modal-header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: #fff;
+            padding: 20px 25px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .api-modal-header h2 {
+            margin: 0;
+            font-size: 1.3em;
+        }
+        .api-modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px 12px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .api-modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .api-modal-body {
+            padding: 25px;
+        }
+        .api-modal-loading {
+            text-align: center;
+            padding: 50px;
+            color: #7f8c8d;
+        }
+        .api-modal-loading::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 4px solid #ecf0f1;
+            border-top-color: #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .api-modal-error {
+            text-align: center;
+            padding: 50px;
+            color: #e74c3c;
+        }
+        .api-modal-iframe {
+            width: 100%;
+            height: 70vh;
+            border: none;
+        }
+        .popup-link {
+            cursor: pointer;
+        }
+        .popup-link,
+        .popup-link:visited,
+        .popup-link:active {
+            color: inherit;
+        }
+        .popup-link:hover {
+            background-color: #e8f4f8;
+        }
+        /* API 확정 배지 */
+        .confirmed-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-left: 8px;
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: #fff;
+            box-shadow: 0 1px 3px rgba(39, 174, 96, 0.3);
+        }
+        .pending-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-left: 8px;
+            background-color: #f39c12;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EF Backend API 문서</h1>
+            <p class="subtitle">Application Server & System Server API 레퍼런스</p>
+        </header>
+
+        <div class="history-link" id="historyLink" data-date="2026-03-06">
+            <a href="history/commit-history.html">
+                <span class="history-icon">&#128196;</span>
+                <span class="history-date">2026.03.06</span>
+                <span class="history-title">API 팝업 모달 전환 및 확정 배지 시스템 구현</span>
+            </a>
+            <span class="history-arrow">&rarr;</span>
+        </div>
+
+        <!-- Exception Reference Link -->
+        <div class="exception-link">
+            <a href="exception/exception.html">
+                <span class="exception-icon">&#9888;</span>
+                <span class="exception-title">Exception Reference</span>
+                <span class="exception-desc">전체 에러 코드, 메시지, 발생 케이스 확인</span>
+            </a>
+            <span class="exception-arrow">&rarr;</span>
+        </div>
+
+        <div class="gateway-info">
+            <h3>Gateway 접근 정보</h3>
+            <p>모든 API는 Gateway를 통해 접근해야 합니다. URL 패턴은 다음과 같습니다:</p>
+            <p style="margin-top: 10px;">
+                <code>/{clientType}/{version}/{endpoint}</code>
+            </p>
+            <table>
+                <tr>
+                    <th>파라미터</th>
+                    <th>값</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td><code>{clientType}</code></td>
+                    <td>app, web</td>
+                    <td>클라이언트 유형 식별자</td>
+                </tr>
+                <tr>
+                    <td><code>{version}</code></td>
+                    <td>v1, v2, ...</td>
+                    <td>API 버전</td>
+                </tr>
+            </table>
+            <p style="margin-top: 10px;"><strong>Gateway 포트:</strong> 9999</p>
+            <p style="margin-top: 5px; font-size: 0.9em; color: #666;">
+                <em>참고: Gateway가 내부적으로 <code>/app/v1/**</code> &rarr; <code>/api/v1/**</code>로 URL을 변환합니다.</em>
+            </p>
+        </div>
+
+        <div class="version-info">
+            <h3>지원 API 버전</h3>
+            <ul>
+                <li><strong>v1</strong> - 현재 안정 버전</li>
+                <li><strong>v2</strong> - 확장 기능 지원</li>
+            </ul>
+        </div>
+
+        <div class="overview">
+            <h2>API 개요</h2>
+            <ul>
+                <li>모든 API는 <strong>POST</strong> 메서드만 사용합니다</li>
+                <li>요청 및 응답 본문은 <strong>JSON</strong> 형식입니다</li>
+                <li>인증은 Gateway에서 <strong>JWT</strong>를 통해 처리됩니다</li>
+                <li>공개 API (회원가입, 로그인, 인증)는 JWT 인증이 필요하지 않습니다</li>
+                <li><strong>로그인 시 비밀번호는 RSA 공개키로 암호화</strong>하여 전송해야 합니다</li>
+            </ul>
+        </div>
+
+        <!-- Gateway Exception Section -->
+        <div class="gateway-error-section">
+            <div class="project-block">
+                <div class="project-header" onclick="toggleProject(this)" style="background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);">
+                    <h3>
+                        Gateway 오류 응답
+                        <span class="count-badge">4 Categories</span>
+                    </h3>
+                    <span class="toggle-icon">&#9660;</span>
+                </div>
+                <div class="project-content">
+                    <div style="padding: 20px;">
+                        <p style="margin-bottom: 15px; color: #666;">
+                            Gateway에서 발생할 수 있는 오류 케이스입니다. Application API 호출 전에 Gateway 단계에서 차단될 수 있습니다.
+                            <br><strong>모든 Gateway 오류는 Application과 동일한 JSON 응답 구조로 반환됩니다.</strong>
+                        </p>
+
+                        <!-- 공통 응답 구조 설명 -->
+                        <div style="background-color: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                            <h4 style="margin-bottom: 10px; color: #495057;">통일된 응답 구조</h4>
+                            <p style="margin-bottom: 10px; color: #666; font-size: 0.9em;">성공/실패 여부와 관계없이 모든 API는 동일한 구조로 응답합니다.</p>
+                            <div class="response-example">// 성공 (code == 1)
+{
+    "code": 1,
+    "message": "OK",
+    "data": { ... }
+}
+
+// 실패 (code != 1)
+{
+    "code": 에러코드(int),
+    "message": "에러 메시지",
+    "data": null
+}</div>
+                            <p style="margin-top: 10px; color: #666; font-size: 0.9em;"><strong>Frontend 처리:</strong> code == 1이면 성공, code != 1이면 message를 사용자에게 노출</p>
+                        </div>
+
+                        <!-- 1. JWT 인증 오류 (11XXX) -->
+                        <div class="error-category">
+                            <div class="error-category-header auth" onclick="toggleErrorCategory(this)">
+                                <h3>JWT 인증 오류 (11XXX)</h3>
+                                <span class="http-status">HTTP 401 Unauthorized</span>
+                                <span class="toggle-icon">&#9660;</span>
+                            </div>
+                            <div class="error-category-body">
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">1</span> Authorization 헤더 누락 (code: 11001)</h4>
+                                    <p>요청에 <code>Authorization</code> 헤더가 없거나 비어있는 경우</p>
+                                    <div class="response-example">{"code": 11001, "message": "인증 토큰이 없습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> 로그인 API로 JWT 토큰을 발급받은 후, <code>Authorization: Bearer {token}</code> 헤더를 추가하세요.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">2</span> Bearer 토큰 형식 오류 (code: 11002)</h4>
+                                    <p>Authorization 헤더가 <code>Bearer </code>로 시작하지 않거나 토큰 형식이 잘못된 경우</p>
+                                    <div class="response-example">{"code": 11002, "message": "토큰 형식이 올바르지 않습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> 헤더 값이 <code>Bearer {토큰}</code> 형식인지 확인하세요.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">3</span> JWT 토큰 만료 (code: 11003)</h4>
+                                    <p>토큰의 유효 기간이 지난 경우 (exp claim 초과)</p>
+                                    <div class="response-example">{"code": 11003, "message": "토큰이 만료되었습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> 로그인 API를 다시 호출하여 새 토큰을 발급받으세요.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">4</span> JWT 서명 검증 실패 (code: 11004)</h4>
+                                    <p>토큰이 위조되었거나 잘못된 secret key로 생성된 경우</p>
+                                    <div class="response-example">{"code": 11004, "message": "토큰 서명이 유효하지 않습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> 로그인 API에서 발급받은 정상 토큰을 사용하세요.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">5</span> JWT Issuer 불일치 (code: 11005)</h4>
+                                    <p>토큰의 발급자(iss) 클레임이 일치하지 않는 경우</p>
+                                    <div class="response-example">{"code": 11005, "message": "토큰 발급자가 유효하지 않습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> 다른 시스템에서 발급된 토큰은 사용할 수 없습니다.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">6</span> JWT Audience 불일치 (code: 11006)</h4>
+                                    <p>토큰의 대상(aud) 클레임이 일치하지 않는 경우</p>
+                                    <div class="response-example">{"code": 11006, "message": "토큰 대상이 유효하지 않습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> 올바른 대상으로 발급된 토큰을 사용하세요.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. API 버전 정책 오류 (12XXX) -->
+                        <div class="error-category">
+                            <div class="error-category-header policy" onclick="toggleErrorCategory(this)">
+                                <h3>API 버전 정책 오류 (12XXX)</h3>
+                                <span class="http-status">HTTP 403 / 405 / 410</span>
+                                <span class="toggle-icon">&#9660;</span>
+                            </div>
+                            <div class="error-category-body">
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">1</span> 클라이언트-API 조합 차단 (code: 12001)</h4>
+                                    <p>특정 클라이언트 타입에서 해당 API 버전 사용이 금지된 경우 (HTTP 403)</p>
+                                    <div class="response-example">{"code": 12001, "message": "해당 API 버전은 차단되었습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> 해당 클라이언트 타입에서 지원하는 API 버전을 사용하세요.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">2</span> 읽기 전용 모드 (code: 12002)</h4>
+                                    <p>해당 API 버전이 읽기 전용 모드로 전환된 경우 (HTTP 405)</p>
+                                    <div class="response-example">{"code": 12002, "message": "해당 API 버전은 읽기 전용입니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> 새 버전의 API를 사용하거나, GET/HEAD/OPTIONS 요청만 가능합니다.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">3</span> 서비스 종료된 버전 (code: 12003)</h4>
+                                    <p>해당 API 버전이 완전히 종료된 경우 (HTTP 410)</p>
+                                    <div class="response-example">{"code": 12003, "message": "해당 API 버전의 서비스가 종료되었습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> 현재 지원되는 API 버전으로 마이그레이션하세요.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">4</span> 지원하지 않는 버전 (code: 12004)</h4>
+                                    <p>요청한 API 버전을 지원하지 않는 경우</p>
+                                    <div class="response-example">{"code": 12004, "message": "지원하지 않는 API 버전입니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> 지원되는 API 버전(v1, v2)을 사용하세요.</div>
+                                </div>
+                                <div class="error-case" style="background-color: #fff3cd; border-left-color: #ffc107;">
+                                    <h4><span class="error-case-number" style="background-color: #ffc107;">!</span> Deprecation 경고 (WARNING)</h4>
+                                    <p>해당 API 버전이 곧 종료될 예정임을 알리는 경고 (요청은 정상 처리됨)</p>
+                                    <div class="response-example">HTTP/1.1 200 OK | X-Gateway-Warning: API_VERSION_DEPRECATED</div>
+                                    <div class="solution-tip"><strong>권장:</strong> 새 버전으로 마이그레이션을 준비하세요.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. 라우팅 오류 (13XXX) -->
+                        <div class="error-category">
+                            <div class="error-category-header route" onclick="toggleErrorCategory(this)">
+                                <h3>라우팅 오류 (13XXX)</h3>
+                                <span class="http-status">HTTP 404 Not Found</span>
+                                <span class="toggle-icon">&#9660;</span>
+                            </div>
+                            <div class="error-category-body">
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">1</span> 존재하지 않는 경로 (code: 13001)</h4>
+                                    <p>등록되지 않은 API 엔드포인트로 요청한 경우</p>
+                                    <div class="response-example">{"code": 13001, "message": "요청한 경로를 찾을 수 없습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> API 문서에서 정확한 엔드포인트 URL을 확인하세요.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">2</span> 잘못된 클라이언트 타입 (code: 13002)</h4>
+                                    <p>허용되지 않은 클라이언트 타입으로 요청한 경우 (예: /admin/v1/...)</p>
+                                    <div class="response-example">{"code": 13002, "message": "허용되지 않은 클라이언트 타입입니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> 허용된 클라이언트 타입(<code>app</code>, <code>web</code>)을 사용하세요.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">3</span> Gateway 우회 시도</h4>
+                                    <p>시스템 경로를 통해 직접 접근을 시도한 경우</p>
+                                    <div class="response-example">{"code": 13001, "message": "요청한 경로를 찾을 수 없습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>해결:</strong> <code>/api/...</code>가 아닌 <code>/app/...</code> 또는 <code>/web/...</code> 경로를 사용하세요.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. 서버 오류 (19XXX) -->
+                        <div class="error-category">
+                            <div class="error-category-header server" onclick="toggleErrorCategory(this)">
+                                <h3>서버 오류 (19XXX)</h3>
+                                <span class="http-status">HTTP 500 / 503</span>
+                                <span class="toggle-icon">&#9660;</span>
+                            </div>
+                            <div class="error-category-body">
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">1</span> Application 서버 연결 실패 (code: 19001)</h4>
+                                    <p>백엔드 Application 서버에 연결할 수 없는 경우 (HTTP 503)</p>
+                                    <div class="response-example">{"code": 19001, "message": "백엔드 서버에 연결할 수 없습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>원인:</strong> Application 서버가 다운되었거나 네트워크 문제가 발생했습니다.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">2</span> System 서비스 일시 불가 (code: 19002)</h4>
+                                    <p>시스템 서비스가 일시적으로 사용 불가능한 경우 (HTTP 503)</p>
+                                    <div class="response-example">{"code": 19002, "message": "시스템 서비스가 일시적으로 사용 불가합니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>원인:</strong> 시스템 점검 또는 일시적인 과부하 상태입니다.</div>
+                                </div>
+                                <div class="error-case">
+                                    <h4><span class="error-case-number">3</span> Gateway 내부 오류 (code: 19999)</h4>
+                                    <p>Gateway 처리 중 예기치 않은 오류가 발생한 경우 (HTTP 500)</p>
+                                    <div class="response-example">{"code": 19999, "message": "Gateway 내부 오류가 발생했습니다.", "data": null}</div>
+                                    <div class="solution-tip"><strong>원인:</strong> 서버 관리자에게 문의하세요.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gateway 에러 코드 요약 테이블 -->
+                        <div style="margin-top: 20px;">
+                            <h4 style="margin-bottom: 15px; color: #2c3e50;">Gateway 에러 코드 요약 (1XXXX)</h4>
+                            <table>
+                                <tr><th>코드 범위</th><th>카테고리</th><th>설명</th></tr>
+                                <tr><td>11001 ~ 11006</td><td>JWT 인증 오류</td><td>토큰 누락, 형식 오류, 만료, 서명 검증 실패 등</td></tr>
+                                <tr><td>12001 ~ 12004</td><td>API 버전 정책 오류</td><td>버전 차단, 읽기 전용, 서비스 종료 등</td></tr>
+                                <tr><td>13001 ~ 13002</td><td>라우팅 오류</td><td>경로 없음, 잘못된 클라이언트 타입</td></tr>
+                                <tr><td>19001 ~ 19999</td><td>서버 오류</td><td>백엔드 연결 실패, 시스템 불가, 내부 오류</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Server Section -->
+        <div class="server-divider" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
+            <h2>Application Server API</h2>
+            <p>비즈니스 로직 전담 서버 (로그인, 회원가입, 마이페이지, 코드 관리)</p>
+        </div>
+
+        <!-- Hierarchical Controller Section -->
+        <div class="api-index">
+            <!-- Application Server -->
+            <div class="project-block">
+                <div class="project-header" onclick="toggleProject(this)">
+                    <h3>
+                        Application Server
+                        <span class="count-badge">10 Packages</span>
+                        <span class="count-badge">11 Controllers</span>
+                        <span class="count-badge">46 APIs</span>
+                    </h3>
+                    <span class="toggle-icon">&#9660;</span>
+                </div>
+                <div class="project-content">
+
+                    <!-- account package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                account
+                                <span class="count-badge">1 Controller</span>
+                                <span class="count-badge">2 APIs</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        AccountController
+                                        <span class="public-badge">공개</span>
+                                        <span class="count-badge">2 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/account/accountController.html', 'getFindId', '아이디(이메일) 찾기')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/account/getFindId</span>
+                                                <span class="api-desc">아이디(이메일) 찾기</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/account/accountController.html', 'resetPassword', '비밀번호 재설정')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/account/resetPassword</span>
+                                                <span class="api-desc">비밀번호 재설정</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="biz/account/accountController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- auth package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                auth
+                                <span class="count-badge">1 Controller</span>
+                                <span class="count-badge">1 API</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        AuthController
+                                        <span class="public-badge">공개</span>
+                                        <span class="security-badge">보안</span>
+                                        <span class="count-badge">1 API</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/auth/authController.html', 'getPublicKey', 'RSA 공개키 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/auth/getPublicKey</span>
+                                                <span class="api-desc">RSA 공개키 조회</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="biz/auth/authController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- code package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                code
+                                <span class="count-badge">2 Controllers</span>
+                                <span class="count-badge">19 APIs</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <!-- CommonCodeController -->
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        CommonCodeController
+                                        <span class="security-badge">인증필수</span>
+                                        <span class="security-badge">OWNER+ADMIN</span>
+                                        <span class="count-badge">9 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/commonCodeController.html', 'getCodeMngmnList', '코드 그룹 목록 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/code/getCodeMngmnList</span>
+                                                <span class="api-desc">코드 그룹 목록 조회 (tb_code_mngmn)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/commonCodeController.html', 'getCodeMngmn', '코드 그룹 단건 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/code/getCodeMngmn</span>
+                                                <span class="api-desc">코드 그룹 단건 조회 (tb_code_mngmn)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/commonCodeController.html', 'getCodeList', '코드 목록 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/code/getCodeList</span>
+                                                <span class="api-desc">코드 목록 조회 (tb_code)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/commonCodeController.html', 'insCodeMngmn', '코드 그룹 등록')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/code/insCodeMngmn</span>
+                                                <span class="api-desc">코드 그룹 등록 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/commonCodeController.html', 'updCodeMngmn', '코드 그룹 수정')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/code/updCodeMngmn</span>
+                                                <span class="api-desc">코드 그룹 수정 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/commonCodeController.html', 'delCodeMngmn', '코드 그룹 삭제')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/code/delCodeMngmn</span>
+                                                <span class="api-desc">코드 그룹 삭제 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/commonCodeController.html', 'insCode', '코드 등록')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/code/insCode</span>
+                                                <span class="api-desc">코드 등록 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/commonCodeController.html', 'updCode', '코드 수정')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/code/updCode</span>
+                                                <span class="api-desc">코드 수정 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/commonCodeController.html', 'delCode', '코드 삭제')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/code/delCode</span>
+                                                <span class="api-desc">코드 삭제 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="biz/code/commonCodeController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                            <!-- HrCodeController -->
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        HrCodeController
+                                        <span class="security-badge">인증필수</span>
+                                        <span class="security-badge">OWNER+ADMIN</span>
+                                        <span class="count-badge">10 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/hrCodeController.html', 'getCodeMngmnOfficeDuty', '직책 그룹 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/hrCode/getCodeMngmnOfficeDuty</span>
+                                                <span class="api-desc">직책 그룹 조회 (tb_code_mngmn)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/hrCodeController.html', 'getCodeListOfficeDuty', '직책 목록 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/hrCode/getCodeListOfficeDuty</span>
+                                                <span class="api-desc">직책 목록 조회 (tb_code)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/hrCodeController.html', 'insCodeOfficeDuty', '직책 등록')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/hrCode/insCodeOfficeDuty</span>
+                                                <span class="api-desc">직책 등록 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/hrCodeController.html', 'updCodeOfficeDuty', '직책 수정')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/hrCode/updCodeOfficeDuty</span>
+                                                <span class="api-desc">직책 수정 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/hrCodeController.html', 'delCodeOfficeDuty', '직책 삭제')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/hrCode/delCodeOfficeDuty</span>
+                                                <span class="api-desc">직책 삭제 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/hrCodeController.html', 'getCodeMngmnPosition', '직급 그룹 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/hrCode/getCodeMngmnPosition</span>
+                                                <span class="api-desc">직급 그룹 조회 (tb_code_mngmn)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/hrCodeController.html', 'getCodeListPosition', '직급 목록 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/hrCode/getCodeListPosition</span>
+                                                <span class="api-desc">직급 목록 조회 (tb_code)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/hrCodeController.html', 'insCodePosition', '직급 등록')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/hrCode/insCodePosition</span>
+                                                <span class="api-desc">직급 등록 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/hrCodeController.html', 'updCodePosition', '직급 수정')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/hrCode/updCodePosition</span>
+                                                <span class="api-desc">직급 수정 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/code/hrCodeController.html', 'delCodePosition', '직급 삭제')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/hrCode/delCodePosition</span>
+                                                <span class="api-desc">직급 삭제 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="biz/code/hrCodeController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- client package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                client
+                                <span class="count-badge">2 Controllers</span>
+                                <span class="count-badge">6 APIs</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        ClientController
+                                        <span class="security-badge">인증필수</span>
+                                        <span class="security-badge">권한별</span>
+                                        <span class="count-badge">3 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/client/clientController.html', 'getClientList', '고객사 목록 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/client/getClientList</span>
+                                                <span class="api-desc">고객사 목록 조회 (OWNER/ADMIN/USER)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/client/clientController.html', 'getClient', '고객사 상세 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/client/getClient</span>
+                                                <span class="api-desc">고객사 상세 조회 (OWNER/ADMIN/USER)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/client/clientController.html', 'updClient', '고객사 정보 수정')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/client/updClient</span>
+                                                <span class="api-desc">고객사 정보 수정 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="biz/client/clientController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        ClientManageController
+                                        <span class="security-badge">인증필수</span>
+                                        <span class="security-badge">Back-office</span>
+                                        <span class="count-badge">3 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/client/clientManageController.html', 'getClientManageList', '고객사 목록 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/client/manage/getClientManageList</span>
+                                                <span class="api-desc">고객사 목록 조회 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/client/clientManageController.html', 'getClientManage', '고객사 상세 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/client/manage/getClientManage</span>
+                                                <span class="api-desc">고객사 상세 조회 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/client/clientManageController.html', 'updClientManage', '고객사 정보 수정')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/client/manage/updClientManage</span>
+                                                <span class="api-desc">고객사 정보 수정 (OWNER/ADMIN)</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="biz/client/clientManageController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- login package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                login
+                                <span class="count-badge">1 Controller</span>
+                                <span class="count-badge">4 APIs</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        LoginController
+                                        <span class="public-badge">공개</span>
+                                        <span class="count-badge">4 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/login/loginController.html', 'login', '사용자 로그인')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/login</span>
+                                                <span class="api-desc">사용자 로그인 및 JWT 토큰 발급</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/login/loginController.html', 'selectClient', '고객사 선택')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/login/selectClient</span>
+                                                <span class="api-desc">고객사 선택 (2단계 로그인)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/login/loginController.html', 'context', '사용자 컨텍스트 조회')">
+                                                <span class="method get">GET</span>
+                                                <span class="api-url">/{clientType}/{version}/login/context</span>
+                                                <span class="api-desc">사용자 컨텍스트 조회</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/login/loginController.html', 'switchClient', '고객사 전환')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/login/switchClient</span>
+                                                <span class="api-desc">고객사 전환</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="biz/login/loginController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- mobileAuth package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                mobileAuth
+                                <span class="count-badge">1 Controller</span>
+                                <span class="count-badge">4 APIs</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        MobileAuthController
+                                        <span class="public-badge">공개</span>
+                                        <span class="security-badge">일부 인증필수</span>
+                                        <span class="count-badge">4 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/mobileAuth/mobileAuthController.html', 'insSmsAuth', 'SMS 인증번호 발송')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/mobileAuth/insSmsAuth</span>
+                                                <span class="api-desc">SMS 인증번호 발송 (공개)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/mobileAuth/mobileAuthController.html', 'updSmsAuthVerify', 'SMS 인증번호 검증')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/mobileAuth/updSmsAuthVerify</span>
+                                                <span class="api-desc">SMS 인증번호 검증 (공개)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/mobileAuth/mobileAuthController.html', 'insAuthSmsAuth', 'SMS 인증번호 발송')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/mobileAuth/insAuthSmsAuth</span>
+                                                <span class="api-desc">SMS 인증번호 발송 (인증필수)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/mobileAuth/mobileAuthController.html', 'updAuthSmsAuthVerify', 'SMS 인증번호 검증')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/mobileAuth/updAuthSmsAuthVerify</span>
+                                                <span class="api-desc">SMS 인증번호 검증 (인증필수)</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="biz/mobileAuth/mobileAuthController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- mypage package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                mypage
+                                <span class="count-badge">1 Controller</span>
+                                <span class="count-badge">3 APIs</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        MypageController
+                                        <span class="security-badge">인증필수</span>
+                                        <span class="count-badge">3 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/mypage/mypageController.html', 'updProfile', '회원정보 변경')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/mypage/updProfile</span>
+                                                <span class="api-desc">회원정보 변경 (이름, 성별)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/mypage/mypageController.html', 'updChangePhone', '휴대전화번호 변경')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/mypage/updChangePhone</span>
+                                                <span class="api-desc">휴대전화번호 변경 - 최종 변경</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/mypage/mypageController.html', 'updChangePassword', '비밀번호 변경')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/mypage/updChangePassword</span>
+                                                <span class="api-desc">비밀번호 변경</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="biz/mypage/mypageController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- signup package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                signup
+                                <span class="count-badge">1 Controller</span>
+                                <span class="count-badge">1 API</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        SignupController
+                                        <span class="public-badge">공개</span>
+                                        <span class="count-badge">1 API</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/signup/signupController.html', 'insClient', '고객사 및 사용자 회원가입')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/signup/insClient</span>
+                                                <span class="api-desc">고객사 및 사용자 회원가입</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="biz/signup/signupController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- terms package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                terms
+                                <span class="count-badge">1 Controller</span>
+                                <span class="count-badge">4 APIs</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        TermsController
+                                        <span class="public-badge">공개</span>
+                                        <span class="security-badge">일부 인증필수</span>
+                                        <span class="count-badge">4 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/terms/termsController.html', 'getTermsList', '화면별 약관 목록 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/terms/getTermsList</span>
+                                                <span class="api-desc">화면별 약관 목록 조회 (공개)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/terms/termsController.html', 'getTermsDetail', '약관 전문 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/terms/getTermsDetail</span>
+                                                <span class="api-desc">약관 전문 조회 (공개)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/terms/termsController.html', 'agreeTerms', '약관 동의')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/terms/agreeTerms</span>
+                                                <span class="api-desc">약관 동의 처리 (인증필수)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('biz/terms/termsController.html', 'checkReagree', '재동의 필요 체크')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/terms/checkReagree</span>
+                                                <span class="api-desc">재동의 필요 체크 (인증필수)</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="biz/terms/termsController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- System Server Section -->
+            <div class="server-divider" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h2>System Server API</h2>
+                <p>시스템 레벨 기능 전담 서버 (공통코드 조회, 알림, 헬스체크)</p>
+            </div>
+
+            <!-- System Server -->
+            <div class="project-block">
+                <div class="project-header" onclick="toggleProject(this)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h3>
+                        System Server
+                        <span class="count-badge">3 Packages</span>
+                        <span class="count-badge">4 Controllers</span>
+                        <span class="count-badge">14 APIs</span>
+                    </h3>
+                    <span class="toggle-icon">&#9660;</span>
+                </div>
+                <div class="project-content">
+
+                    <!-- health package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                health
+                                <span class="count-badge">1 Controller</span>
+                                <span class="count-badge">3 APIs</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        HealthController
+                                        <span class="public-badge">공개</span>
+                                        <span class="badge k8s">K8s</span>
+                                        <span class="count-badge">3 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/health/healthController.html', 'health', '서버 상태 확인')">
+                                                <span class="method get">GET</span>
+                                                <span class="api-url">/health</span>
+                                                <span class="api-desc">서버 상태 확인</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/health/healthController.html', 'readiness', 'Readiness 체크')">
+                                                <span class="method get">GET</span>
+                                                <span class="api-url">/health/ready</span>
+                                                <span class="api-desc">Readiness 체크 (K8s readinessProbe)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/health/healthController.html', 'liveness', 'Liveness 체크')">
+                                                <span class="method get">GET</span>
+                                                <span class="api-url">/health/live</span>
+                                                <span class="api-desc">Liveness 체크 (K8s livenessProbe)</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="system/health/healthController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- commoncode package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                commoncode
+                                <span class="count-badge">1 Controller</span>
+                                <span class="count-badge">6 APIs</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        CommonCodeController
+                                        <span class="public-badge">공개</span>
+                                        <span class="count-badge">6 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/commoncode/commonCodeController.html', 'query', '공통코드 일괄 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/commCode/query</span>
+                                                <span class="api-desc">공통코드 일괄 조회 (clientNo 기반)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/commoncode/commonCodeController.html', 'refreshCacheNew', '캐시 갱신')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/commCode/cache/refresh</span>
+                                                <span class="api-desc">캐시 갱신 (관리자용)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/commoncode/commonCodeController.html', 'getCodeInit', 'codeInit 코드 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/commCode/getCodeInit</span>
+                                                <span class="api-desc">codeInit으로 공통코드 목록 조회</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/commoncode/commonCodeController.html', 'getCodeInitAndCodeId', 'codeInit+codeId 단건 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/commCode/getCodeInitAndCodeId</span>
+                                                <span class="api-desc">codeInit과 codeId로 단건 조회</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/commoncode/commonCodeController.html', 'getCodeInitList', 'codeInit 일괄 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/commCode/getCodeInitList</span>
+                                                <span class="api-desc">여러 codeInit 일괄 조회</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/commoncode/commonCodeController.html', 'getAllGrouped', '전체 공통코드 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/commCode/getAllGrouped</span>
+                                                <span class="api-desc">전체 공통코드 조회 (codeInit별)</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="system/commoncode/commonCodeController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- notification package -->
+                    <div class="subproject-block">
+                        <div class="subproject-header" onclick="toggleSubproject(this)">
+                            <h4>
+                                notification
+                                <span class="count-badge">2 Controllers</span>
+                                <span class="count-badge">5 APIs</span>
+                            </h4>
+                            <span class="toggle-icon">&#9660;</span>
+                        </div>
+                        <div class="subproject-content">
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        NotificationSseController
+                                        <span class="security-badge">인증필수</span>
+                                        <span class="badge sse">SSE</span>
+                                        <span class="count-badge">1 API</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/notification/notificationSseController.html', 'subscribe', 'SSE 알림 구독')">
+                                                <span class="method get">GET</span>
+                                                <span class="api-url">/{clientType}/{version}/notifications/subscribe</span>
+                                                <span class="api-desc">SSE 알림 구독 (실시간)</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="system/notification/notificationSseController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+
+                            <div class="biz-block">
+                                <div class="biz-header" onclick="toggleBiz(this)">
+                                    <h5>
+                                        NotificationPollingController
+                                        <span class="security-badge">인증필수</span>
+                                        <span class="count-badge">4 APIs</span>
+                                    </h5>
+                                    <span class="toggle-icon">&#9660;</span>
+                                </div>
+                                <div class="biz-content">
+                                    <ul class="api-list">
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/notification/notificationPollingController.html', 'getNotificationList', '알림 목록 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/notifications/getNotificationList</span>
+                                                <span class="api-desc">알림 목록 조회 (Polling)</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/notification/notificationPollingController.html', 'getNotification', '알림 단건 조회')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/notifications/getNotification</span>
+                                                <span class="api-desc">알림 단건 조회</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/notification/notificationPollingController.html', 'updRead', '알림 읽음 처리')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/notifications/updRead</span>
+                                                <span class="api-desc">알림 읽음 처리</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0)" class="popup-link" onclick="openApiModal('system/notification/notificationPollingController.html', 'updReadAll', '전체 알림 읽음 처리')">
+                                                <span class="method post">POST</span>
+                                                <span class="api-url">/{clientType}/{version}/notifications/updReadAll</span>
+                                                <span class="api-desc">전체 알림 읽음 처리</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <a href="system/notification/notificationPollingController.html" class="controller-detail-link">상세 문서 보기</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Generated by Claude Code | 최종 수정일: 2026-03-06</p>
+        </footer>
+    </div>
+
+    <!-- API Modal Popup -->
+    <div id="apiModalOverlay" class="api-modal-overlay" onclick="closeApiModal(event)">
+        <div class="api-modal" onclick="event.stopPropagation()">
+            <div class="api-modal-header">
+                <h2 id="apiModalTitle">API 상세</h2>
+                <button class="api-modal-close" onclick="closeApiModal()">&times;</button>
+            </div>
+            <div class="api-modal-body" id="apiModalBody">
+                <div class="api-modal-loading">로딩 중...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 최근 커밋 (2일 이내) 하이라이트 처리
+        (function() {
+            const historyLink = document.getElementById('historyLink');
+            if (!historyLink) return;
+
+            const commitDateStr = historyLink.getAttribute('data-date');
+            if (!commitDateStr) return;
+
+            const commitDate = new Date(commitDateStr);
+            const today = new Date();
+            const diffTime = today - commitDate;
+            const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+            // 2일 이내면 recent 클래스 추가
+            if (diffDays <= 2) {
+                historyLink.classList.add('recent');
+            }
+        })();
+
+        // Toggle functions for hierarchical structure
+        function toggleProject(header) {
+            header.classList.toggle('expanded');
+            const content = header.nextElementSibling;
+            content.classList.toggle('show');
+        }
+
+        function toggleSubproject(header) {
+            header.classList.toggle('expanded');
+            const content = header.nextElementSibling;
+            content.classList.toggle('show');
+        }
+
+        function toggleBiz(header) {
+            header.classList.toggle('expanded');
+            const content = header.nextElementSibling;
+            content.classList.toggle('show');
+        }
+
+        function toggleErrorCategory(header) {
+            header.classList.toggle('expanded');
+            const content = header.nextElementSibling;
+            content.classList.toggle('show');
+        }
+
+        // 페이지 로드 시 모든 섹션 펼치기 (옵션)
+        // document.querySelectorAll('.project-header, .subproject-header, .biz-header').forEach(h => {
+        //     h.classList.add('expanded');
+        //     h.nextElementSibling.classList.add('show');
+        // });
+
+        // API Modal Functions
+        function openApiModal(url, sectionId, title) {
+            const overlay = document.getElementById('apiModalOverlay');
+            const modalTitle = document.getElementById('apiModalTitle');
+            const modalBody = document.getElementById('apiModalBody');
+
+            // 타이틀 설정
+            modalTitle.textContent = title || 'API 상세';
+
+            // iframe URL 생성 (섹션 ID 포함)
+            const iframeUrl = sectionId ? url + '#' + sectionId : url;
+
+            // iframe으로 내용 표시 (스타일 격리)
+            modalBody.innerHTML = '<iframe class="api-modal-iframe" src="' + iframeUrl + '" onload="this.contentWindow.scrollTo(0, 0)"></iframe>';
+
+            // 모달 표시
+            overlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeApiModal(event) {
+            // 오버레이 클릭 시에만 닫기 (모달 내부 클릭은 무시)
+            if (event && event.target !== event.currentTarget) return;
+
+            const overlay = document.getElementById('apiModalOverlay');
+            overlay.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // ESC 키로 모달 닫기
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeApiModal();
+            }
+        });
+
+        // API 확정 상태 로드 및 배지 표시
+        (function loadApiStatus() {
+            fetch('api-status.json')
+                .then(response => response.json())
+                .then(data => {
+                    const confirmedApis = data.versions.v1.confirmed.map(api => api.path);
+
+                    // 모든 API 링크에 확정 배지 추가
+                    document.querySelectorAll('.api-list li').forEach(li => {
+                        const link = li.querySelector('a');
+                        if (!link) return;
+
+                        const apiUrl = li.querySelector('.api-url');
+                        if (!apiUrl) return;
+
+                        // URL에서 API 경로 추출 (/{clientType}/{version}/ 이후 부분)
+                        const urlText = apiUrl.textContent;
+                        const match = urlText.match(/\{version\}\/(.+)$/);
+                        if (match) {
+                            const apiPath = match[1];
+                            if (confirmedApis.includes(apiPath)) {
+                                const badge = document.createElement('span');
+                                badge.className = 'confirmed-badge';
+                                badge.textContent = 'v1확정';
+                                apiUrl.parentNode.insertBefore(badge, apiUrl.nextSibling);
+                            }
+                        }
+                    });
+                })
+                .catch(err => console.log('API status not loaded:', err));
+        })();
+    </script>
+</body>
+</html>

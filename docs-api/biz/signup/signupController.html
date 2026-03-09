@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignupController API 문서</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h3 {
+            color: #7f8c8d;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .api-section {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            border-left: 4px solid #3498db;
+        }
+        .method {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: #fff;
+            margin-right: 10px;
+        }
+        .method.post {
+            background-color: #27ae60;
+        }
+        .url {
+            font-family: 'Courier New', monospace;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px 15px;
+            border-radius: 3px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #bdc3c7;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .required {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .optional {
+            color: #27ae60;
+        }
+        .description-box {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .description-box h4 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+        .description-box ul {
+            margin-left: 20px;
+        }
+        .description-box li {
+            margin-bottom: 5px;
+        }
+        .exception-section {
+            margin: 15px 0;
+        }
+        .exception-type {
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .exception-type.biz {
+            background-color: #f39c12;
+            color: #fff;
+        }
+        .exception-type.system {
+            background-color: #e74c3c;
+            color: #fff;
+        }
+        .exception-table {
+            margin-top: 10px;
+        }
+        .note {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .error-response {
+            background-color: #fdf2f2;
+            border: 1px solid #f5c6cb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .field-group {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+        }
+        .field-group-title {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 5px;
+        }
+        .toc {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .toc h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .toc li {
+            margin-bottom: 8px;
+        }
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        .auth-table {
+            width: auto;
+            min-width: 300px;
+        }
+        .auth-table th {
+            background-color: #6c757d;
+            width: 100px;
+        }
+        .typescript-interface {
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .interface-header {
+            background-color: #343a40;
+            color: #fff;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .interface-header span {
+            font-weight: bold;
+        }
+        .copy-btn {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+        .all-interfaces-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 30px;
+            border: 2px solid #3498db;
+        }
+        .all-interfaces-section h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        .info-box {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .info-box h4 {
+            color: #0c5460;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">&larr; 목록으로 돌아가기</a>
+
+        <h1>SignupController API 문서</h1>
+
+        <div class="note">
+            <strong>참고:</strong> 모든 API는 Gateway를 통해 접근합니다. 회원가입 API는 공개 API로 JWT 인증이 필요하지 않습니다.
+        </div>
+
+        <div class="info-box">
+            <h4>SMS 인증 API 안내</h4>
+            <p>SMS 인증 관련 API는 <a href="../mobileAuth/mobileAuthController.html">MobileAuthController</a>에서 처리됩니다.</p>
+            <ul style="margin-top: 10px; margin-left: 20px;">
+                <li>인증번호 발송: <code>POST /api/{version}/mobileAuth/insSmsAuth</code> (authType=SIGNUP)</li>
+                <li>인증번호 검증: <code>POST /api/{version}/mobileAuth/updSmsAuthVerify</code> (authType=SIGNUP)</li>
+            </ul>
+        </div>
+
+        <div class="toc">
+            <h3>목차</h3>
+            <ul>
+                <li><a href="#insClient">1. 고객사 회원가입 (insClient)</a></li>
+                <li><a href="#all-interfaces">2. 전체 TypeScript Interface</a></li>
+            </ul>
+        </div>
+
+        <!-- insClient API -->
+        <div class="api-section" id="insClient">
+            <h2>1. 고객사 회원가입 (insClient)</h2>
+
+            <h3>1. API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/api/{version}/signup/insClient</div>
+            <p style="margin-top: 10px;">
+                <strong>URL 예시:</strong><br>
+                <code>POST /api/v1/signup/insClient</code>
+            </p>
+
+            <h3>2. API Method</h3>
+            <p><code>POST</code></p>
+
+            <h3>3. 인증 및 권한</h3>
+            <table class="auth-table">
+                <tr>
+                    <th>토큰</th>
+                    <td>NONE</td>
+                </tr>
+                <tr>
+                    <th>권한</th>
+                    <td>PUBLIC</td>
+                </tr>
+                <tr>
+                    <th>Header</th>
+                    <td>-</td>
+                </tr>
+            </table>
+
+            <h3>4. API Parameter (Request Body)</h3>
+
+            <div class="field-group">
+                <div class="field-group-title">1) 모바일 인증 정보</div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>필드명</th>
+                        <th>타입</th>
+                        <th>필수여부</th>
+                        <th>설명 (@Info)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>authKey</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>모바일 인증 키 (MobileAuthController에서 인증 완료된 키)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="field-group">
+                <div class="field-group-title">2) 고객사 정보 (ClientVO 상속)</div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>필드명</th>
+                        <th>타입</th>
+                        <th>필수여부</th>
+                        <th>설명 (@Info)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>bizRegNo</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>사업자등록번호 (숫자만, 10자리)</td>
+                    </tr>
+                    <tr>
+                        <td>clientName</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>고객사명 (200자 이내)</td>
+                    </tr>
+                    <tr>
+                        <td>clientStartDate</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>회사 개업일 (YYYYMMDD, 8자리)</td>
+                    </tr>
+                    <tr>
+                        <td>representativeTelephoneNumber</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>대표 전화번호 (숫자만, 9~11자리)</td>
+                    </tr>
+                    <tr>
+                        <td>zipCode</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>우편번호 (숫자만, 5~6자리)</td>
+                    </tr>
+                    <tr>
+                        <td>address</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>주소 (300자 이내)</td>
+                    </tr>
+                    <tr>
+                        <td>addressDetail</td>
+                        <td>String</td>
+                        <td class="optional">선택</td>
+                        <td>상세주소 (300자 이내)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="field-group">
+                <div class="field-group-title">3) 사용자 정보</div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>필드명</th>
+                        <th>타입</th>
+                        <th>필수여부</th>
+                        <th>설명 (@Info)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>userName</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>사용자 이름</td>
+                    </tr>
+                    <tr>
+                        <td>email</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>이메일</td>
+                    </tr>
+                    <tr>
+                        <td>mobileNo</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>휴대전화번호 (숫자만, 10~11자리)</td>
+                    </tr>
+                    <tr>
+                        <td>gender</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>성별 (M/F)</td>
+                    </tr>
+                    <tr>
+                        <td>encryptPassword</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>암호화된 비밀번호 (RSA 공개키로 암호화된 Base64 문자열)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="field-group">
+                <div class="field-group-title">4) 약관 동의 정보</div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>필드명</th>
+                        <th>타입</th>
+                        <th>필수여부</th>
+                        <th>설명 (@Info)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>termsNoList</td>
+                        <td>List&lt;Long&gt;</td>
+                        <td class="required">필수</td>
+                        <td>동의 약관 번호 목록</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>요청 예시</h4>
+            <pre>{
+    "authKey": "SMS-20260114123456789-a1b2c3d4",
+    "bizRegNo": "1234567890",
+    "clientName": "예시회사",
+    "clientStartDate": "20200101",
+    "representativeTelephoneNumber": "02-1234-5678",
+    "zipCode": "12345",
+    "address": "서울시 강남구 테헤란로 123",
+    "addressDetail": "10층 1001호",
+    "userName": "홍길동",
+    "email": "hong@example.com",
+    "mobileNo": "010-1234-5678",
+    "gender": "M",
+    "encryptPassword": "Base64EncodedRSAEncryptedPassword...",
+    "termsNoList": [1, 2, 3]
+}</pre>
+
+            <h3>5. API Response</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>필드명</th>
+                        <th>타입</th>
+                        <th>필수</th>
+                        <th>설명 (@Info)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>clientNo</td>
+                        <td>Long</td>
+                        <td class="required">필수</td>
+                        <td>고객사 번호</td>
+                    </tr>
+                    <tr>
+                        <td>clientCode</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>고객사 코드 (E + 7자리 숫자)</td>
+                    </tr>
+                    <tr>
+                        <td>userNo</td>
+                        <td>Long</td>
+                        <td class="required">필수</td>
+                        <td>사용자 번호</td>
+                    </tr>
+                    <tr>
+                        <td>userCode</td>
+                        <td>String</td>
+                        <td class="required">필수</td>
+                        <td>사용자 코드 (S + 7자리 숫자)</td>
+                    </tr>
+                    <tr>
+                        <td>userClientNo</td>
+                        <td>Long</td>
+                        <td class="required">필수</td>
+                        <td>사용자-고객사 관계번호</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>응답 예시 (성공)</h4>
+            <pre>{
+    "code": 1,
+    "message": "OK",
+    "data": {
+        "clientNo": 1001,
+        "clientCode": "E0000001",
+        "userNo": 5001,
+        "userCode": "S0000001",
+        "userClientNo": 100
+    }
+}</pre>
+
+            <h3>6. TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-insClient')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-insClient">
+/** 고객사 회원가입 요청 */
+interface ClientSignupRequest {
+  // ----- 인증 정보 -----
+  /** 모바일 인증 키 */
+  authKey: string;
+
+  // ----- 고객사 정보 -----
+  /** 사업자등록번호 (숫자만, 10자리) */
+  bizRegNo: string;
+  /** 고객사명 */
+  clientName: string;
+  /** 회사 개업일 (YYYYMMDD) */
+  clientStartDate: string;
+  /** 대표 전화번호 (숫자만, 9~11자리) */
+  representativeTelephoneNumber: string;
+  /** 우편번호 (숫자만, 5~6자리) */
+  zipCode: string;
+  /** 주소 */
+  address: string;
+  /** 상세주소 */
+  addressDetail?: string;
+
+  // ----- 사용자 정보 -----
+  /** 사용자 이름 */
+  userName: string;
+  /** 이메일 */
+  email: string;
+  /** 휴대전화번호 (숫자만, 10~11자리) */
+  mobileNo: string;
+  /** 성별 (M/F) */
+  gender: 'M' | 'F';
+  /** 암호화된 비밀번호 (RSA 공개키로 암호화된 Base64 문자열) */
+  encryptPassword: string;
+
+  // ----- 약관 동의 정보 -----
+  /** 동의 약관 번호 목록 */
+  termsNoList: number[];
+}
+
+/** 고객사 회원가입 응답 */
+interface ClientSignupResponse {
+  /** 고객사 번호 */
+  clientNo: number;
+  /** 고객사 코드 (E + 7자리 숫자) */
+  clientCode: string;
+  /** 사용자 번호 */
+  userNo: number;
+  /** 사용자 코드 (S + 7자리 숫자) */
+  userCode: string;
+  /** 사용자-고객사 관계번호 */
+  userClientNo: number;
+}
+                </pre>
+            </div>
+
+            <h3>7. API Error Response</h3>
+
+            <div class="error-response">
+                <h4>오류 응답 형식</h4>
+                <pre>{
+    "code": [오류코드],
+    "message": "[오류메시지]",
+    "data": null
+}</pre>
+            </div>
+
+            <div class="exception-section">
+                <span class="exception-type biz">BizException (비즈니스 예외)</span>
+                <table class="exception-table">
+                    <thead>
+                        <tr>
+                            <th>코드</th>
+                            <th>ResponseCode</th>
+                            <th>메시지</th>
+                            <th>발생 상황</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>3100</td>
+                            <td>AUTH_KEY_INVALID</td>
+                            <td>유효하지 않은 인증 키입니다.</td>
+                            <td>모바일 인증 키가 존재하지 않는 경우</td>
+                        </tr>
+                        <tr>
+                            <td>4001</td>
+                            <td>AUTH_NOT_VERIFIED</td>
+                            <td>휴대전화 인증이 완료되지 않았습니다.</td>
+                            <td>모바일 인증이 완료되지 않은 상태로 회원가입 시도</td>
+                        </tr>
+                        <tr>
+                            <td>3102</td>
+                            <td>AUTH_CODE_EXPIRED</td>
+                            <td>인증번호가 만료되었습니다. 다시 인증해 주세요.</td>
+                            <td>모바일 인증이 만료된 경우</td>
+                        </tr>
+                        <tr>
+                            <td>4008</td>
+                            <td>PASSWORD_DECRYPT_FAIL</td>
+                            <td>비밀번호 복호화에 실패했습니다.</td>
+                            <td>RSA 암호화된 비밀번호 복호화 실패</td>
+                        </tr>
+                        <tr>
+                            <td>1002</td>
+                            <td>BUSINESS_REG_NO_INVALID</td>
+                            <td>사업자등록번호 형식이 올바르지 않습니다.</td>
+                            <td>사업자등록번호 형식이 유효하지 않은 경우</td>
+                        </tr>
+                        <tr>
+                            <td>1001</td>
+                            <td>BUSINESS_DUPLICATED</td>
+                            <td>이미 등록된 사업자등록번호입니다.</td>
+                            <td>이미 등록된 사업자등록번호로 가입 시도</td>
+                        </tr>
+                        <tr>
+                            <td>4004</td>
+                            <td>EMAIL_INVALID</td>
+                            <td>이메일 형식이 올바르지 않습니다.</td>
+                            <td>이메일 형식이 유효하지 않은 경우</td>
+                        </tr>
+                        <tr>
+                            <td>4003</td>
+                            <td>EMAIL_DUPLICATED</td>
+                            <td>이미 등록된 이메일입니다.</td>
+                            <td>이미 등록된 이메일로 가입 시도</td>
+                        </tr>
+                        <tr>
+                            <td>4002</td>
+                            <td>PASSWORD_PATTERN_INVALID</td>
+                            <td>비밀번호는 8~20자, 영문/숫자/특수문자를 각 1자 이상 포함해야 합니다.</td>
+                            <td>복호화된 비밀번호가 정책 위반</td>
+                        </tr>
+                        <tr>
+                            <td>4006</td>
+                            <td>TERMS_NOT_AGREED</td>
+                            <td>필수 약관에 동의해야 합니다.</td>
+                            <td>필수 약관에 동의하지 않은 경우</td>
+                        </tr>
+                        <tr>
+                            <td>9005</td>
+                            <td>UNSUPPORTED_VERSION</td>
+                            <td>지원하지 않는 API 버전입니다.</td>
+                            <td>지원하지 않는 버전으로 요청한 경우</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="exception-section">
+                <span class="exception-type system">Exception (시스템 예외)</span>
+                <table class="exception-table">
+                    <thead>
+                        <tr>
+                            <th>코드</th>
+                            <th>ResponseCode</th>
+                            <th>메시지</th>
+                            <th>발생 상황</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>9999</td>
+                            <td>INTERNAL_SERVER_ERROR</td>
+                            <td>서버 내부 오류가 발생했습니다.</td>
+                            <td>서버 내부 처리 중 예기치 않은 오류 발생</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>8. API Description</h3>
+            <div class="description-box">
+                <h4>목적</h4>
+                <p>고객사 최초 회원가입 API입니다. 모바일 인증 완료 후 고객사 정보와 해당 고객사의 첫 번째 사용자(관리자)를 함께 등록합니다.</p>
+            </div>
+
+            <div class="description-box">
+                <h4>선행 조건</h4>
+                <ul>
+                    <li>로그인이 필요하지 않음 (공개 API)</li>
+                    <li>Gateway에서 JWT 인증을 요구하지 않음</li>
+                    <li><strong>모바일 인증 완료 필요</strong>: MobileAuthController의 insSmsAuth + updSmsAuthVerify를 통해 인증을 완료하고 발급받은 authKey가 필요합니다</li>
+                    <li>필수 약관 동의 필요: termsNoList에 필수 약관 번호들이 포함되어야 합니다</li>
+                    <li>비밀번호는 RSA 공개키로 암호화하여 전송해야 합니다</li>
+                </ul>
+            </div>
+
+            <div class="description-box">
+                <h4>기대 효과</h4>
+                <ul>
+                    <li>새로운 고객사와 해당 고객사의 관리자 사용자 동시 생성</li>
+                    <li>고객사 번호(clientNo), 고객사 코드(clientCode), 사용자 번호(userNo), 사용자 코드(userCode), 관계번호(userClientNo) 발급</li>
+                    <li>회원가입 완료 후 로그인 API를 통해 서비스 이용 가능</li>
+                </ul>
+            </div>
+
+            <div class="note">
+                <strong>회원가입 프로세스:</strong>
+                <ol style="margin-top: 10px; margin-left: 20px;">
+                    <li>/auth/getPublicKey API로 RSA 공개키 조회</li>
+                    <li>/mobileAuth/insSmsAuth API로 휴대전화 인증번호 발송 (authType=SIGNUP)</li>
+                    <li>/mobileAuth/updSmsAuthVerify API로 인증번호 확인</li>
+                    <li>/signup/insClient API로 회원가입 완료</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- 전체 TypeScript Interface -->
+        <section id="all-interfaces" class="all-interfaces-section">
+            <h2>전체 TypeScript Interface</h2>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>SignupController 전체 Interface</span>
+                    <button onclick="copyToClipboard('all-interfaces-code')" class="copy-btn">전체 복사</button>
+                </div>
+                <pre id="all-interfaces-code">
+// ============================================
+// SignupController API Interfaces
+// Generated from: biz/signup/controller/SignupController.java
+// ============================================
+
+// ---------- Request Interfaces ----------
+
+/** 고객사 회원가입 요청 */
+interface ClientSignupRequest {
+  // ----- 인증 정보 -----
+  /** 모바일 인증 키 */
+  authKey: string;
+
+  // ----- 고객사 정보 -----
+  /** 사업자등록번호 (숫자만, 10자리) */
+  bizRegNo: string;
+  /** 고객사명 */
+  clientName: string;
+  /** 회사 개업일 (YYYYMMDD) */
+  clientStartDate: string;
+  /** 대표 전화번호 (숫자만, 9~11자리) */
+  representativeTelephoneNumber: string;
+  /** 우편번호 (숫자만, 5~6자리) */
+  zipCode: string;
+  /** 주소 */
+  address: string;
+  /** 상세주소 */
+  addressDetail?: string;
+
+  // ----- 사용자 정보 -----
+  /** 사용자 이름 */
+  userName: string;
+  /** 이메일 */
+  email: string;
+  /** 휴대전화번호 (숫자만, 10~11자리) */
+  mobileNo: string;
+  /** 성별 (M/F) */
+  gender: 'M' | 'F';
+  /** 암호화된 비밀번호 (RSA 공개키로 암호화된 Base64 문자열) */
+  encryptPassword: string;
+
+  // ----- 약관 동의 정보 -----
+  /** 동의 약관 번호 목록 */
+  termsNoList: number[];
+}
+
+// ---------- Response Interfaces ----------
+
+/** 고객사 회원가입 응답 */
+interface ClientSignupResponse {
+  /** 고객사 번호 */
+  clientNo: number;
+  /** 고객사 코드 (E + 7자리 숫자) */
+  clientCode: string;
+  /** 사용자 번호 */
+  userNo: number;
+  /** 사용자 코드 (S + 7자리 숫자) */
+  userCode: string;
+  /** 사용자-고객사 관계번호 */
+  userClientNo: number;
+}
+
+// ---------- Common Types ----------
+
+/** API 공통 응답 래퍼 */
+interface ApiResponse&lt;T&gt; {
+  /** 응답 코드 (1: 성공, 그 외: 오류) */
+  code: number;
+  /** 응답 메시지 */
+  message: string;
+  /** 응답 데이터 */
+  data: T | null;
+}
+
+/** 회원가입 API 응답 타입 */
+type SignupApiResponse = ApiResponse&lt;ClientSignupResponse&gt;;
+                </pre>
+            </div>
+        </section>
+    </div>
+
+    <script>
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('클립보드에 복사되었습니다.');
+        }).catch(err => {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('클립보드에 복사되었습니다.');
+        });
+    }
+    </script>
+</body>
+</html>

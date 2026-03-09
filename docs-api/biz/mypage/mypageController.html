@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MypageController API 문서</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; margin-bottom: 30px; }
+        h2 { color: #34495e; margin-top: 30px; margin-bottom: 15px; }
+        h3 { color: #7f8c8d; margin-top: 20px; margin-bottom: 10px; }
+        .api-section { background-color: #ecf0f1; padding: 20px; border-radius: 5px; margin-bottom: 30px; border-left: 4px solid #3498db; }
+        .method { display: inline-block; padding: 5px 15px; border-radius: 3px; font-weight: bold; color: #fff; margin-right: 10px; }
+        .method.post { background-color: #27ae60; }
+        .url { font-family: 'Courier New', monospace; background-color: #2c3e50; color: #ecf0f1; padding: 10px 15px; border-radius: 3px; display: inline-block; margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #bdc3c7; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: #fff; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .required { color: #e74c3c; font-weight: bold; }
+        .optional { color: #27ae60; }
+        .description-box { background-color: #fff; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .description-box h4 { color: #2980b9; margin-bottom: 10px; }
+        .description-box ul { margin-left: 20px; }
+        .description-box li { margin-bottom: 5px; }
+        .exception-section { margin: 15px 0; }
+        .exception-type { font-weight: bold; padding: 8px 12px; border-radius: 3px; margin-bottom: 10px; display: inline-block; }
+        .exception-type.biz { background-color: #f39c12; color: #fff; }
+        .note { background-color: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .security-note { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .security-note h4 { color: #721c24; margin-bottom: 10px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        code { background-color: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+        pre { background-color: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; margin: 10px 0; }
+        .usage-guide { background-color: #d1ecf1; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .usage-guide h4 { color: #0c5460; margin-bottom: 10px; }
+        .usage-guide ol { margin-left: 20px; }
+        .usage-guide li { margin-bottom: 8px; }
+        .auth-table { margin: 15px 0; }
+        .auth-table th { background-color: #6c757d; width: 150px; }
+        .typescript-interface { background-color: #1e1e1e; border-radius: 5px; margin: 15px 0; overflow: hidden; }
+        .interface-header { background-color: #333; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .interface-header span { color: #fff; font-weight: bold; }
+        .copy-btn { background-color: #3498db; color: #fff; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-size: 12px; }
+        .copy-btn:hover { background-color: #2980b9; }
+        .typescript-interface pre { margin: 0; padding: 15px; background-color: #1e1e1e; color: #d4d4d4; font-size: 13px; }
+        .all-interfaces { background-color: #f8f9fa; border: 2px solid #3498db; border-radius: 5px; padding: 20px; margin-top: 40px; }
+        .all-interfaces h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; margin-top: 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">&larr; 목록으로 돌아가기</a>
+
+        <h1>MypageController API 문서</h1>
+        <p><strong>소스 경로:</strong> <code>biz/mypage/controller/MypageController.java</code></p>
+
+        <div class="security-note">
+            <h4>인증 필수</h4>
+            <p>이 Controller의 모든 API는 <strong>로그인 상태에서만 호출 가능</strong>합니다.</p>
+            <p>요청 시 <code>Authorization: Bearer {accessToken}</code> 헤더가 필수입니다.</p>
+        </div>
+
+        <div class="note">
+            <strong>참고:</strong> 휴대전화 변경 SMS 인증은 <a href="../mobileAuth/mobileAuthController.html">MobileAuthController</a>에서 처리합니다.
+            <ul>
+                <li>인증번호 발송: POST /api/{version}/mobileAuth/insAuthSmsAuth (authType=CHANGE_PHONE)</li>
+                <li>인증번호 검증: POST /api/{version}/mobileAuth/updAuthSmsAuthVerify (authType=CHANGE_PHONE)</li>
+            </ul>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 1. updProfile API -->
+        <!-- ========================================== -->
+        <div class="api-section" id="updProfile">
+            <h2>1. 회원정보 변경 (updProfile)</h2>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/mypage/updProfile</div>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>ACCESS_TOKEN</td></tr>
+                <tr><th>권한</th><td>USER</td></tr>
+                <tr><th>Header</th><td><code>Authorization: Bearer {accessToken}</code></td></tr>
+            </table>
+
+            <h3>Request Body (UpdateProfileDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>userName</td><td>String</td><td class="optional">N</td><td>이름</td></tr>
+                    <tr><td>gender</td><td>String</td><td class="optional">N</td><td>성별 (M/F)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response</h3>
+            <pre>{
+    "code": 1,
+    "message": "OK",
+    "data": null
+}</pre>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-updProfile')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-updProfile">/** 회원정보 변경 요청 */
+interface UpdateProfileRequest {
+  /** 이름 */
+  userName?: string;
+  /** 성별 */
+  gender?: 'M' | 'F';
+}</pre>
+            </div>
+
+            <h3>Description</h3>
+            <div class="description-box">
+                <h4>목적</h4>
+                <p>로그인한 사용자의 기본 정보(이름, 성별)를 수정합니다. 이메일(아이디)은 변경할 수 없습니다.</p>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 2. updChangePhone API -->
+        <!-- ========================================== -->
+        <div class="api-section" id="updChangePhone">
+            <h2>2. 휴대전화번호 변경 - 최종 변경 (updChangePhone)</h2>
+
+            <div class="usage-guide">
+                <h4>휴대전화번호 변경 프로세스</h4>
+                <ol>
+                    <li>MobileAuthController: <code>insAuthSmsAuth</code> (authType=CHANGE_PHONE) - 인증번호 발송</li>
+                    <li>MobileAuthController: <code>updAuthSmsAuthVerify</code> (authType=CHANGE_PHONE) - 인증번호 검증</li>
+                    <li><strong>[현재 API]</strong> 최종 변경 - authKey로 휴대전화번호 변경</li>
+                </ol>
+            </div>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/mypage/updChangePhone</div>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>ACCESS_TOKEN</td></tr>
+                <tr><th>권한</th><td>USER</td></tr>
+                <tr><th>Header</th><td><code>Authorization: Bearer {accessToken}</code></td></tr>
+            </table>
+
+            <h3>Request Body (ChangePhoneDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>authKey</td><td>String</td><td class="required">Y</td><td>인증키 (SMS 인증 완료된 키)</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Response</h3>
+            <pre>{
+    "code": 1,
+    "message": "OK",
+    "data": null
+}</pre>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-updChangePhone')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-updChangePhone">/** 휴대전화번호 변경 요청 */
+interface ChangePhoneRequest {
+  /** 인증키 (SMS 인증 완료된 키) */
+  authKey: string;
+}</pre>
+            </div>
+
+            <h3>Error Cases</h3>
+            <div class="exception-section">
+                <span class="exception-type biz">BizException</span>
+                <table>
+                    <thead><tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr></thead>
+                    <tbody>
+                        <tr><td>3100</td><td>AUTH_KEY_INVALID</td><td>유효하지 않은 인증 키입니다.</td><td>인증키가 없거나 이미 사용된 경우</td></tr>
+                        <tr><td>4001</td><td>AUTH_NOT_VERIFIED</td><td>인증이 완료되지 않았습니다.</td><td>SMS 인증번호 검증이 완료되지 않은 경우</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 3. updChangePassword API -->
+        <!-- ========================================== -->
+        <div class="api-section" id="updChangePassword">
+            <h2>3. 비밀번호 변경 (updChangePassword)</h2>
+
+            <h3>API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/{clientType}/{version}/mypage/updChangePassword</div>
+
+            <h3>인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>ACCESS_TOKEN</td></tr>
+                <tr><th>권한</th><td>USER</td></tr>
+                <tr><th>Header</th><td><code>Authorization: Bearer {accessToken}</code></td></tr>
+            </table>
+
+            <h3>Request Body (ChangePasswordDto)</h3>
+            <table>
+                <thead><tr><th>필드명</th><th>타입</th><th>필수</th><th>설명</th></tr></thead>
+                <tbody>
+                    <tr><td>currentPassword</td><td>String</td><td class="required">Y</td><td>현재 비밀번호 (RSA 암호화)</td></tr>
+                    <tr><td>newPassword</td><td>String</td><td class="required">Y</td><td>새 비밀번호 (RSA 암호화)</td></tr>
+                    <tr><td>confirmPassword</td><td>String</td><td class="required">Y</td><td>새 비밀번호 확인 (RSA 암호화)</td></tr>
+                </tbody>
+            </table>
+
+            <div class="note">
+                <strong>RSA 암호화:</strong> 모든 비밀번호는 RSA 공개키로 암호화하여 전송해야 합니다.
+                공개키는 <code>/{clientType}/{version}/auth/getPublicKey</code> API에서 조회합니다.
+            </div>
+
+            <h3>Response</h3>
+            <pre>{
+    "code": 1,
+    "message": "OK",
+    "data": null
+}</pre>
+
+            <h3>TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-updChangePassword')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-updChangePassword">/** 비밀번호 변경 요청 */
+interface ChangePasswordRequest {
+  /** 현재 비밀번호 (RSA 암호화) */
+  currentPassword: string;
+  /** 새 비밀번호 (RSA 암호화) */
+  newPassword: string;
+  /** 새 비밀번호 확인 (RSA 암호화) */
+  confirmPassword: string;
+}</pre>
+            </div>
+
+            <h3>Error Cases</h3>
+            <div class="exception-section">
+                <span class="exception-type biz">BizException</span>
+                <table>
+                    <thead><tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr></thead>
+                    <tbody>
+                        <tr><td>4008</td><td>PASSWORD_DECRYPT_FAIL</td><td>비밀번호 복호화에 실패했습니다.</td><td>RSA 복호화 실패</td></tr>
+                        <tr><td>8001</td><td>CURRENT_PASSWORD_INVALID</td><td>현재 비밀번호가 올바르지 않습니다.</td><td>현재 비밀번호 불일치</td></tr>
+                        <tr><td>8003</td><td>PASSWORD_CONFIRM_NOT_MATCH</td><td>비밀번호가 일치하지 않습니다.</td><td>새 비밀번호와 확인 불일치</td></tr>
+                        <tr><td>8004</td><td>PASSWORD_SAME_AS_CURRENT</td><td>새 비밀번호는 현재 비밀번호와 달라야 합니다.</td><td>동일 비밀번호 사용</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="security-note">
+                <h4>보안 안내</h4>
+                <p>비밀번호 변경 완료 후 <strong>기존 세션이 무효화</strong>되므로 다시 로그인해야 합니다.</p>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- 전체 TypeScript Interface -->
+        <!-- ========================================== -->
+        <section class="all-interfaces" id="all-interfaces">
+            <h2>전체 TypeScript Interface</h2>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>MypageController 전체 Interface</span>
+                    <button onclick="copyToClipboard('all-interfaces-code')" class="copy-btn">전체 복사</button>
+                </div>
+                <pre id="all-interfaces-code">// ============================================
+// MypageController API Interfaces
+// Generated from: biz/mypage/controller/MypageController.java
+// ============================================
+
+// ---------- Request Interfaces ----------
+
+/** 회원정보 변경 요청 */
+interface UpdateProfileRequest {
+  /** 이름 */
+  userName?: string;
+  /** 성별 */
+  gender?: 'M' | 'F';
+}
+
+/** 휴대전화번호 변경 요청 */
+interface ChangePhoneRequest {
+  /** 인증키 (SMS 인증 완료된 키) */
+  authKey: string;
+}
+
+/** 비밀번호 변경 요청 */
+interface ChangePasswordRequest {
+  /** 현재 비밀번호 (RSA 암호화) */
+  currentPassword: string;
+  /** 새 비밀번호 (RSA 암호화) */
+  newPassword: string;
+  /** 새 비밀번호 확인 (RSA 암호화) */
+  confirmPassword: string;
+}</pre>
+            </div>
+        </section>
+    </div>
+
+    <script>
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.innerText;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('클립보드에 복사되었습니다.');
+            }).catch(() => { fallbackCopy(text); });
+        } else {
+            fallbackCopy(text);
+        }
+    }
+    function fallbackCopy(text) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            alert('클립보드에 복사되었습니다.');
+        } catch (err) {
+            alert('복사에 실패했습니다.');
+        }
+        document.body.removeChild(textArea);
+    }
+    </script>
+</body>
+</html>

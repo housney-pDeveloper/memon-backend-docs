@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exception 코드 레퍼런스 - EF Backend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #e74c3c;
+        }
+        h1 {
+            color: #c0392b;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .error-overview {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .error-overview h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .code-structure {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+        }
+        .project-section {
+            margin-bottom: 40px;
+        }
+        .project-header {
+            padding: 15px 20px;
+            color: #fff;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .project-header.gateway {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+        .project-header.application {
+            background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);
+        }
+        .project-header.common {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+        }
+        .project-header h2 {
+            margin: 0;
+        }
+        .project-header .code-range {
+            background-color: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .project-body {
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+        }
+        .category-section {
+            margin-bottom: 25px;
+        }
+        .category-header {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .category-header h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        .category-header .range-badge {
+            background-color: #3498db;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+        .error-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .error-table th {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+        }
+        .error-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: top;
+        }
+        .error-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        .error-code {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #e74c3c;
+            background-color: #fef5f5;
+            padding: 3px 8px;
+            border-radius: 3px;
+        }
+        .error-name {
+            font-family: 'Courier New', monospace;
+            color: #2c3e50;
+            font-size: 0.9em;
+        }
+        .error-message {
+            color: #495057;
+        }
+        .error-case {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+        .error-case ul {
+            margin: 5px 0 0 20px;
+            padding: 0;
+        }
+        .error-case li {
+            margin-bottom: 3px;
+        }
+        .http-status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        .http-status.s401 {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .http-status.s403 {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .http-status.s404 {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        .http-status.s500 {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .http-status.s200 {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        .toc {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .toc h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .toc ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .toc li {
+            margin-bottom: 8px;
+        }
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        .toc .indent {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">&larr; API 문서로 돌아가기</a>
+
+        <header>
+            <h1>Exception 코드 레퍼런스</h1>
+            <p class="subtitle">Gateway, Application, Common 에러 코드 전체 목록</p>
+        </header>
+
+        <div class="error-overview">
+            <h2>에러 코드 체계</h2>
+            <p>모든 에러 코드는 5자리 숫자로 구성됩니다.</p>
+            <div class="code-structure">
+{프로젝트번호}{역할1}{역할2}{시퀀스(2자리)}
+
+예시: 31001 = Application(3) + 계정/인증(1) + 로그인(0) + 시퀀스(01)
+            </div>
+            <table style="width: 100%; margin-top: 15px; border-collapse: collapse;">
+                <tr>
+                    <th style="padding: 10px; border: 1px solid #dee2e6; background: #f8f9fa;">프로젝트</th>
+                    <th style="padding: 10px; border: 1px solid #dee2e6; background: #f8f9fa;">코드 범위</th>
+                    <th style="padding: 10px; border: 1px solid #dee2e6; background: #f8f9fa;">설명</th>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">Gateway</td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;"><strong>1XXXX</strong></td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">JWT 인증, API 정책, 라우팅 오류</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">Application</td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;"><strong>3XXXX</strong></td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">비즈니스 로직 오류</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">Common</td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;"><strong>9XXXX</strong></td>
+                    <td style="padding: 10px; border: 1px solid #dee2e6;">공통 시스템 오류</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="toc">
+            <h3>목차</h3>
+            <ul>
+                <li><a href="#gateway">Gateway (1XXXX)</a></li>
+                <ul class="indent">
+                    <li><a href="#gateway-jwt">JWT 인증 오류 (11XXX)</a></li>
+                    <li><a href="#gateway-policy">API 버전 정책 오류 (12XXX)</a></li>
+                    <li><a href="#gateway-route">라우팅 오류 (13XXX)</a></li>
+                    <li><a href="#gateway-server">서버 오류 (19XXX)</a></li>
+                </ul>
+                <li><a href="#application">Application (3XXXX)</a></li>
+                <ul class="indent">
+                    <li><a href="#app-account">계정/인증 (31XXX)</a></li>
+                    <li><a href="#app-security">보안 (32XXX)</a></li>
+                    <li><a href="#app-data">데이터 (33XXX)</a></li>
+                </ul>
+                <li><a href="#common">Common (9XXXX)</a></li>
+                <ul class="indent">
+                    <li><a href="#common-system">시스템 공통 (90XXX)</a></li>
+                    <li><a href="#common-request">요청/파라미터 (91XXX)</a></li>
+                    <li><a href="#common-auth">인증/인가 (92XXX)</a></li>
+                    <li><a href="#common-resource">리소스 (93XXX)</a></li>
+                </ul>
+            </ul>
+        </div>
+
+        <!-- Gateway Section -->
+        <div class="project-section" id="gateway">
+            <div class="project-header gateway">
+                <h2>Gateway</h2>
+                <span class="code-range">1XXXX</span>
+            </div>
+            <div class="project-body">
+                <!-- JWT 인증 오류 -->
+                <div class="category-section" id="gateway-jwt">
+                    <div class="category-header">
+                        <h3>JWT 인증 오류</h3>
+                        <span class="range-badge">11XXX</span>
+                    </div>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                                <th style="width: 80px;">HTTP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">11001</span></td>
+                                <td><span class="error-name">JWT_TOKEN_MISSING</span></td>
+                                <td class="error-message">인증 토큰이 없습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>Authorization 헤더가 없는 경우</li>
+                                        <li>Authorization 헤더가 비어있는 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s401">401</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">11002</span></td>
+                                <td><span class="error-name">JWT_TOKEN_INVALID_FORMAT</span></td>
+                                <td class="error-message">토큰 형식이 올바르지 않습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>Bearer 접두사 없이 토큰만 전송한 경우</li>
+                                        <li>JWT 구조(header.payload.signature)가 아닌 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s401">401</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">11003</span></td>
+                                <td><span class="error-name">JWT_TOKEN_EXPIRED</span></td>
+                                <td class="error-message">토큰이 만료되었습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>토큰의 exp claim이 현재 시간보다 과거인 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s401">401</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">11004</span></td>
+                                <td><span class="error-name">JWT_SIGNATURE_INVALID</span></td>
+                                <td class="error-message">토큰 서명이 유효하지 않습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>토큰이 위조되었거나 변조된 경우</li>
+                                        <li>잘못된 secret key로 생성된 토큰인 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s401">401</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">11005</span></td>
+                                <td><span class="error-name">JWT_ISSUER_INVALID</span></td>
+                                <td class="error-message">토큰 발급자가 유효하지 않습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>토큰의 iss claim이 설정된 발급자와 다른 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s401">401</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">11006</span></td>
+                                <td><span class="error-name">JWT_AUDIENCE_INVALID</span></td>
+                                <td class="error-message">토큰 대상이 유효하지 않습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>토큰의 aud claim이 설정된 대상과 다른 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s401">401</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- API 버전 정책 오류 -->
+                <div class="category-section" id="gateway-policy">
+                    <div class="category-header">
+                        <h3>API 버전 정책 오류</h3>
+                        <span class="range-badge">12XXX</span>
+                    </div>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                                <th style="width: 80px;">HTTP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">12001</span></td>
+                                <td><span class="error-name">API_VERSION_BLOCKED</span></td>
+                                <td class="error-message">해당 API 버전은 차단되었습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>특정 클라이언트에서 해당 버전 사용이 금지된 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s403">403</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">12002</span></td>
+                                <td><span class="error-name">API_VERSION_READ_ONLY</span></td>
+                                <td class="error-message">해당 API 버전은 읽기 전용입니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>읽기 전용 모드에서 POST/PUT/DELETE 요청한 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s403">403</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">12003</span></td>
+                                <td><span class="error-name">API_VERSION_SUNSET</span></td>
+                                <td class="error-message">해당 API 버전의 서비스가 종료되었습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>완전히 종료된 API 버전에 요청한 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s403">403</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">12004</span></td>
+                                <td><span class="error-name">API_VERSION_UNSUPPORTED</span></td>
+                                <td class="error-message">지원하지 않는 API 버전입니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>존재하지 않는 버전(v99 등)으로 요청한 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s404">404</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 라우팅 오류 -->
+                <div class="category-section" id="gateway-route">
+                    <div class="category-header">
+                        <h3>라우팅 오류</h3>
+                        <span class="range-badge">13XXX</span>
+                    </div>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                                <th style="width: 80px;">HTTP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">13001</span></td>
+                                <td><span class="error-name">ROUTE_NOT_FOUND</span></td>
+                                <td class="error-message">요청한 경로를 찾을 수 없습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>존재하지 않는 API 엔드포인트로 요청한 경우</li>
+                                        <li>/api/... 내부 경로로 직접 접근한 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s404">404</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">13002</span></td>
+                                <td><span class="error-name">CLIENT_TYPE_INVALID</span></td>
+                                <td class="error-message">허용되지 않은 클라이언트 타입입니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>app, web 외 다른 클라이언트 타입으로 요청한 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s404">404</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 서버 오류 -->
+                <div class="category-section" id="gateway-server">
+                    <div class="category-header">
+                        <h3>서버 오류</h3>
+                        <span class="range-badge">19XXX</span>
+                    </div>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                                <th style="width: 80px;">HTTP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">19001</span></td>
+                                <td><span class="error-name">BACKEND_CONNECTION_FAILED</span></td>
+                                <td class="error-message">백엔드 서버에 연결할 수 없습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>Application 서버가 다운된 경우</li>
+                                        <li>네트워크 연결 문제가 발생한 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s500">503</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">19002</span></td>
+                                <td><span class="error-name">SYSTEM_SERVICE_UNAVAILABLE</span></td>
+                                <td class="error-message">시스템 서비스가 일시적으로 사용 불가합니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>시스템 점검 중인 경우</li>
+                                        <li>일시적인 서비스 중단 상태인 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s500">503</span></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">19999</span></td>
+                                <td><span class="error-name">GATEWAY_INTERNAL_ERROR</span></td>
+                                <td class="error-message">Gateway 내부 오류가 발생했습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>예기치 않은 Gateway 내부 오류가 발생한 경우</li>
+                                    </ul>
+                                </td>
+                                <td><span class="http-status s500">500</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Application Section -->
+        <div class="project-section" id="application">
+            <div class="project-header application">
+                <h2>Application</h2>
+                <span class="code-range">3XXXX</span>
+            </div>
+            <div class="project-body">
+                <!-- 계정/인증 -->
+                <div class="category-section" id="app-account">
+                    <div class="category-header">
+                        <h3>계정/인증 (Account & Authentication)</h3>
+                        <span class="range-badge">31XXX</span>
+                    </div>
+
+                    <h4 style="margin: 15px 0 10px 0; color: #495057;">로그인/계정 상태 (310XX)</h4>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">31001</span></td>
+                                <td><span class="error-name">USER_NOT_FOUND</span></td>
+                                <td class="error-message">등록되지 않은 사용자입니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>로그인 시 이메일이 존재하지 않는 경우</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31002</span></td>
+                                <td><span class="error-name">INVALID_PASSWORD</span></td>
+                                <td class="error-message">비밀번호가 일치하지 않습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>로그인 시 비밀번호가 틀린 경우</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31003</span></td>
+                                <td><span class="error-name">ACCOUNT_LOCKED</span></td>
+                                <td class="error-message">계정이 잠겼습니다. 관리자에게 문의하세요.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>비밀번호 오류 횟수 초과로 계정이 잠긴 경우</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31004</span></td>
+                                <td><span class="error-name">ACCOUNT_DISABLED</span></td>
+                                <td class="error-message">비활성화된 계정입니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>관리자에 의해 비활성화된 계정으로 로그인 시도</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin: 25px 0 10px 0; color: #495057;">회원가입 (311XX)</h4>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">31101</span></td>
+                                <td><span class="error-name">BUSINESS_REG_NO_NOT_VERIFIED</span></td>
+                                <td class="error-message">사업자등록번호 중복 확인을 먼저 진행해주세요.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>사업자등록번호 확인 없이 회원가입 진행 시</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31102</span></td>
+                                <td><span class="error-name">AUTH_NOT_VERIFIED</span></td>
+                                <td class="error-message">휴대전화 인증이 완료되지 않았습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>휴대전화 인증 완료 없이 회원가입 진행 시</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31103</span></td>
+                                <td><span class="error-name">PASSWORD_PATTERN_INVALID</span></td>
+                                <td class="error-message">비밀번호는 8~20자, 영문/숫자/특수문자를 각 1자 이상 포함해야 합니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>비밀번호 정책 불만족 시</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31104</span></td>
+                                <td><span class="error-name">EMAIL_DUPLICATED</span></td>
+                                <td class="error-message">이미 등록된 이메일입니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>기존 사용자와 동일한 이메일로 가입 시도</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31105</span></td>
+                                <td><span class="error-name">EMAIL_INVALID</span></td>
+                                <td class="error-message">이메일 형식이 올바르지 않습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>이메일 형식 검증 실패 시</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31106</span></td>
+                                <td><span class="error-name">NAME_INVALID</span></td>
+                                <td class="error-message">이름은 2~15자로 입력해주세요.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>이름 길이 조건 불만족 시</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31107</span></td>
+                                <td><span class="error-name">TERMS_NOT_AGREED</span></td>
+                                <td class="error-message">필수 약관에 동의해야 합니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>필수 약관 동의 없이 회원가입 시도</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31108</span></td>
+                                <td><span class="error-name">SIGNUP_FAIL</span></td>
+                                <td class="error-message">회원가입에 실패했습니다.</td>
+                                <td class="error-case">
+                                    <ul>
+                                        <li>회원가입 처리 중 오류 발생</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin: 25px 0 10px 0; color: #495057;">본인 인증 (312XX)</h4>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">31201</span></td>
+                                <td><span class="error-name">PHONE_NUMBER_EMPTY</span></td>
+                                <td class="error-message">휴대전화번호를 입력해 주세요.</td>
+                                <td class="error-case"><ul><li>휴대전화번호 미입력</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31202</span></td>
+                                <td><span class="error-name">PHONE_NUMBER_INVALID</span></td>
+                                <td class="error-message">휴대전화번호 형식이 올바르지 않습니다.</td>
+                                <td class="error-case"><ul><li>휴대전화번호 형식 검증 실패</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31203</span></td>
+                                <td><span class="error-name">SMS_SEND_FAIL</span></td>
+                                <td class="error-message">인증번호 발송에 실패했습니다.</td>
+                                <td class="error-case"><ul><li>SMS 발송 외부 서비스 오류</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31204</span></td>
+                                <td><span class="error-name">AUTH_KEY_INVALID</span></td>
+                                <td class="error-message">유효하지 않은 인증 키입니다.</td>
+                                <td class="error-case"><ul><li>잘못된 authKey로 인증 시도</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31205</span></td>
+                                <td><span class="error-name">AUTH_CODE_INVALID</span></td>
+                                <td class="error-message">인증번호를 입력해 주세요.</td>
+                                <td class="error-case"><ul><li>인증번호 미입력</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31206</span></td>
+                                <td><span class="error-name">AUTH_CODE_EXPIRED</span></td>
+                                <td class="error-message">인증 시간이 만료되었습니다. 재전송해 주세요.</td>
+                                <td class="error-case"><ul><li>인증 유효시간(3분) 초과</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31207</span></td>
+                                <td><span class="error-name">AUTH_NOT_MATCH</span></td>
+                                <td class="error-message">인증번호가 일치하지 않습니다.</td>
+                                <td class="error-case"><ul><li>입력한 인증번호가 발송된 코드와 불일치</li></ul></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin: 25px 0 10px 0; color: #495057;">계정 관리 (313XX)</h4>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">31301</span></td>
+                                <td><span class="error-name">CURRENT_PASSWORD_INVALID</span></td>
+                                <td class="error-message">현재 비밀번호가 올바르지 않습니다.</td>
+                                <td class="error-case"><ul><li>비밀번호 변경 시 현재 비밀번호 오류</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31302</span></td>
+                                <td><span class="error-name">PASSWORD_POLICY_INVALID</span></td>
+                                <td class="error-message">8자 ~ 20자 이내로 입력해 주세요.</td>
+                                <td class="error-case"><ul><li>새 비밀번호 길이 조건 불만족</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31303</span></td>
+                                <td><span class="error-name">PASSWORD_CONFIRM_NOT_MATCH</span></td>
+                                <td class="error-message">비밀번호가 일치하지 않습니다.</td>
+                                <td class="error-case"><ul><li>비밀번호와 비밀번호 확인 불일치</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31304</span></td>
+                                <td><span class="error-name">PASSWORD_SAME_AS_CURRENT</span></td>
+                                <td class="error-message">새 비밀번호는 현재 비밀번호와 달라야 합니다.</td>
+                                <td class="error-case"><ul><li>새 비밀번호가 현재 비밀번호와 동일</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31305</span></td>
+                                <td><span class="error-name">GENDER_INVALID</span></td>
+                                <td class="error-message">성별 값이 올바르지 않습니다.</td>
+                                <td class="error-case"><ul><li>M, F 외 다른 값 입력</li></ul></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin: 25px 0 10px 0; color: #495057;">계정 찾기 (314XX)</h4>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">31401</span></td>
+                                <td><span class="error-name">NAME_EMPTY</span></td>
+                                <td class="error-message">이름을 입력해 주세요.</td>
+                                <td class="error-case"><ul><li>아이디 찾기 시 이름 미입력</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31402</span></td>
+                                <td><span class="error-name">ACCOUNT_NOT_FOUND</span></td>
+                                <td class="error-message">입력하신 정보와 일치하는 계정이 없습니다.</td>
+                                <td class="error-case"><ul><li>이름+휴대전화번호로 계정 찾기 실패</li></ul></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin: 25px 0 10px 0; color: #495057;">사업자 정보 (315XX)</h4>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">31501</span></td>
+                                <td><span class="error-name">BUSINESS_REG_NO_EMPTY</span></td>
+                                <td class="error-message">사업자등록번호를 입력해주세요.</td>
+                                <td class="error-case"><ul><li>사업자등록번호 미입력</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31502</span></td>
+                                <td><span class="error-name">BUSINESS_DUPLICATED</span></td>
+                                <td class="error-message">이미 등록된 사업자등록번호입니다.</td>
+                                <td class="error-case"><ul><li>중복된 사업자등록번호로 가입 시도</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">31503</span></td>
+                                <td><span class="error-name">BUSINESS_REG_NO_INVALID</span></td>
+                                <td class="error-message">사업자등록번호 형식이 올바르지 않습니다.</td>
+                                <td class="error-case"><ul><li>10자리 숫자가 아닌 경우</li></ul></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 보안 -->
+                <div class="category-section" id="app-security">
+                    <div class="category-header">
+                        <h3>보안 (Security)</h3>
+                        <span class="range-badge">32XXX</span>
+                    </div>
+
+                    <h4 style="margin: 15px 0 10px 0; color: #495057;">암호화/복호화 (320XX)</h4>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">32001</span></td>
+                                <td><span class="error-name">RSA_KEY_LOAD_FAILED</span></td>
+                                <td class="error-message">RSA 키 로딩에 실패했습니다.</td>
+                                <td class="error-case"><ul><li>서버 RSA 키 파일 손상 또는 누락</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">32002</span></td>
+                                <td><span class="error-name">RSA_DECRYPTION_FAILED</span></td>
+                                <td class="error-message">암호화된 데이터 복호화에 실패했습니다.</td>
+                                <td class="error-case"><ul><li>잘못된 공개키로 암호화된 데이터 수신</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">32003</span></td>
+                                <td><span class="error-name">ENCRYPTION_FAILED</span></td>
+                                <td class="error-message">암호화 처리 중 오류가 발생했습니다.</td>
+                                <td class="error-case"><ul><li>암호화 처리 중 내부 오류</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">32004</span></td>
+                                <td><span class="error-name">PASSWORD_DECRYPT_FAIL</span></td>
+                                <td class="error-message">비밀번호 복호화에 실패했습니다.</td>
+                                <td class="error-case"><ul><li>만료된 공개키로 암호화된 비밀번호 수신</li></ul></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h4 style="margin: 25px 0 10px 0; color: #495057;">키 관리 (321XX)</h4>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">32101</span></td>
+                                <td><span class="error-name">PUBLIC_KEY_NOT_FOUND</span></td>
+                                <td class="error-message">공개키를 찾을 수 없습니다.</td>
+                                <td class="error-case"><ul><li>요청된 keyId에 해당하는 공개키 없음</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">32102</span></td>
+                                <td><span class="error-name">PUBLIC_KEY_EXPIRED</span></td>
+                                <td class="error-message">공개키가 만료되었습니다.</td>
+                                <td class="error-case"><ul><li>만료된 keyId로 요청한 경우</li></ul></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 데이터 -->
+                <div class="category-section" id="app-data">
+                    <div class="category-header">
+                        <h3>데이터 (Data)</h3>
+                        <span class="range-badge">33XXX</span>
+                    </div>
+
+                    <h4 style="margin: 15px 0 10px 0; color: #495057;">공통코드 (330XX)</h4>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">33001</span></td>
+                                <td><span class="error-name">CODE_GROUP_NOT_FOUND</span></td>
+                                <td class="error-message">코드 그룹을 찾을 수 없습니다.</td>
+                                <td class="error-case"><ul><li>존재하지 않는 그룹코드로 조회 시</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">33002</span></td>
+                                <td><span class="error-name">CODE_GROUP_ALREADY_EXISTS</span></td>
+                                <td class="error-message">이미 존재하는 코드 그룹입니다.</td>
+                                <td class="error-case"><ul><li>중복된 그룹코드 생성 시도</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">33003</span></td>
+                                <td><span class="error-name">CODE_NOT_FOUND</span></td>
+                                <td class="error-message">코드를 찾을 수 없습니다.</td>
+                                <td class="error-case"><ul><li>존재하지 않는 코드 조회 시</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">33004</span></td>
+                                <td><span class="error-name">CODE_ALREADY_EXISTS</span></td>
+                                <td class="error-message">이미 존재하는 코드입니다.</td>
+                                <td class="error-case"><ul><li>동일 그룹 내 중복 코드 생성 시도</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">33005</span></td>
+                                <td><span class="error-name">CODE_INIT_RESTRICTED</span></td>
+                                <td class="error-message">해당 코드 그룹은 수정할 수 없습니다.</td>
+                                <td class="error-case"><ul><li>시스템 초기화 코드 수정 시도</li></ul></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common Section -->
+        <div class="project-section" id="common">
+            <div class="project-header common">
+                <h2>Common (공통)</h2>
+                <span class="code-range">9XXXX</span>
+            </div>
+            <div class="project-body">
+                <!-- 시스템 공통 -->
+                <div class="category-section" id="common-system">
+                    <div class="category-header">
+                        <h3>시스템 공통</h3>
+                        <span class="range-badge">90XXX</span>
+                    </div>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">90001</span></td>
+                                <td><span class="error-name">INTERNAL_SERVER_ERROR</span></td>
+                                <td class="error-message">시스템 오류가 발생했습니다.</td>
+                                <td class="error-case"><ul><li>예상치 못한 서버 내부 오류</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">90002</span></td>
+                                <td><span class="error-name">SERVICE_UNAVAILABLE</span></td>
+                                <td class="error-message">서비스를 일시적으로 사용할 수 없습니다.</td>
+                                <td class="error-case"><ul><li>일시적 서비스 장애</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">90003</span></td>
+                                <td><span class="error-name">UNSUPPORTED_VERSION</span></td>
+                                <td class="error-message">지원하지 않는 API 버전입니다.</td>
+                                <td class="error-case"><ul><li>지원하지 않는 API 버전으로 요청</li></ul></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 요청/파라미터 -->
+                <div class="category-section" id="common-request">
+                    <div class="category-header">
+                        <h3>요청/파라미터</h3>
+                        <span class="range-badge">91XXX</span>
+                    </div>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">91001</span></td>
+                                <td><span class="error-name">INVALID_REQUEST</span></td>
+                                <td class="error-message">요청 형식이 올바르지 않습니다.</td>
+                                <td class="error-case"><ul><li>잘못된 JSON 형식</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">91002</span></td>
+                                <td><span class="error-name">INVALID_PARAMETER</span></td>
+                                <td class="error-message">요청 파라미터가 올바르지 않습니다.</td>
+                                <td class="error-case"><ul><li>필수 파라미터 누락 또는 잘못된 값</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">91003</span></td>
+                                <td><span class="error-name">VALIDATION_FAILED</span></td>
+                                <td class="error-message">입력값 검증에 실패했습니다.</td>
+                                <td class="error-case"><ul><li>@Valid 검증 실패</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">91004</span></td>
+                                <td><span class="error-name">REQUIRED_FIELD_MISSING</span></td>
+                                <td class="error-message">필수 입력값이 누락되었습니다.</td>
+                                <td class="error-case"><ul><li>필수 필드 미입력</li></ul></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 인증/인가 -->
+                <div class="category-section" id="common-auth">
+                    <div class="category-header">
+                        <h3>인증/인가</h3>
+                        <span class="range-badge">92XXX</span>
+                    </div>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">92001</span></td>
+                                <td><span class="error-name">UNAUTHORIZED</span></td>
+                                <td class="error-message">인증이 필요합니다.</td>
+                                <td class="error-case"><ul><li>인증 필수 API에 미인증 접근</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">92002</span></td>
+                                <td><span class="error-name">ACCESS_DENIED</span></td>
+                                <td class="error-message">접근 권한이 없습니다.</td>
+                                <td class="error-case"><ul><li>권한 없는 리소스 접근 시도</li></ul></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 리소스 -->
+                <div class="category-section" id="common-resource">
+                    <div class="category-header">
+                        <h3>리소스</h3>
+                        <span class="range-badge">93XXX</span>
+                    </div>
+                    <table class="error-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">코드</th>
+                                <th style="width: 200px;">이름</th>
+                                <th style="width: 300px;">메시지</th>
+                                <th>발생 케이스</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="error-code">93001</span></td>
+                                <td><span class="error-name">RESOURCE_NOT_FOUND</span></td>
+                                <td class="error-message">요청한 리소스를 찾을 수 없습니다.</td>
+                                <td class="error-case"><ul><li>존재하지 않는 리소스 조회</li></ul></td>
+                            </tr>
+                            <tr>
+                                <td><span class="error-code">93002</span></td>
+                                <td><span class="error-name">DUPLICATE_RESOURCE</span></td>
+                                <td class="error-message">이미 존재하는 리소스입니다.</td>
+                                <td class="error-case"><ul><li>중복 리소스 생성 시도</li></ul></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Generated by Claude Code | 최종 수정일: 2026-01-18</p>
+        </footer>
+    </div>
+</body>
+</html>

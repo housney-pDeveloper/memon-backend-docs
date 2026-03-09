@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AccountController API 문서</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; margin-bottom: 30px; }
+        h2 { color: #34495e; margin-top: 30px; margin-bottom: 15px; }
+        h3 { color: #7f8c8d; margin-top: 20px; margin-bottom: 10px; }
+        .api-section { background-color: #ecf0f1; padding: 20px; border-radius: 5px; margin-bottom: 30px; border-left: 4px solid #3498db; }
+        .method { display: inline-block; padding: 5px 15px; border-radius: 3px; font-weight: bold; color: #fff; margin-right: 10px; }
+        .method.post { background-color: #27ae60; }
+        .url { font-family: 'Courier New', monospace; background-color: #2c3e50; color: #ecf0f1; padding: 10px 15px; border-radius: 3px; display: inline-block; margin: 10px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #bdc3c7; padding: 12px; text-align: left; }
+        th { background-color: #3498db; color: #fff; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .required { color: #e74c3c; font-weight: bold; }
+        .optional { color: #27ae60; }
+        .description-box { background-color: #fff; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .description-box h4 { color: #2980b9; margin-bottom: 10px; }
+        .description-box ul { margin-left: 20px; }
+        .description-box li { margin-bottom: 5px; }
+        .exception-section { margin: 15px 0; }
+        .exception-type { font-weight: bold; padding: 8px 12px; border-radius: 3px; margin-bottom: 10px; display: inline-block; }
+        .exception-type.biz { background-color: #f39c12; color: #fff; }
+        .note { background-color: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .security-note { background-color: #f8d7da; border: 1px solid #f5c6cb; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .security-note h4 { color: #721c24; margin-bottom: 10px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #3498db; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        code { background-color: #f4f4f4; padding: 2px 6px; border-radius: 3px; font-family: 'Courier New', monospace; }
+        pre { background-color: #2c3e50; color: #ecf0f1; padding: 15px; border-radius: 5px; overflow-x: auto; margin: 10px 0; }
+        .usage-guide { background-color: #d1ecf1; border: 1px solid #bee5eb; padding: 15px; border-radius: 5px; margin: 15px 0; }
+        .usage-guide h4 { color: #0c5460; margin-bottom: 10px; }
+        .usage-guide ol { margin-left: 20px; }
+        .usage-guide li { margin-bottom: 8px; }
+        .auth-table { width: auto; min-width: 300px; }
+        .auth-table th { background-color: #6c757d; width: 100px; }
+        .typescript-interface { margin: 15px 0; border: 1px solid #dee2e6; border-radius: 5px; overflow: hidden; }
+        .interface-header { background-color: #343a40; color: #fff; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .interface-header span { font-weight: bold; }
+        .copy-btn { background-color: #28a745; color: #fff; border: none; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-size: 12px; }
+        .copy-btn:hover { background-color: #218838; }
+        .all-interfaces-section { background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin-top: 30px; border: 2px solid #3498db; }
+        .all-interfaces-section h2 { margin-top: 0; color: #2c3e50; }
+        .toc { background-color: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 30px; }
+        .toc h3 { margin-top: 0; margin-bottom: 15px; }
+        .toc ul { list-style-type: none; padding-left: 0; }
+        .toc li { margin-bottom: 8px; }
+        .toc a { color: #3498db; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .updated-badge { background-color: #17a2b8; color: #fff; padding: 2px 8px; border-radius: 3px; font-size: 11px; margin-left: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../../index.html" class="back-link">&larr; 목록으로 돌아가기</a>
+
+        <h1>AccountController API 문서</h1>
+
+        <div class="note">
+            <strong>참고:</strong> 모든 API는 Gateway를 통해 접근합니다.
+        </div>
+
+        <div class="toc">
+            <h3>목차</h3>
+            <ul>
+                <li><a href="#getFindId">1. 아이디 찾기 (getFindId)</a></li>
+                <li><a href="#resetPassword">2. 비밀번호 재설정 (resetPassword)</a> <span class="updated-badge">UPDATED</span></li>
+                <li><a href="#all-interfaces">3. 전체 TypeScript Interface</a></li>
+            </ul>
+        </div>
+
+        <div class="usage-guide">
+            <h4>아이디 찾기 프로세스 가이드</h4>
+            <ol>
+                <li><code>POST /api/{version}/mobileAuth/insFindIdSmsAuth</code> API를 호출하여 이름+휴대전화번호 확인 후 SMS 인증번호를 발송합니다</li>
+                <li><code>POST /api/{version}/mobileAuth/updSmsAuthVerify</code> API를 호출하여 인증번호를 확인합니다 (authType: "FIND_ID")</li>
+                <li>인증 완료 후 반환된 <code>authKey</code>를 저장합니다</li>
+                <li>아이디 찾기 API를 호출하여 이름과 휴대전화번호로 등록된 이메일(아이디) 목록을 조회합니다</li>
+            </ol>
+        </div>
+
+        <div class="usage-guide">
+            <h4>비밀번호 재설정 프로세스 가이드</h4>
+            <ol>
+                <li><code>POST /api/{version}/mobileAuth/insFindPwSmsAuth</code> API를 호출하여 이메일+휴대전화번호 확인 후 SMS 인증번호를 발송합니다</li>
+                <li><code>POST /api/{version}/mobileAuth/updSmsAuthVerify</code> API를 호출하여 인증번호를 확인합니다 (authType: "FIND_PW")</li>
+                <li>인증 완료 후 반환된 <code>authKey</code>를 저장합니다</li>
+                <li>비밀번호 재설정 API를 호출하여 새 비밀번호를 설정합니다</li>
+            </ol>
+        </div>
+
+        <!-- getFindId API -->
+        <div class="api-section" id="getFindId">
+            <h2>1. 아이디 찾기 (getFindId)</h2>
+
+            <h3>1. API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/api/{version}/account/getFindId</div>
+            <p style="margin-top: 10px;">
+                <strong>URL 예시:</strong><br>
+                <code>POST /api/v1/account/getFindId</code>
+            </p>
+
+            <h3>2. API Method</h3>
+            <p><code>POST</code></p>
+
+            <h3>3. 인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>NONE</td></tr>
+                <tr><th>권한</th><td>PUBLIC</td></tr>
+                <tr><th>Header</th><td>-</td></tr>
+            </table>
+
+            <h3>4. API Parameter (Request Body)</h3>
+            <table>
+                <thead>
+                    <tr><th>필드명</th><th>타입</th><th>필수여부</th><th>설명 (@Info)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>name</td><td>String</td><td class="required">필수</td><td>이름</td></tr>
+                    <tr><td>phoneNumber</td><td>String</td><td class="required">필수</td><td>휴대전화번호</td></tr>
+                    <tr><td>authKey</td><td>String</td><td class="required">필수</td><td>인증키 (휴대전화 인증 완료 후 발급된 키)</td></tr>
+                </tbody>
+            </table>
+
+            <h4>요청 예시</h4>
+            <pre>{
+    "name": "홍길동",
+    "phoneNumber": "01012345678",
+    "authKey": "SMS-20240101120000000-abcd1234"
+}</pre>
+
+            <h3>5. API Response</h3>
+            <table>
+                <thead>
+                    <tr><th>필드명</th><th>타입</th><th>필수</th><th>설명 (@Info)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>emailInfoList</td><td>List&lt;EmailInfo&gt;</td><td class="required">필수</td><td>이메일 정보 목록</td></tr>
+                    <tr><td>emailInfoList[].email</td><td>String</td><td class="required">필수</td><td>이메일(아이디)</td></tr>
+                    <tr><td>emailInfoList[].regDate</td><td>String</td><td class="required">필수</td><td>가입일 (YYYYMMDD)</td></tr>
+                </tbody>
+            </table>
+
+            <h4>응답 예시 (성공)</h4>
+            <pre>{
+    "code": 1,
+    "message": "OK",
+    "data": {
+        "emailInfoList": [
+            {
+                "email": "user1@example.com",
+                "regDate": "20240115"
+            }
+        ]
+    }
+}</pre>
+
+            <h3>6. TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-getFindId')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-getFindId">/** 아이디 찾기 요청 */
+interface FindIdRequest {
+  /** 이름 */
+  name: string;
+  /** 휴대전화번호 */
+  phoneNumber: string;
+  /** 인증키 */
+  authKey: string;
+}
+
+/** 이메일 정보 */
+interface EmailInfo {
+  /** 이메일(아이디) */
+  email: string;
+  /** 가입일 (YYYYMMDD) */
+  regDate: string;
+}
+
+/** 아이디 찾기 응답 */
+interface FindIdResponse {
+  /** 이메일 정보 목록 */
+  emailInfoList: EmailInfo[];
+}</pre>
+            </div>
+
+            <h3>7. API Error Response</h3>
+            <div class="exception-section">
+                <span class="exception-type biz">BizException (비즈니스 예외)</span>
+                <table class="exception-table">
+                    <thead>
+                        <tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>31401</td><td>NAME_EMPTY</td><td>이름을 입력해 주세요.</td><td>이름이 빈 값인 경우</td></tr>
+                        <tr><td>31204</td><td>AUTH_KEY_INVALID</td><td>유효하지 않은 인증 키입니다.</td><td>인증키가 없거나 유효하지 않은 경우</td></tr>
+                        <tr><td>31102</td><td>AUTH_NOT_VERIFIED</td><td>휴대전화 인증이 완료되지 않았습니다.</td><td>인증이 완료되지 않은 인증키인 경우</td></tr>
+                        <tr><td>31206</td><td>AUTH_CODE_EXPIRED</td><td>인증 시간이 만료되었습니다. 재확인해 주세요.</td><td>인증 유효 시간 초과</td></tr>
+                        <tr><td>31402</td><td>ACCOUNT_NOT_FOUND</td><td>입력하신 정보와 일치하는 계정이 없습니다.</td><td>이름과 휴대전화번호로 등록된 계정이 없는 경우</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>8. API Description</h3>
+            <div class="description-box">
+                <h4>목적</h4>
+                <p>아이디(이메일) 찾기 API입니다. 이름과 휴대전화번호로 가입된 계정의 이메일(아이디)과 가입일을 조회합니다.</p>
+            </div>
+
+            <div class="description-box">
+                <h4>선행 조건</h4>
+                <ul>
+                    <li>로그인이 필요하지 않음 (공개 API)</li>
+                    <li><strong>휴대전화 인증 완료 필수</strong>: <code>insFindIdSmsAuth</code> → <code>updSmsAuthVerify</code> 순으로 호출</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- resetPassword API -->
+        <div class="api-section" id="resetPassword">
+            <h2>2. 비밀번호 재설정 (resetPassword) <span class="updated-badge">UPDATED</span></h2>
+
+            <h3>1. API URL</h3>
+            <span class="method post">POST</span>
+            <div class="url">/api/{version}/account/resetPassword</div>
+            <p style="margin-top: 10px;">
+                <strong>URL 예시:</strong><br>
+                <code>POST /api/v1/account/resetPassword</code>
+            </p>
+
+            <h3>2. API Method</h3>
+            <p><code>POST</code></p>
+
+            <h3>3. 인증 및 권한</h3>
+            <table class="auth-table">
+                <tr><th>토큰</th><td>NONE</td></tr>
+                <tr><th>권한</th><td>PUBLIC</td></tr>
+                <tr><th>Header</th><td>-</td></tr>
+            </table>
+
+            <h3>4. API Parameter (Request Body)</h3>
+            <table>
+                <thead>
+                    <tr><th>필드명</th><th>타입</th><th>필수여부</th><th>설명 (@Info)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>authKey</td><td>String</td><td class="required">필수</td><td>인증 키 (휴대전화 인증 완료 후 발급된 키)</td></tr>
+                    <tr><td>email</td><td>String</td><td class="required">필수</td><td>이메일(로그인ID)</td></tr>
+                    <tr><td>newPassword</td><td>String</td><td class="required">필수</td><td>새 비밀번호 (RSA 암호화)</td></tr>
+                    <tr><td>confirmPassword</td><td>String</td><td class="required">필수</td><td>새 비밀번호 확인 (RSA 암호화)</td></tr>
+                </tbody>
+            </table>
+
+            <h4>요청 예시</h4>
+            <pre>{
+    "authKey": "SMS-20240101120000000-abcd1234",
+    "email": "user@example.com",
+    "newPassword": "[RSA 암호화된 새 비밀번호]",
+    "confirmPassword": "[RSA 암호화된 새 비밀번호 확인]"
+}</pre>
+
+            <div class="security-note">
+                <h4>보안 안내</h4>
+                <ul>
+                    <li><code>newPassword</code>와 <code>confirmPassword</code>는 반드시 RSA 공개키로 암호화하여 전송해야 합니다.</li>
+                    <li>RSA 공개키는 <code>POST /api/{version}/auth/getPublicKey</code> API를 통해 획득합니다.</li>
+                    <li>비밀번호 정책: 8~20자, 영문/숫자/특수문자(@$!%*#?&) 각 1자 이상 포함</li>
+                </ul>
+            </div>
+
+            <h3>5. API Response</h3>
+            <p>성공 시 응답 데이터 없음</p>
+
+            <h4>응답 예시 (성공)</h4>
+            <pre>{
+    "code": 1,
+    "message": "OK",
+    "data": null
+}</pre>
+
+            <h3>6. TypeScript Interface</h3>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>TypeScript Interface</span>
+                    <button onclick="copyToClipboard('interface-resetPassword')" class="copy-btn">복사</button>
+                </div>
+                <pre id="interface-resetPassword">/** 비밀번호 재설정 요청 */
+interface ResetPasswordRequest {
+  /** 인증 키 */
+  authKey: string;
+  /** 이메일(로그인ID) */
+  email: string;
+  /** 새 비밀번호 (RSA 암호화) */
+  newPassword: string;
+  /** 새 비밀번호 확인 (RSA 암호화) */
+  confirmPassword: string;
+}
+
+/** 비밀번호 재설정 응답 (성공 시 data는 null) */
+type ResetPasswordResponse = null;</pre>
+            </div>
+
+            <h3>7. API Error Response</h3>
+            <div class="exception-section">
+                <span class="exception-type biz">BizException (비즈니스 예외)</span>
+                <table class="exception-table">
+                    <thead>
+                        <tr><th>코드</th><th>ResponseCode</th><th>메시지</th><th>발생 상황</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>31204</td><td>AUTH_KEY_INVALID</td><td>유효하지 않은 인증 키입니다.</td><td>인증키가 없거나 유효하지 않은 경우</td></tr>
+                        <tr><td>31102</td><td>AUTH_NOT_VERIFIED</td><td>휴대전화 인증이 완료되지 않았습니다.</td><td>인증이 완료되지 않은 인증키인 경우</td></tr>
+                        <tr><td>31206</td><td>AUTH_CODE_EXPIRED</td><td>인증 시간이 만료되었습니다. 재확인해 주세요.</td><td>인증 유효 시간 초과</td></tr>
+                        <tr><td>31402</td><td>ACCOUNT_NOT_FOUND</td><td>입력하신 정보와 일치하는 계정이 없습니다.</td><td>이메일과 휴대전화번호로 등록된 계정이 없는 경우</td></tr>
+                        <tr><td>32004</td><td>PASSWORD_DECRYPT_FAIL</td><td>비밀번호 복호화에 실패했습니다.</td><td>RSA 암호화된 비밀번호 복호화 실패</td></tr>
+                        <tr><td>31303</td><td>PASSWORD_CONFIRM_NOT_MATCH</td><td>비밀번호가 일치하지 않습니다.</td><td>새 비밀번호와 비밀번호 확인이 일치하지 않는 경우</td></tr>
+                        <tr><td>31302</td><td>PASSWORD_POLICY_INVALID</td><td>8자 ~ 20자 이내로 입력해 주세요.</td><td>비밀번호 길이가 8자 미만 또는 20자 초과</td></tr>
+                        <tr><td>31305</td><td>PASSWORD_NO_LETTER</td><td>영문을 입력해 주세요.</td><td>비밀번호에 영문이 포함되지 않은 경우</td></tr>
+                        <tr><td>31306</td><td>PASSWORD_NO_NUMBER</td><td>숫자를 입력해 주세요.</td><td>비밀번호에 숫자가 포함되지 않은 경우</td></tr>
+                        <tr><td>31307</td><td>PASSWORD_NO_SPECIAL_CHAR</td><td>특수문자를 입력해 주세요.</td><td>비밀번호에 특수문자(@$!%*#?&)가 포함되지 않은 경우</td></tr>
+                        <tr><td>31304</td><td>PASSWORD_SAME_AS_CURRENT</td><td>기존 비밀번호와 다른 비밀번호를 입력해 주세요.</td><td>새 비밀번호가 기존 비밀번호와 동일한 경우</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>8. API Description</h3>
+            <div class="description-box">
+                <h4>목적</h4>
+                <p>비밀번호를 잊어버린 사용자가 휴대전화 인증 후 새 비밀번호로 재설정하는 API입니다.</p>
+            </div>
+
+            <div class="description-box">
+                <h4>선행 조건</h4>
+                <ul>
+                    <li>로그인이 필요하지 않음 (공개 API)</li>
+                    <li><strong>휴대전화 인증 완료 필수</strong>: <code>insFindPwSmsAuth</code> → <code>updSmsAuthVerify</code> 순으로 호출</li>
+                    <li>RSA 공개키로 비밀번호를 암호화하여 전송해야 함</li>
+                </ul>
+            </div>
+
+            <div class="description-box">
+                <h4>비밀번호 정책</h4>
+                <ul>
+                    <li>8자 ~ 20자 이내</li>
+                    <li>영문(대소문자) 1자 이상 포함</li>
+                    <li>숫자 1자 이상 포함</li>
+                    <li>특수문자(@$!%*#?&) 1자 이상 포함</li>
+                    <li>기존 비밀번호와 동일 불가</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 전체 TypeScript Interface -->
+        <section id="all-interfaces" class="all-interfaces-section">
+            <h2>전체 TypeScript Interface</h2>
+            <div class="typescript-interface">
+                <div class="interface-header">
+                    <span>AccountController 전체 Interface</span>
+                    <button onclick="copyToClipboard('all-interfaces-code')" class="copy-btn">전체 복사</button>
+                </div>
+                <pre id="all-interfaces-code">// ============================================
+// AccountController API Interfaces
+// Generated from: biz/account/controller/AccountController.java
+// ============================================
+
+// ---------- Request Interfaces ----------
+
+/** 아이디 찾기 요청 */
+interface FindIdRequest {
+  /** 이름 */
+  name: string;
+  /** 휴대전화번호 */
+  phoneNumber: string;
+  /** 인증키 */
+  authKey: string;
+}
+
+/** 비밀번호 재설정 요청 */
+interface ResetPasswordRequest {
+  /** 인증 키 */
+  authKey: string;
+  /** 이메일(로그인ID) */
+  email: string;
+  /** 새 비밀번호 (RSA 암호화) */
+  newPassword: string;
+  /** 새 비밀번호 확인 (RSA 암호화) */
+  confirmPassword: string;
+}
+
+// ---------- Response Interfaces ----------
+
+/** 이메일 정보 */
+interface EmailInfo {
+  /** 이메일(아이디) */
+  email: string;
+  /** 가입일 (YYYYMMDD) */
+  regDate: string;
+}
+
+/** 아이디 찾기 응답 */
+interface FindIdResponse {
+  /** 이메일 정보 목록 */
+  emailInfoList: EmailInfo[];
+}
+
+/** 비밀번호 재설정 응답 (성공 시 data는 null) */
+type ResetPasswordResponse = null;
+
+// ---------- Common Response Wrapper ----------
+
+/** API 공통 응답 래퍼 */
+interface ApiResponse&lt;T&gt; {
+  /** 응답 코드 (1: 성공) */
+  code: number;
+  /** 응답 메시지 */
+  message: string;
+  /** 응답 데이터 */
+  data: T | null;
+}
+
+// ---------- Error Codes ----------
+
+/** 비밀번호 정책 에러 코드 */
+type PasswordPolicyErrorCode =
+  | 31302  // PASSWORD_POLICY_INVALID - 길이 오류
+  | 31305  // PASSWORD_NO_LETTER - 영문 미포함
+  | 31306  // PASSWORD_NO_NUMBER - 숫자 미포함
+  | 31307; // PASSWORD_NO_SPECIAL_CHAR - 특수문자 미포함</pre>
+            </div>
+        </section>
+    </div>
+
+    <script>
+    function copyToClipboard(elementId) {
+        const element = document.getElementById(elementId);
+        const text = element.innerText;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('클립보드에 복사되었습니다.');
+            }).catch(() => { fallbackCopy(text); });
+        } else {
+            fallbackCopy(text);
+        }
+    }
+    function fallbackCopy(text) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            alert('클립보드에 복사되었습니다.');
+        } catch (err) {
+            alert('복사에 실패했습니다.');
+        }
+        document.body.removeChild(textArea);
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "description": "API 버전별 확정 상태 관리",
+  "lastUpdated": "2026-03-06",
+  "versions": {
+    "v1": {
+      "confirmed": [
+        {
+          "path": "signup/insClient",
+          "method": "POST",
+          "description": "고객사 및 사용자 회원가입",
+          "confirmedDate": "2026-03-06"
+        }
+      ],
+      "pending": []
+    }
+  },
+  "legend": {
+    "confirmed": "확정된 API - 프로덕션 배포 가능",
+    "pending": "검토 중인 API - 변경 가능성 있음"
+  }
+}

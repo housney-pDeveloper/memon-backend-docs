@@ -1,0 +1,22 @@
+name: platform-ef-nginx
+
+services:
+
+# -------------------------
+# All Frontends (Integrated Nginx)
+# -------------------------
+  platform-ef-front-all:
+    image: spa-nginx:1.0.8
+    container_name: platform-ef-nginx
+    restart: unless-stopped
+    ports:
+      - "8090:80"
+    volumes:
+      - /home/fingate/docker/volumes/platform/ef/front/app:/usr/share/nginx/html:ro
+      - /home/fingate/docker/volumes/platform/ef/front/nginx/kp-nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks: [edge]
+
+networks:
+  edge:
+    external: true

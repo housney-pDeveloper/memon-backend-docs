@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프론트엔드 로그인 암호화 보안 가이드</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --danger-color: #dc2626;
+            --warning-color: #f59e0b;
+            --success-color: #10b981;
+            --bg-color: #f8fafc;
+            --code-bg: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background-color: var(--bg-color);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #0f172a;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: #1e40af;
+            margin: 2rem 0 1rem 0;
+            padding-left: 0.5rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        h3 {
+            color: #334155;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        p {
+            margin: 0.75rem 0;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid var(--warning-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .danger-box {
+            background: #fee2e2;
+            border-left: 4px solid var(--danger-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            border-left: 4px solid var(--success-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .info-box {
+            background: #dbeafe;
+            border-left: 4px solid var(--primary-color);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+            font-size: 0.875rem;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .code-comment {
+            color: #94a3b8;
+        }
+
+        .code-keyword {
+            color: #c084fc;
+        }
+
+        .code-string {
+            color: #86efac;
+        }
+
+        .code-function {
+            color: #60a5fa;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f5f9;
+            font-weight: 600;
+        }
+
+        ul, ol {
+            margin: 0.75rem 0;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin: 0.5rem 0;
+        }
+
+        .flow-diagram {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .badge-required {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-optional {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 프론트엔드 로그인 암호화 보안 가이드</h1>
+
+        <div class="section">
+            <h2>1. 개요</h2>
+            <p>이 문서는 React 기반 프론트엔드에서 로그인 시 비밀번호를 RSA 공개키로 암호화하여 전송하는 방법을 설명합니다.</p>
+
+            <div class="warning-box">
+                <strong>⚠️ 중요:</strong> 이 암호화는 "보안 강화"가 아닌 "전송 중 노출 최소화" 목적입니다.
+                <br>HTTPS(TLS)가 전제되어야 하며, 암호화만으로 보안이 완성되지 않습니다.
+            </div>
+
+            <h3>보안 아키텍처 흐름</h3>
+            <div class="flow-diagram">
+┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
+│    Frontend     │      │     Gateway     │      │   API Server    │
+│    (React)      │      │   (인증 필터)    │      │    (로그인)     │
+└────────┬────────┘      └────────┬────────┘      └────────┬────────┘
+         │                        │                        │
+         │  1. 공개키 요청        │                        │
+         │ ───────────────────────┼───────────────────────▶│
+         │                        │                        │
+         │  2. 공개키 응답        │                        │
+         │ ◀───────────────────────────────────────────────│
+         │                        │                        │
+         │  3. 비밀번호 RSA 암호화 │                        │
+         │  (클라이언트 측)        │                        │
+         │                        │                        │
+         │  4. 암호화된 비밀번호 전송                       │
+         │ ───────────────────────▶──────────────────────▶ │
+         │                        │   (인증 제외 경로)      │
+         │                        │                        │
+         │                        │  5. RSA 복호화         │
+         │                        │     bcrypt 비교        │
+         │                        │     JWT 발급           │
+         │                        │                        │
+         │  6. JWT 토큰 응답      │                        │
+         │ ◀──────────────────────────────────────────────│
+         │                        │                        │
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>2. 기술 스택</h2>
+            <table>
+                <tr>
+                    <th>구분</th>
+                    <th>기술</th>
+                    <th>용도</th>
+                </tr>
+                <tr>
+                    <td>HTTP Client</td>
+                    <td>Axios</td>
+                    <td>API 통신</td>
+                </tr>
+                <tr>
+                    <td>RSA 암호화</td>
+                    <td>JSEncrypt 또는 WebCrypto API</td>
+                    <td>비밀번호 암호화</td>
+                </tr>
+                <tr>
+                    <td>프레임워크</td>
+                    <td>React + TypeScript</td>
+                    <td>UI 구현</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>3. API 명세</h2>
+
+            <h3>3-1. 공개키 조회 API</h3>
+            <table>
+                <tr>
+                    <th>항목</th>
+                    <th>내용</th>
+                </tr>
+                <tr>
+                    <td>URL</td>
+                    <td><code>POST /web/api/v1/auth/getPublicKey</code></td>
+                </tr>
+                <tr>
+                    <td>Method</td>
+                    <td>POST</td>
+                </tr>
+                <tr>
+                    <td>인증</td>
+                    <td>불필요 (공개 API)</td>
+                </tr>
+                <tr>
+                    <td>Request Body</td>
+                    <td>없음</td>
+                </tr>
+            </table>
+
+            <h4>Response</h4>
+            <pre><code>{
+  <span class="code-string">"code"</span>: <span class="code-keyword">1</span>,
+  <span class="code-string">"message"</span>: <span class="code-string">"OK"</span>,
+  <span class="code-string">"data"</span>: {
+    <span class="code-string">"publicKey"</span>: <span class="code-string">"MIIBIjANBgkqhki..."</span>,  <span class="code-comment">// Base64 인코딩된 RSA 공개키</span>
+    <span class="code-string">"algorithm"</span>: <span class="code-string">"RSA"</span>,
+    <span class="code-string">"keySize"</span>: <span class="code-keyword">2048</span>
+  }
+}</code></pre>
+
+            <h3>3-2. 로그인 API</h3>
+            <table>
+                <tr>
+                    <th>항목</th>
+                    <th>내용</th>
+                </tr>
+                <tr>
+                    <td>URL</td>
+                    <td><code>POST /web/v1/login</code></td>
+                </tr>
+                <tr>
+                    <td>Method</td>
+                    <td>POST</td>
+                </tr>
+                <tr>
+                    <td>인증</td>
+                    <td>불필요 (공개 API)</td>
+                </tr>
+            </table>
+
+            <h4>Request Body</h4>
+            <pre><code>{
+  <span class="code-string">"email"</span>: <span class="code-string">"user@example.com"</span>,           <span class="code-comment">// 평문 이메일</span>
+  <span class="code-string">"encryptedPassword"</span>: <span class="code-string">"RSA암호화된Base64문자열"</span>  <span class="code-comment">// RSA 공개키로 암호화된 비밀번호</span>
+}</code></pre>
+
+            <h4>Response (성공)</h4>
+            <pre><code>{
+  <span class="code-string">"code"</span>: <span class="code-keyword">1</span>,
+  <span class="code-string">"message"</span>: <span class="code-string">"OK"</span>,
+  <span class="code-string">"data"</span>: {
+    <span class="code-string">"email"</span>: <span class="code-string">"user@example.com"</span>,
+    <span class="code-string">"accessToken"</span>: <span class="code-string">"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."</span>,
+    <span class="code-string">"issuedAt"</span>: <span class="code-string">"2025-01-13T10:30:00+09:00"</span>
+  }
+}</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>4. HTTP Client 구현 (http.ts)</h2>
+
+            <h3>4-1. 기본 HTTP Client 설정</h3>
+            <pre><code><span class="code-comment">// src/api/http.ts</span>
+<span class="code-keyword">import</span> axios, { AxiosInstance, AxiosRequestConfig } <span class="code-keyword">from</span> <span class="code-string">'axios'</span>;
+<span class="code-keyword">import</span> JSEncrypt <span class="code-keyword">from</span> <span class="code-string">'jsencrypt'</span>;
+
+<span class="code-comment">// API 기본 URL 설정</span>
+<span class="code-keyword">const</span> BASE_URL = process.env.REACT_APP_API_URL || <span class="code-string">'https://api.example.com'</span>;
+
+<span class="code-comment">// Axios 인스턴스 생성</span>
+<span class="code-keyword">const</span> axiosInstance: AxiosInstance = axios.<span class="code-function">create</span>({
+  baseURL: BASE_URL,
+  timeout: <span class="code-keyword">30000</span>,
+  headers: {
+    <span class="code-string">'Content-Type'</span>: <span class="code-string">'application/json'</span>,
+  },
+});
+
+<span class="code-comment">// 응답 인터셉터: 공통 에러 처리</span>
+axiosInstance.interceptors.response.<span class="code-function">use</span>(
+  (response) => response,
+  (error) => {
+    <span class="code-comment">// 에러 처리 로직</span>
+    console.<span class="code-function">error</span>(<span class="code-string">'API Error:'</span>, error.response?.data || error.message);
+    <span class="code-keyword">return</span> Promise.<span class="code-function">reject</span>(error);
+  }
+);
+
+<span class="code-keyword">export default</span> axiosInstance;</code></pre>
+
+            <h3>4-2. RSA 암호화 유틸리티</h3>
+            <pre><code><span class="code-comment">// src/utils/crypto.ts</span>
+<span class="code-keyword">import</span> JSEncrypt <span class="code-keyword">from</span> <span class="code-string">'jsencrypt'</span>;
+
+<span class="code-comment">/**
+ * RSA 공개키 저장소 (메모리에만 저장)
+ * ⚠️ LocalStorage에 저장하지 마세요!
+ */</span>
+<span class="code-keyword">let</span> cachedPublicKey: <span class="code-keyword">string</span> | <span class="code-keyword">null</span> = <span class="code-keyword">null</span>;
+
+<span class="code-comment">/**
+ * RSA 공개키 설정
+ * @param publicKey Base64 인코딩된 RSA 공개키
+ */</span>
+<span class="code-keyword">export const</span> <span class="code-function">setPublicKey</span> = (publicKey: <span class="code-keyword">string</span>): <span class="code-keyword">void</span> => {
+  cachedPublicKey = publicKey;
+};
+
+<span class="code-comment">/**
+ * RSA 공개키 초기화 (로그아웃 시 호출)
+ */</span>
+<span class="code-keyword">export const</span> <span class="code-function">clearPublicKey</span> = (): <span class="code-keyword">void</span> => {
+  cachedPublicKey = <span class="code-keyword">null</span>;
+};
+
+<span class="code-comment">/**
+ * 저장된 공개키 존재 여부 확인
+ */</span>
+<span class="code-keyword">export const</span> <span class="code-function">hasPublicKey</span> = (): <span class="code-keyword">boolean</span> => {
+  <span class="code-keyword">return</span> cachedPublicKey !== <span class="code-keyword">null</span>;
+};
+
+<span class="code-comment">/**
+ * RSA 공개키로 데이터 암호화
+ * @param plainText 암호화할 평문
+ * @returns Base64 인코딩된 암호문
+ * @throws Error 공개키가 설정되지 않았거나 암호화 실패 시
+ */</span>
+<span class="code-keyword">export const</span> <span class="code-function">encryptWithPublicKey</span> = (plainText: <span class="code-keyword">string</span>): <span class="code-keyword">string</span> => {
+  <span class="code-keyword">if</span> (!cachedPublicKey) {
+    <span class="code-keyword">throw new</span> Error(<span class="code-string">'공개키가 설정되지 않았습니다. 먼저 공개키를 조회하세요.'</span>);
+  }
+
+  <span class="code-keyword">const</span> encrypt = <span class="code-keyword">new</span> JSEncrypt();
+
+  <span class="code-comment">// PEM 형식으로 변환</span>
+  <span class="code-keyword">const</span> pemKey = <span class="code-string">`-----BEGIN PUBLIC KEY-----\n${cachedPublicKey}\n-----END PUBLIC KEY-----`</span>;
+  encrypt.<span class="code-function">setPublicKey</span>(pemKey);
+
+  <span class="code-keyword">const</span> encrypted = encrypt.<span class="code-function">encrypt</span>(plainText);
+
+  <span class="code-keyword">if</span> (!encrypted) {
+    <span class="code-keyword">throw new</span> Error(<span class="code-string">'암호화에 실패했습니다.'</span>);
+  }
+
+  <span class="code-keyword">return</span> encrypted;
+};</code></pre>
+
+            <h3>4-3. http.postEnc 함수 구현</h3>
+            <pre><code><span class="code-comment">// src/api/http.ts (계속)</span>
+<span class="code-keyword">import</span> { encryptWithPublicKey, hasPublicKey, setPublicKey } <span class="code-keyword">from</span> <span class="code-string">'../utils/crypto'</span>;
+
+<span class="code-comment">/**
+ * 공개키 조회 API 호출
+ * @returns 공개키 정보
+ */</span>
+<span class="code-keyword">export const</span> <span class="code-function">fetchPublicKey</span> = <span class="code-keyword">async</span> (): Promise&lt;<span class="code-keyword">void</span>&gt; => {
+  <span class="code-keyword">try</span> {
+    <span class="code-keyword">const</span> response = <span class="code-keyword">await</span> axiosInstance.<span class="code-function">post</span>(<span class="code-string">'/web/v1/auth/getPublicKey'</span>);
+    <span class="code-keyword">const</span> { publicKey } = response.data.data;
+
+    <span class="code-keyword">if</span> (!publicKey) {
+      <span class="code-keyword">throw new</span> Error(<span class="code-string">'공개키 응답이 유효하지 않습니다.'</span>);
+    }
+
+    <span class="code-function">setPublicKey</span>(publicKey);
+    console.<span class="code-function">debug</span>(<span class="code-string">'공개키 조회 완료'</span>);
+  } <span class="code-keyword">catch</span> (error) {
+    console.<span class="code-function">error</span>(<span class="code-string">'공개키 조회 실패:'</span>, error);
+    <span class="code-keyword">throw</span> error;
+  }
+};
+
+<span class="code-comment">/**
+ * 암호화된 비밀번호가 필요한 API 요청
+ *
+ * 사용법:
+ * - 일반 POST 요청: http.post('/web/api/data', { field: 'value' })
+ * - 암호화 POST 요청: http.postEnc('/web/api/login', { email: 'user@example.com' }, 'myPassword123')
+ *
+ * @param url API 엔드포인트
+ * @param data 요청 데이터 (비밀번호 제외)
+ * @param password 암호화할 비밀번호
+ * @param config Axios 설정 (선택)
+ */</span>
+<span class="code-keyword">export const</span> <span class="code-function">postEnc</span> = <span class="code-keyword">async</span> &lt;T&gt;(
+  url: <span class="code-keyword">string</span>,
+  data: <span class="code-keyword">object</span>,
+  password: <span class="code-keyword">string</span>,
+  config?: AxiosRequestConfig
+): Promise&lt;T&gt; => {
+  <span class="code-comment">// 공개키가 없으면 먼저 조회</span>
+  <span class="code-keyword">if</span> (!<span class="code-function">hasPublicKey</span>()) {
+    <span class="code-keyword">await</span> <span class="code-function">fetchPublicKey</span>();
+  }
+
+  <span class="code-comment">// 비밀번호 RSA 암호화</span>
+  <span class="code-keyword">const</span> encryptedPassword = <span class="code-function">encryptWithPublicKey</span>(password);
+
+  <span class="code-comment">// 암호화된 비밀번호를 요청 데이터에 추가</span>
+  <span class="code-keyword">const</span> requestData = {
+    ...data,
+    encryptedPassword,
+  };
+
+  <span class="code-keyword">const</span> response = <span class="code-keyword">await</span> axiosInstance.<span class="code-function">post</span>&lt;T&gt;(url, requestData, config);
+  <span class="code-keyword">return</span> response.data;
+};
+
+<span class="code-comment">// HTTP 메서드 객체 export</span>
+<span class="code-keyword">export const</span> http = {
+  get: axiosInstance.get,
+  post: axiosInstance.post,
+  put: axiosInstance.put,
+  delete: axiosInstance.delete,
+  postEnc,  <span class="code-comment">// 암호화가 필요한 POST 요청</span>
+};</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>5. 로그인 구현 예시</h2>
+
+            <h3>5-1. 로그인 서비스</h3>
+            <pre><code><span class="code-comment">// src/services/authService.ts</span>
+<span class="code-keyword">import</span> { http, fetchPublicKey } <span class="code-keyword">from</span> <span class="code-string">'../api/http'</span>;
+<span class="code-keyword">import</span> { clearPublicKey } <span class="code-keyword">from</span> <span class="code-string">'../utils/crypto'</span>;
+
+<span class="code-keyword">interface</span> LoginResponse {
+  code: <span class="code-keyword">number</span>;
+  message: <span class="code-keyword">string</span>;
+  data: {
+    email: <span class="code-keyword">string</span>;
+    accessToken: <span class="code-keyword">string</span>;
+    issuedAt: <span class="code-keyword">string</span>;
+  };
+}
+
+<span class="code-comment">/**
+ * 로그인 처리
+ *
+ * @param email 사용자 이메일
+ * @param password 비밀번호 (평문 - 내부에서 암호화됨)
+ * @returns 로그인 결과 (JWT 토큰 포함)
+ */</span>
+<span class="code-keyword">export const</span> <span class="code-function">login</span> = <span class="code-keyword">async</span> (
+  email: <span class="code-keyword">string</span>,
+  password: <span class="code-keyword">string</span>
+): Promise&lt;LoginResponse&gt; => {
+  <span class="code-keyword">try</span> {
+    <span class="code-comment">// http.postEnc가 자동으로:</span>
+    <span class="code-comment">// 1. 공개키 조회 (없으면)</span>
+    <span class="code-comment">// 2. 비밀번호 RSA 암호화</span>
+    <span class="code-comment">// 3. API 요청</span>
+    <span class="code-keyword">const</span> response = <span class="code-keyword">await</span> http.<span class="code-function">postEnc</span>&lt;LoginResponse&gt;(
+      <span class="code-string">'/web/v1/login'</span>,
+      { email },
+      password
+    );
+
+    <span class="code-comment">// 토큰 저장 (httpOnly 쿠키 권장, 아래는 예시)</span>
+    <span class="code-keyword">if</span> (response.data.accessToken) {
+      sessionStorage.<span class="code-function">setItem</span>(<span class="code-string">'accessToken'</span>, response.data.accessToken);
+    }
+
+    <span class="code-keyword">return</span> response;
+  } <span class="code-keyword">catch</span> (error) {
+    console.<span class="code-function">error</span>(<span class="code-string">'로그인 실패:'</span>, error);
+    <span class="code-keyword">throw</span> error;
+  }
+};
+
+<span class="code-comment">/**
+ * 로그아웃 처리
+ */</span>
+<span class="code-keyword">export const</span> <span class="code-function">logout</span> = (): <span class="code-keyword">void</span> => {
+  <span class="code-comment">// 토큰 삭제</span>
+  sessionStorage.<span class="code-function">removeItem</span>(<span class="code-string">'accessToken'</span>);
+
+  <span class="code-comment">// 캐시된 공개키 초기화</span>
+  <span class="code-function">clearPublicKey</span>();
+};</code></pre>
+
+            <h3>5-2. React 로그인 컴포넌트</h3>
+            <pre><code><span class="code-comment">// src/components/LoginForm.tsx</span>
+<span class="code-keyword">import</span> React, { useState } <span class="code-keyword">from</span> <span class="code-string">'react'</span>;
+<span class="code-keyword">import</span> { login } <span class="code-keyword">from</span> <span class="code-string">'../services/authService'</span>;
+
+<span class="code-keyword">const</span> LoginForm: React.FC = () => {
+  <span class="code-keyword">const</span> [email, setEmail] = <span class="code-function">useState</span>(<span class="code-string">''</span>);
+  <span class="code-keyword">const</span> [password, setPassword] = <span class="code-function">useState</span>(<span class="code-string">''</span>);
+  <span class="code-keyword">const</span> [loading, setLoading] = <span class="code-function">useState</span>(<span class="code-keyword">false</span>);
+  <span class="code-keyword">const</span> [error, setError] = <span class="code-function">useState</span>&lt;<span class="code-keyword">string</span> | <span class="code-keyword">null</span>&gt;(<span class="code-keyword">null</span>);
+
+  <span class="code-keyword">const</span> <span class="code-function">handleSubmit</span> = <span class="code-keyword">async</span> (e: React.FormEvent) => {
+    e.<span class="code-function">preventDefault</span>();
+    <span class="code-function">setLoading</span>(<span class="code-keyword">true</span>);
+    <span class="code-function">setError</span>(<span class="code-keyword">null</span>);
+
+    <span class="code-keyword">try</span> {
+      <span class="code-keyword">const</span> result = <span class="code-keyword">await</span> <span class="code-function">login</span>(email, password);
+
+      <span class="code-keyword">if</span> (result.code === <span class="code-keyword">1</span>) {
+        <span class="code-comment">// 로그인 성공 - 메인 페이지로 이동</span>
+        window.location.href = <span class="code-string">'/dashboard'</span>;
+      } <span class="code-keyword">else</span> {
+        <span class="code-function">setError</span>(result.message);
+      }
+    } <span class="code-keyword">catch</span> (err: <span class="code-keyword">any</span>) {
+      <span class="code-function">setError</span>(err.response?.data?.message || <span class="code-string">'로그인에 실패했습니다.'</span>);
+    } <span class="code-keyword">finally</span> {
+      <span class="code-function">setLoading</span>(<span class="code-keyword">false</span>);
+    }
+  };
+
+  <span class="code-keyword">return</span> (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;div&gt;
+        &lt;label htmlFor=<span class="code-string">"email"</span>&gt;이메일&lt;/label&gt;
+        &lt;input
+          id=<span class="code-string">"email"</span>
+          type=<span class="code-string">"email"</span>
+          value={email}
+          onChange={(e) => <span class="code-function">setEmail</span>(e.target.value)}
+          required
+          disabled={loading}
+        /&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;label htmlFor=<span class="code-string">"password"</span>&gt;비밀번호&lt;/label&gt;
+        &lt;input
+          id=<span class="code-string">"password"</span>
+          type=<span class="code-string">"password"</span>
+          value={password}
+          onChange={(e) => <span class="code-function">setPassword</span>(e.target.value)}
+          required
+          disabled={loading}
+          autoComplete=<span class="code-string">"current-password"</span>
+        /&gt;
+      &lt;/div&gt;
+
+      {error && &lt;div className=<span class="code-string">"error"</span>&gt;{error}&lt;/div&gt;}
+
+      &lt;button type=<span class="code-string">"submit"</span> disabled={loading}&gt;
+        {loading ? <span class="code-string">'로그인 중...'</span> : <span class="code-string">'로그인'</span>}
+      &lt;/button&gt;
+    &lt;/form&gt;
+  );
+};
+
+<span class="code-keyword">export default</span> LoginForm;</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>6. 보안 주의사항</h2>
+
+            <div class="danger-box">
+                <h3>🚫 절대 금지 사항</h3>
+                <ul>
+                    <li><strong>LocalStorage에 공개키 저장 금지</strong>: 공개키는 메모리에만 유지하세요.</li>
+                    <li><strong>AES 고정 키 하드코딩 금지</strong>: 프론트엔드에 대칭키를 저장하면 안 됩니다.</li>
+                    <li><strong>비밀번호 평문 로깅 금지</strong>: console.log로 비밀번호를 출력하지 마세요.</li>
+                    <li><strong>Private Key 클라이언트 배포 금지</strong>: 개인키는 서버에만 존재해야 합니다.</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ 주의 사항</h3>
+                <ul>
+                    <li>공개키는 세션당 또는 로그인 시도당 새로 조회하세요.</li>
+                    <li>HTTPS(TLS) 연결이 전제되어야 합니다.</li>
+                    <li>XSS 공격 방어가 선행되어야 합니다 (React의 기본 이스케이프 활용).</li>
+                    <li>개발 환경에서도 실제 비밀번호를 로그에 출력하지 마세요.</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h3>✅ 권장 사항</h3>
+                <ul>
+                    <li>JWT 토큰은 httpOnly 쿠키에 저장하는 것을 권장합니다.</li>
+                    <li>로그인 실패 시 구체적인 오류 메시지 대신 일반 메시지를 표시하세요.</li>
+                    <li>비밀번호 입력 필드에 <code>autoComplete="current-password"</code> 속성을 추가하세요.</li>
+                    <li>공개키 조회 실패 시 적절한 재시도 로직을 구현하세요.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>7. 패키지 설치</h2>
+            <pre><code><span class="code-comment"># npm 사용</span>
+npm install jsencrypt axios
+
+<span class="code-comment"># yarn 사용</span>
+yarn add jsencrypt axios
+
+<span class="code-comment"># TypeScript 타입 정의 (필요 시)</span>
+npm install -D @types/jsencrypt</code></pre>
+        </div>
+
+        <div class="section">
+            <h2>8. WebCrypto API 대안</h2>
+
+            <div class="info-box">
+                <p>JSEncrypt 대신 브라우저 내장 WebCrypto API를 사용할 수도 있습니다. WebCrypto는 더 나은 성능과 보안을 제공하지만, 구현이 더 복잡합니다.</p>
+            </div>
+
+            <pre><code><span class="code-comment">// src/utils/webCrypto.ts</span>
+<span class="code-comment">/**
+ * WebCrypto API를 사용한 RSA 암호화
+ *
+ * @param publicKeyBase64 Base64 인코딩된 공개키
+ * @param plainText 암호화할 평문
+ * @returns Base64 인코딩된 암호문
+ */</span>
+<span class="code-keyword">export const</span> <span class="code-function">encryptWithWebCrypto</span> = <span class="code-keyword">async</span> (
+  publicKeyBase64: <span class="code-keyword">string</span>,
+  plainText: <span class="code-keyword">string</span>
+): Promise&lt;<span class="code-keyword">string</span>&gt; => {
+  <span class="code-comment">// Base64 디코딩</span>
+  <span class="code-keyword">const</span> binaryDer = Uint8Array.<span class="code-function">from</span>(
+    <span class="code-function">atob</span>(publicKeyBase64),
+    (c) => c.<span class="code-function">charCodeAt</span>(<span class="code-keyword">0</span>)
+  );
+
+  <span class="code-comment">// 공개키 임포트</span>
+  <span class="code-keyword">const</span> publicKey = <span class="code-keyword">await</span> crypto.subtle.<span class="code-function">importKey</span>(
+    <span class="code-string">'spki'</span>,
+    binaryDer,
+    {
+      name: <span class="code-string">'RSA-OAEP'</span>,
+      hash: <span class="code-string">'SHA-256'</span>,
+    },
+    <span class="code-keyword">false</span>,
+    [<span class="code-string">'encrypt'</span>]
+  );
+
+  <span class="code-comment">// 평문을 바이트 배열로 변환</span>
+  <span class="code-keyword">const</span> encoder = <span class="code-keyword">new</span> TextEncoder();
+  <span class="code-keyword">const</span> data = encoder.<span class="code-function">encode</span>(plainText);
+
+  <span class="code-comment">// RSA-OAEP로 암호화</span>
+  <span class="code-keyword">const</span> encrypted = <span class="code-keyword">await</span> crypto.subtle.<span class="code-function">encrypt</span>(
+    { name: <span class="code-string">'RSA-OAEP'</span> },
+    publicKey,
+    data
+  );
+
+  <span class="code-comment">// Base64로 인코딩하여 반환</span>
+  <span class="code-keyword">return</span> <span class="code-function">btoa</span>(String.<span class="code-function">fromCharCode</span>(...<span class="code-keyword">new</span> Uint8Array(encrypted)));
+};</code></pre>
+
+            <div class="warning-box">
+                <strong>⚠️ 주의:</strong> WebCrypto API (RSA-OAEP)를 사용하면 서버 측에서도 동일한 알고리즘(RSA/ECB/OAEPWithSHA-256AndMGF1Padding)을 사용해야 합니다. 기본 구현은 JSEncrypt 호환(RSA/ECB/PKCS1Padding)입니다.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>9. 에러 코드 참조</h2>
+            <table>
+                <tr>
+                    <th>코드</th>
+                    <th>메시지</th>
+                    <th>원인</th>
+                </tr>
+                <tr>
+                    <td>3001</td>
+                    <td>등록되지 않은 사용자입니다.</td>
+                    <td>이메일로 사용자를 찾을 수 없음</td>
+                </tr>
+                <tr>
+                    <td>3002</td>
+                    <td>비밀번호가 일치하지 않습니다.</td>
+                    <td>비밀번호 불일치</td>
+                </tr>
+                <tr>
+                    <td>3003</td>
+                    <td>계정이 잠겼습니다.</td>
+                    <td>로그인 실패 횟수 초과</td>
+                </tr>
+                <tr>
+                    <td>3004</td>
+                    <td>비활성화된 계정입니다.</td>
+                    <td>사용 중지된 계정</td>
+                </tr>
+                <tr>
+                    <td>4001</td>
+                    <td>RSA 키 로딩에 실패했습니다.</td>
+                    <td>서버 RSA 키 설정 오류</td>
+                </tr>
+                <tr>
+                    <td>4002</td>
+                    <td>암호화된 데이터 복호화에 실패했습니다.</td>
+                    <td>잘못된 암호화 데이터 또는 키 불일치</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>10. 체크리스트</h2>
+            <table>
+                <tr>
+                    <th>항목</th>
+                    <th>상태</th>
+                    <th>설명</th>
+                </tr>
+                <tr>
+                    <td>HTTPS 사용</td>
+                    <td>✅ 필수</td>
+                    <td>모든 통신은 TLS로 암호화</td>
+                </tr>
+                <tr>
+                    <td>공개키 메모리 저장</td>
+                    <td>✅ 필수</td>
+                    <td>LocalStorage 저장 금지</td>
+                </tr>
+                <tr>
+                    <td>비밀번호 로깅 금지</td>
+                    <td>✅ 필수</td>
+                    <td>평문/암호문 모두 로그 출력 금지</td>
+                </tr>
+                <tr>
+                    <td>XSS 방어</td>
+                    <td>✅ 필수</td>
+                    <td>React 기본 이스케이프 활용</td>
+                </tr>
+                <tr>
+                    <td>JSEncrypt 또는 WebCrypto</td>
+                    <td>✅ 선택</td>
+                    <td>둘 중 하나 사용</td>
+                </tr>
+                <tr>
+                    <td>토큰 httpOnly 쿠키 저장</td>
+                    <td>⭐ 권장</td>
+                    <td>XSS 공격으로부터 토큰 보호</td>
+                </tr>
+            </table>
+        </div>
+
+        <footer style="margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--border-color); color: #64748b; font-size: 0.875rem;">
+            <p>📄 이 문서는 금융·공공 프로젝트 보안 요구사항을 기반으로 작성되었습니다.</p>
+            <p>📅 작성일: 2025-01-13</p>
+        </footer>
+    </div>
+</body>
+</html>

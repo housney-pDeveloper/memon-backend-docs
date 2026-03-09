@@ -1,0 +1,192 @@
+name: platform-ef-develop
+
+services:
+  platform-ef-develop-api:
+    image: gitlab.fingate.kr/platform/ef/backend/application:develop
+    container_name: platform-ef-develop-api
+    restart: unless-stopped
+
+    working_dir: /home/ec2-user
+
+    environment:
+      SPRING_PROFILES_ACTIVE: develop
+      DOCKER_FOREGROUND: "true"
+      APP_TZ: Asia/Seoul
+
+      AWS_PROFILE: epk-dev
+      AWS_REGION: ap-northeast-2
+      AWS_SHARED_CREDENTIALS_FILE: /aws-creds/credentials
+      AWS_CONFIG_FILE: /aws-creds/config
+      AWS_SDK_LOAD_CONFIG: "1"
+      AWS_EC2_METADATA_DISABLED: "true"
+
+    volumes:
+      - /root/.aws:/aws-creds:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home/fingate/docker/volumes/platform/ef-develop:/home/ec2-user
+      - /home/fingate/docker/volumes/platform/ef-develop/data:/data
+
+    entrypoint:
+      - /bin/bash
+      - -lc
+      - |
+        chmod +x /home/ec2-user/deploy/application/scripts/*.sh 2>/dev/null || true
+        exec /home/ec2-user/deploy/application/scripts/deploy.sh
+
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:9301/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    networks:
+      - platform-ef-develop-network
+      - platform-ef-develop-infra
+
+  # ============================================================
+  # System Server - API (port 8082)
+  # ============================================================
+  platform-ef-develop-system-api:
+    image: gitlab.fingate.kr/platform/ef/backend/system:develop
+    container_name: platform-ef-develop-system-api
+    restart: unless-stopped
+
+    working_dir: /home/ec2-user
+
+    environment:
+      SPRING_PROFILES_ACTIVE: api,develop
+      DOCKER_FOREGROUND: "true"
+      APP_TZ: Asia/Seoul
+      APP_NAME: system
+
+      AWS_PROFILE: epk-dev
+      AWS_REGION: ap-northeast-2
+      AWS_SHARED_CREDENTIALS_FILE: /aws-creds/credentials
+      AWS_CONFIG_FILE: /aws-creds/config
+      AWS_SDK_LOAD_CONFIG: "1"
+      AWS_EC2_METADATA_DISABLED: "true"      
+
+    volumes:
+      - /root/.aws:/aws-creds:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home/fingate/docker/volumes/platform/ef-develop:/home/ec2-user
+      - /home/fingate/docker/volumes/platform/ef-develop/data:/data
+
+    entrypoint:
+      - /bin/bash
+      - -lc
+      - |
+        chmod +x /home/ec2-user/deploy/system/scripts/*.sh 2>/dev/null || true
+        exec /home/ec2-user/deploy/system/scripts/deploy.sh
+
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    networks:
+      - platform-ef-develop-network
+      - platform-ef-develop-infra
+
+  # ============================================================
+  # System Server - MQ Worker (port 8083)
+  # ============================================================
+  platform-ef-develop-system-mq:
+    image: gitlab.fingate.kr/platform/ef/backend/system:develop
+    container_name: platform-ef-develop-system-mq
+    restart: unless-stopped
+
+    working_dir: /home/ec2-user
+
+    environment:
+      SPRING_PROFILES_ACTIVE: worker-mq,develop
+      DOCKER_FOREGROUND: "true"
+      APP_TZ: Asia/Seoul
+      APP_NAME: system
+
+      AWS_PROFILE: epk-dev
+      AWS_REGION: ap-northeast-2
+      AWS_SHARED_CREDENTIALS_FILE: /aws-creds/credentials
+      AWS_CONFIG_FILE: /aws-creds/config
+      AWS_SDK_LOAD_CONFIG: "1"
+      AWS_EC2_METADATA_DISABLED: "true"
+
+    volumes:
+      - /root/.aws:/aws-creds:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home/fingate/docker/volumes/platform/ef-develop:/home/ec2-user
+      - /home/fingate/docker/volumes/platform/ef-develop/data:/data
+
+    entrypoint:
+      - /bin/bash
+      - -lc
+      - |
+        chmod +x /home/ec2-user/deploy/system/scripts/*.sh 2>/dev/null || true
+        exec /home/ec2-user/deploy/system/scripts/deploy.sh
+
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8083/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    networks:
+      - platform-ef-develop-network
+      - platform-ef-develop-infra
+
+  # ============================================================
+  # System Server - Batch Worker (port 8084)
+  # ============================================================
+  platform-ef-develop-system-batch:
+    image: gitlab.fingate.kr/platform/ef/backend/system:develop
+    container_name: platform-ef-develop-system-batch
+    restart: unless-stopped
+
+    working_dir: /home/ec2-user
+
+    environment:
+      SPRING_PROFILES_ACTIVE: worker-batch,develop
+      DOCKER_FOREGROUND: "true"
+      APP_TZ: Asia/Seoul
+      APP_NAME: system
+
+      AWS_PROFILE: epk-dev
+      AWS_REGION: ap-northeast-2
+      AWS_SHARED_CREDENTIALS_FILE: /aws-creds/credentials
+      AWS_CONFIG_FILE: /aws-creds/config
+      AWS_SDK_LOAD_CONFIG: "1"
+      AWS_EC2_METADATA_DISABLED: "true"
+
+    volumes:
+      - /root/.aws:/aws-creds:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /home/fingate/docker/volumes/platform/ef-develop:/home/ec2-user
+      - /home/fingate/docker/volumes/platform/ef-develop/data:/data
+
+    entrypoint:
+      - /bin/bash
+      - -lc
+      - |
+        chmod +x /home/ec2-user/deploy/system/scripts/*.sh 2>/dev/null || true
+        exec /home/ec2-user/deploy/system/scripts/deploy.sh
+
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8084/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+    networks:
+      - platform-ef-develop-network
+      - platform-ef-develop-infra
+
+networks:
+  platform-ef-develop-network:
+    external: true
+  platform-ef-develop-infra:
+    external: true

@@ -1,0 +1,304 @@
+{
+  "rabbit_version": "3.13.7",
+  "rabbitmq_version": "3.13.7",
+  "product_name": "RabbitMQ",
+  "product_version": "3.13.7",
+  "users": [
+    {
+      "name": "admin",
+      "password_hash": "sayy0MUrlbZuvNOGsj133mi1gbjEJ8DSrrDRbqVGgrb+1LFI",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": ["administrator"],
+      "limits": {}
+    },
+    {
+      "name": "pf_ef_consumer",
+      "password_hash": "fh3+0iWmxWNErk9n/DUSPr2aenK4vGJPg0ownouUhbeCIomH",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": ["system"],
+      "limits": {}
+    },
+    {
+      "name": "pf_ef_publisher",
+      "password_hash": "z0iObSaOz+wapFfLV4exT7pJnUgd9cUhrll5kis2fskVNxt1",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": ["application"],
+      "limits": {}
+    },
+    {
+      "name": "pf_ef_admin",
+      "password_hash": "WeGaSg17jmw0F7iuru4Avym0dJTZByjVJHzKk4GL50AMqpEy",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": ["administrator"],
+      "limits": {}
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "/pf-ef",
+      "description": "platform-eventflow",
+      "tags": [],
+      "default_queue_type": "classic",
+      "metadata": {
+        "description": "platform-eventflow",
+        "tags": [],
+        "default_queue_type": "classic"
+      }
+    },
+    {
+      "name": "/",
+      "description": "Default virtual host",
+      "tags": [],
+      "metadata": {
+        "description": "Default virtual host",
+        "tags": []
+      }
+    }
+  ],
+  "permissions": [
+    {
+      "user": "pf_ef_admin",
+      "vhost": "/pf-ef",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "pf_ef_publisher",
+      "vhost": "/pf-ef",
+      "configure": "",
+      "write": "ex\\.pf\\.ef\\..*",
+      "read": ""
+    },
+    {
+      "user": "admin",
+      "vhost": "/pf-ef",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "pf_ef_consumer",
+      "vhost": "/pf-ef",
+      "configure": "",
+      "write": "",
+      "read": "q\\.pf\\.ef\\..*"
+    },
+    {
+      "user": "admin",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "global_parameters": [
+    {
+      "name": "internal_cluster_id",
+      "value": "rabbitmq-cluster-id-LWSNtoK0m3IeLn2iOLH_8w"
+    }
+  ],
+  "policies": [],
+  "queues": [
+    {
+      "name": "q.pf.ef.log.write",
+      "vhost": "/pf-ef",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    },
+    {
+      "name": "q.pf.ef.message.send",
+      "vhost": "/pf-ef",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum",
+        "x-dead-letter-exchange": "ex.pf.ef.dlx",
+        "x-dead-letter-routing-key": "message.send.dlq",
+        "x-message-ttl": 86400000,
+        "x-max-length": 50000,
+        "x-overflow": "reject-publish"
+      }
+    },
+    {
+      "name": "q.pf.ef.dlq.message.send",
+      "vhost": "/pf-ef",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum",
+        "x-message-ttl": 604800000
+      }
+    },
+    {
+      "name": "q.pf.ef.notification",
+      "vhost": "/pf-ef",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum",
+        "x-dead-letter-exchange": "ex.pf.ef.dlx",
+        "x-dead-letter-routing-key": "notification.dlq",
+        "x-message-ttl": 86400000
+      }
+    },
+    {
+      "name": "q.pf.ef.dlq.notification",
+      "vhost": "/pf-ef",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum",
+        "x-message-ttl": 604800000
+      }
+    },
+    {
+      "name": "q.pf.ef.commoncode.changed",
+      "vhost": "/pf-ef",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum",
+        "x-dead-letter-exchange": "ex.pf.ef.dlx",
+        "x-dead-letter-routing-key": "commoncode.changed.dlq",
+        "x-message-ttl": 86400000
+      }
+    },
+    {
+      "name": "q.pf.ef.dlq.commoncode.changed",
+      "vhost": "/pf-ef",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum",
+        "x-message-ttl": 604800000
+      }
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "ex.pf.ef.log.topic",
+      "vhost": "/pf-ef",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "ex.pf.ef.message.topic",
+      "vhost": "/pf-ef",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "ex.pf.ef.notification.topic",
+      "vhost": "/pf-ef",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "ex.pf.ef.commoncode.topic",
+      "vhost": "/pf-ef",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "ex.pf.ef.dlx",
+      "vhost": "/pf-ef",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "ex.pf.ef.log.topic",
+      "vhost": "/pf-ef",
+      "destination": "q.pf.ef.log.write",
+      "destination_type": "queue",
+      "routing_key": "log.access.v1",
+      "arguments": {}
+    },
+    {
+      "source": "ex.pf.ef.log.topic",
+      "vhost": "/pf-ef",
+      "destination": "q.pf.ef.log.write",
+      "destination_type": "queue",
+      "routing_key": "log.error.v1",
+      "arguments": {}
+    },
+    {
+      "source": "ex.pf.ef.log.topic",
+      "vhost": "/pf-ef",
+      "destination": "q.pf.ef.log.write",
+      "destination_type": "queue",
+      "routing_key": "log.audit.v1",
+      "arguments": {}
+    },
+    {
+      "source": "ex.pf.ef.message.topic",
+      "vhost": "/pf-ef",
+      "destination": "q.pf.ef.message.send",
+      "destination_type": "queue",
+      "routing_key": "message.send.v1",
+      "arguments": {}
+    },
+    {
+      "source": "ex.pf.ef.dlx",
+      "vhost": "/pf-ef",
+      "destination": "q.pf.ef.dlq.message.send",
+      "destination_type": "queue",
+      "routing_key": "message.send.dlq",
+      "arguments": {}
+    },
+    {
+      "source": "ex.pf.ef.notification.topic",
+      "vhost": "/pf-ef",
+      "destination": "q.pf.ef.notification",
+      "destination_type": "queue",
+      "routing_key": "notification.event.v1",
+      "arguments": {}
+    },
+    {
+      "source": "ex.pf.ef.dlx",
+      "vhost": "/pf-ef",
+      "destination": "q.pf.ef.dlq.notification",
+      "destination_type": "queue",
+      "routing_key": "notification.dlq",
+      "arguments": {}
+    },
+    {
+      "source": "ex.pf.ef.commoncode.topic",
+      "vhost": "/pf-ef",
+      "destination": "q.pf.ef.commoncode.changed",
+      "destination_type": "queue",
+      "routing_key": "commoncode.changed.v1",
+      "arguments": {}
+    },
+    {
+      "source": "ex.pf.ef.dlx",
+      "vhost": "/pf-ef",
+      "destination": "q.pf.ef.dlq.commoncode.changed",
+      "destination_type": "queue",
+      "routing_key": "commoncode.changed.dlq",
+      "arguments": {}
+    }
+  ]
+}
