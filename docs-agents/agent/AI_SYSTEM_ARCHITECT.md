@@ -56,14 +56,25 @@ System은 Worker / MQ / Batch Server다.
 ## 6. 관련 역할
 
 - AI_SYSTEM_ENGINEER
-- AI_EVENTFLOW_ARCHITECT
+- AI_EVENT_ARCHITECT
 
 ---
 
-## 7. 관련 문서
+## docs-claude 참조
 
-- 33_system/CLAUDE.md
-- 33_system/docs-claude/**
+단독 수행 시 다음 문서를 로드한다.
+- 01_architecture/ARCHITECTURE.md (필수)
+- 04_backend/SYSTEM.md (필수)
+- 05_infra/INFRASTRUCTURE.md (필수)
+- 03_data/DATABASE.md (선택)
+
+---
+
+## Team 수행 시 프로토콜
+
+TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
+- prompt.md + task_prompt.md + 이전 역할 result 파일을 읽고 수행한다
+- 수행 완료 후 result_AI_SYSTEM_ARCHITECT.md를 생성한다
 
 ---
 

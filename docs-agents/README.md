@@ -8,29 +8,27 @@
 
 ```
 docs-agents/
-├── README.md              # 이 파일
-├── agent/                 # 개별 Agent 역할 정의
-│   ├── README.md
-│   ├── AI_TECH_LEAD.md
-│   ├── AI_ARCHITECT.md
-│   ├── AI_EVENT_ARCHITECT.md
-│   ├── AI_EVENTFLOW_ARCHITECT.md
-│   ├── AI_BACKEND_ENGINEER.md
-│   ├── AI_INFRA_ENGINEER.md
-│   ├── AI_REVIEWER.md
-│   ├── AI_SECURITY_ENGINEER.md
-│   ├── AI_REFACTOR_ENGINEER.md
-│   ├── AI_GATEWAY_ARCHITECT.md
-│   ├── AI_GATEWAY_ENGINEER.md
-│   ├── AI_APPLICATION_ARCHITECT.md
-│   ├── AI_APPLICATION_ENGINEER.md
-│   ├── AI_SYSTEM_ARCHITECT.md
-│   ├── AI_SYSTEM_ENGINEER.md
-│   ├── AI_TASK_ROUTER.md
-│   └── AI_TASK_PIPELINE.md
-└── team/                  # Team 정의
-    ├── README.md
-    ├── AGENT_TEAM_STRATEGY.md
+├── README.md                          # 이 파일
+├── AGENT_DOCS_MAPPING.md              # 역할별 docs-claude 참조 매핑
+├── TEAM_EXECUTION_PROTOCOL.md         # Team 수행 프로토콜
+├── agent/                             # 개별 Agent 역할 정의 (15개)
+│   ├── AI_TASK_ROUTER.md              # Orchestrator (Pipeline 포함)
+│   ├── AI_TECH_LEAD.md                # 기술 리더 + 시스템 아키텍처 총괄
+│   ├── AI_EVENT_ARCHITECT.md          # 이벤트/MQ/EventFlow 설계
+│   ├── AI_GATEWAY_ARCHITECT.md        # Gateway 설계
+│   ├── AI_APPLICATION_ARCHITECT.md    # Application 설계
+│   ├── AI_SYSTEM_ARCHITECT.md         # System 설계
+│   ├── AI_GATEWAY_ENGINEER.md         # Gateway 구현
+│   ├── AI_APPLICATION_ENGINEER.md     # Application 구현
+│   ├── AI_SYSTEM_ENGINEER.md          # System 구현
+│   ├── AI_DATABASE_ENGINEER.md        # DB 설계/DDL/DML/Mapper
+│   ├── AI_API_DOC_ENGINEER.md         # API 문서 생성
+│   ├── AI_INFRA_ENGINEER.md           # 인프라 구성
+│   ├── AI_REVIEWER.md                 # 코드 품질 검토
+│   ├── AI_SECURITY_ENGINEER.md        # 보안 검토
+│   └── AI_REFACTOR_ENGINEER.md        # 코드 개선
+└── team/                              # Team 정의
+    ├── AGENT_TEAM_STRATEGY.md         # Team 전략 총괄
     ├── FEATURE_DEVELOPMENT_TEAM.md
     ├── EVENTFLOW_TEAM.md
     ├── QUALITY_ASSURANCE_TEAM.md
@@ -45,40 +43,33 @@ docs-agents/
 
 ## 개요
 
-CLAUDE_AI_TEAM_POLICY.md에서 정의된 AI 역할과 Team을 개별 문서로 분리하여 관리한다.
+AI Agent 역할과 Team을 개별 문서로 분리하여 관리한다.
+각 역할은 AGENT_DOCS_MAPPING.md에 따라 docs-claude 문서를 참조한다.
+Team 수행 시 TEAM_EXECUTION_PROTOCOL.md에 따라 프로세스를 진행한다.
 
 ---
 
-## Agent 역할
-
-개별 Agent 역할은 [agent/](./agent/README.md) 디렉토리에서 관리한다.
+## Agent 역할 (15개)
 
 ### 역할 분류
 
-| 분류 | 역할 |
-|------|------|
-| Orchestrator | AI_TASK_ROUTER, AI_TASK_PIPELINE |
-| Architecture | AI_TECH_LEAD, AI_ARCHITECT, AI_EVENT_ARCHITECT, AI_EVENTFLOW_ARCHITECT |
-| Engineering | AI_BACKEND_ENGINEER, AI_INFRA_ENGINEER |
-| Quality | AI_REVIEWER, AI_SECURITY_ENGINEER, AI_REFACTOR_ENGINEER |
-| Gateway | AI_GATEWAY_ARCHITECT, AI_GATEWAY_ENGINEER |
-| Application | AI_APPLICATION_ARCHITECT, AI_APPLICATION_ENGINEER |
-| System | AI_SYSTEM_ARCHITECT, AI_SYSTEM_ENGINEER |
+| 분류 | 역할 | 수 |
+|------|------|----|
+| Orchestrator | AI_TASK_ROUTER | 1 |
+| Architect | AI_TECH_LEAD, AI_EVENT_ARCHITECT, AI_GATEWAY_ARCHITECT, AI_APPLICATION_ARCHITECT, AI_SYSTEM_ARCHITECT | 5 |
+| Engineer | AI_GATEWAY_ENGINEER, AI_APPLICATION_ENGINEER, AI_SYSTEM_ENGINEER, AI_DATABASE_ENGINEER, AI_API_DOC_ENGINEER, AI_INFRA_ENGINEER | 6 |
+| Quality | AI_REVIEWER, AI_SECURITY_ENGINEER, AI_REFACTOR_ENGINEER | 3 |
 
 ---
 
-## Team 정의
-
-Team 정의는 [team/](./team/README.md) 디렉토리에서 관리한다.
-
-### 사전 정의 Team
+## Team 정의 (8개)
 
 | Team | 용도 | 핵심 역할 |
 |------|------|----------|
-| FEATURE_DEVELOPMENT_TEAM | 새로운 기능 개발 | TECH_LEAD → ARCHITECT → ENGINEER → REVIEWER |
-| EVENTFLOW_TEAM | Event Driven 구현 | EVENTFLOW_ARCHITECT → APP_ENGINEER → SYS_ENGINEER |
+| FEATURE_DEVELOPMENT_TEAM | 새로운 기능 개발 | TECH_LEAD → MODULE_ARCHITECT → MODULE_ENGINEER → REVIEWER |
+| EVENTFLOW_TEAM | Event Driven 구현 | EVENT_ARCHITECT → APP_ENGINEER → SYS_ENGINEER |
 | QUALITY_ASSURANCE_TEAM | 코드 품질 보증 | REVIEWER → SECURITY → REFACTOR |
-| ARCHITECTURE_TEAM | 시스템 설계 | TECH_LEAD → ARCHITECT → EVENT_ARCHITECT |
+| ARCHITECTURE_TEAM | 시스템 설계 | TECH_LEAD → EVENT_ARCHITECT (선택) → REVIEWER |
 | GATEWAY_TEAM | Gateway 작업 | GATEWAY_ARCHITECT → GATEWAY_ENGINEER |
 | APPLICATION_TEAM | Application 작업 | APP_ARCHITECT → APP_ENGINEER |
 | SYSTEM_TEAM | System 작업 | SYS_ARCHITECT → SYS_ENGINEER |
@@ -89,9 +80,9 @@ Team 정의는 [team/](./team/README.md) 디렉토리에서 관리한다.
 ## 표준 개발 Workflow
 
 ```
-STEP 1: AI_TECH_LEAD           → 요구사항 분석, 작업 분해
-STEP 2: AI_ARCHITECT           → 아키텍처 설계
-STEP 3: AI_EVENTFLOW_ARCHITECT → Event driven 설계 (필요 시)
+STEP 1: AI_TECH_LEAD           → 요구사항 분석, 작업 분해, 전체 설계
+STEP 2: AI_*_ARCHITECT         → 모듈별 상세 설계
+STEP 3: AI_EVENT_ARCHITECT     → Event driven 설계 (필요 시)
 STEP 4: AI_*_ENGINEER          → 코드 구현
 STEP 5: AI_REVIEWER            → 코드 리뷰
 STEP 6: AI_SECURITY_ENGINEER   → 보안 검토
@@ -120,12 +111,15 @@ Developer → AI_REVIEWER → AI_SECURITY_ENGINEER → AI_REFACTOR_ENGINEER
 | 비즈니스 API, 도메인 | APPLICATION_TEAM |
 | Worker, Consumer | SYSTEM_TEAM |
 | Docker, CI/CD | INFRA_TEAM |
+| DDL, DML, 스키마 | AI_DATABASE_ENGINEER (단독) |
+| API 문서 | AI_API_DOC_ENGINEER (단독) |
 
 ---
 
 ## 관련 문서
 
-- CLAUDE_AI_TEAM_POLICY.md
+- AGENT_DOCS_MAPPING.md (역할별 docs-claude 매핑)
+- TEAM_EXECUTION_PROTOCOL.md (Team 수행 프로토콜)
 - CLAUDE.md (각 프로젝트)
 
 ---

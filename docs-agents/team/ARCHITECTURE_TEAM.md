@@ -15,8 +15,8 @@ ARCHITECTURE_TEAM은 시스템의 전체 아키텍처를 설계하고
 
 | 순서 | 역할 | 책임 |
 |------|------|------|
-| 1 | AI_TECH_LEAD | 요구사항 분석 |
-| 2 | AI_ARCHITECT | 전체 아키텍처 설계 |
+| 1 | AI_TECH_LEAD | 요구사항 분석 + 전체 아키텍처 설계 |
+| 2 | AI_*_ARCHITECT | 모듈별 상세 설계 (필요 시) |
 | 3 | AI_EVENT_ARCHITECT | 이벤트 아키텍처 설계 (필요 시) |
 | 4 | AI_REVIEWER | 설계 검토 |
 
@@ -38,18 +38,18 @@ ARCHITECTURE_TEAM은 시스템의 전체 아키텍처를 설계하고
 
 ```
 ┌─────────────────┐
-│  AI_TECH_LEAD   │ 요구사항 분석
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│  AI_ARCHITECT   │ 전체 아키텍처 설계
+│  AI_TECH_LEAD   │ 요구사항 분석 + 전체 아키텍처 설계
 └────────┬────────┘
          ▼
     ┌────┴────┐
     ▼         ▼
-┌────────┐  ┌─────────────────┐
-│ 완료   │  │AI_EVENT_ARCHITECT│ (필요 시)
-└────────┘  └────────┬────────┘
+┌────────┐  ┌──────────────────┐
+│ 완료   │  │ AI_*_ARCHITECT   │ (모듈별 상세 설계, 필요 시)
+└────────┘  └────────┬─────────┘
+                     ▼
+            ┌──────────────────┐
+            │AI_EVENT_ARCHITECT│ (이벤트 설계, 필요 시)
+            └────────┬─────────┘
                      ▼
             ┌─────────────────┐
             │  AI_REVIEWER    │ 설계 검토
@@ -62,8 +62,8 @@ ARCHITECTURE_TEAM은 시스템의 전체 아키텍처를 설계하고
 
 | 역할 | 출력물 |
 |------|--------|
-| AI_TECH_LEAD | task-plan.md, development-plan.md |
-| AI_ARCHITECT | architecture.md, service-responsibility.md |
+| AI_TECH_LEAD | task-plan.md, architecture.md, service-responsibility.md |
+| AI_*_ARCHITECT | 모듈별 상세 설계 문서 |
 | AI_EVENT_ARCHITECT | event-architecture.md, mq-topology.md |
 
 ---
@@ -82,15 +82,15 @@ ARCHITECTURE_TEAM은 시스템의 전체 아키텍처를 설계하고
 
 ## 7. 핸드오프 규칙
 
-### 7.1 TECH_LEAD → ARCHITECT
+### 7.1 TECH_LEAD → MODULE_ARCHITECT
 
 전달 항목:
+- 전체 아키텍처 문서
 - 요구사항 분석 문서
-- 기능 목록
+- 모듈별 상세 설계 범위
 - 제약 조건
-- 비기능 요구사항
 
-### 7.2 ARCHITECT → EVENT_ARCHITECT
+### 7.2 TECH_LEAD / MODULE_ARCHITECT → EVENT_ARCHITECT
 
 전달 항목:
 - 전체 아키텍처 문서
@@ -133,25 +133,18 @@ AI_REVIEWER는 다음을 검토한다:
   - 로그인/로그아웃
   - 프로필 관리
   - 알림 발송
-- 작업 분해
+- 전체 아키텍처 설계
+  - 도메인 모델 설계 (Member, MemberProfile)
+  - API 구조 설계 (/api/v1/signup, /api/v1/login, /api/v1/members/{id})
+  - 서비스 책임 정의
 
-[STEP 2] AI_ARCHITECT
-- 도메인 모델 설계
-  - Member 엔티티
-  - MemberProfile 엔티티
-- API 구조 설계
-  - /api/v1/signup
-  - /api/v1/login
-  - /api/v1/members/{id}
-- 서비스 책임 정의
-
-[STEP 3] AI_EVENT_ARCHITECT
+[STEP 2] AI_EVENT_ARCHITECT (이벤트 필요 시)
 - 알림 이벤트 설계
   - Exchange: ef.notification.exchange
   - Queue: ef.notification.welcome.queue
 - DLQ 정책 정의
 
-[STEP 4] AI_REVIEWER
+[STEP 3] AI_REVIEWER
 - 설계 일관성 검토
 - 서버 책임 분리 검토
 - 확장성 검토
@@ -170,9 +163,34 @@ AI_REVIEWER는 다음을 검토한다:
 ## 11. 관련 문서
 
 - [AI_TECH_LEAD](../agent/AI_TECH_LEAD.md)
-- [AI_ARCHITECT](../agent/AI_ARCHITECT.md)
 - [AI_EVENT_ARCHITECT](../agent/AI_EVENT_ARCHITECT.md)
 - [AI_REVIEWER](../agent/AI_REVIEWER.md)
+- [AI_GATEWAY_ARCHITECT](../agent/AI_GATEWAY_ARCHITECT.md)
+- [AI_APPLICATION_ARCHITECT](../agent/AI_APPLICATION_ARCHITECT.md)
+- [AI_SYSTEM_ARCHITECT](../agent/AI_SYSTEM_ARCHITECT.md)
+
+---
+
+## Team 수행 프로토콜
+
+TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
+
+### 수행 순서 및 docs-claude 매핑
+
+| 순서 | 역할 | 필수 docs-claude | 병렬 |
+|------|------|-----------------|------|
+| 1 | AI_TECH_LEAD | 01_architecture, 02_security, 03_data, 04_backend/CODE_CONVENTION | N |
+| 2 | AI_*_ARCHITECT | 역할별 AGENT_DOCS_MAPPING 참조 | 조건부 (모듈별 상세 설계 시) |
+| 3 | AI_EVENT_ARCHITECT | 01_architecture, 05_infra | 조건부 (이벤트 관련 시) |
+| 4 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | N |
+
+### 핸드오프 흐름
+
+```
+prompt.md → task_prompt.md → result_AI_TECH_LEAD.md
+→ result_AI_*_ARCHITECT.md (해당 시) → result_AI_EVENT_ARCHITECT.md (해당 시)
+→ result_AI_REVIEWER.md → result_VERIFICATION.md
+```
 
 ---
 

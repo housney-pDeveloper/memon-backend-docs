@@ -66,12 +66,20 @@ Gateway는 Edge / Policy Server다.
 
 ---
 
-## 7. 관련 문서
+## docs-claude 참조
 
-- 31_gateway/CLAUDE.md
-- 31_gateway/docs-claude/ARCHITECTURE.md
-- 31_gateway/docs-claude/ROUTING_POLICY.md
-- 31_gateway/docs-claude/SECURITY.md
+단독 수행 시 다음 문서를 로드한다.
+- 01_architecture/ARCHITECTURE.md (필수)
+- 02_security/SECURITY.md (필수)
+- 04_backend/GATEWAY.md (필수)
+
+---
+
+## Team 수행 시 프로토콜
+
+TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
+- prompt.md + task_prompt.md + 이전 역할 result 파일을 읽고 수행한다
+- 수행 완료 후 result_AI_GATEWAY_ARCHITECT.md를 생성한다
 
 ---
 

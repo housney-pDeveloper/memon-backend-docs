@@ -165,4 +165,27 @@ REVIEWER → 재검토
 
 ---
 
+## Team 수행 프로토콜
+
+TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
+
+### 수행 순서 및 docs-claude 매핑
+
+| 순서 | 역할 | 필수 docs-claude | 병렬 |
+|------|------|-----------------|------|
+| 1 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | Y (with 2) |
+| 2 | AI_SECURITY_ENGINEER | 01_architecture, 02_security | Y (with 1) |
+| 3 | AI_REFACTOR_ENGINEER | 01_architecture, 04_backend/CODE_CONVENTION | N |
+
+### 핸드오프 흐름
+
+```
+prompt.md → task_prompt.md
+→ result_AI_REVIEWER.md + result_AI_SECURITY_ENGINEER.md (병렬)
+→ result_AI_REFACTOR_ENGINEER.md
+→ result_VERIFICATION.md
+```
+
+---
+
 END OF FILE

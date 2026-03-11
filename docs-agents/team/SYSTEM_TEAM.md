@@ -183,4 +183,28 @@ public class {Domain}{Action}Consumer {
 
 ---
 
+## Team 수행 프로토콜
+
+TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
+
+### 수행 순서 및 docs-claude 매핑
+
+| 순서 | 역할 | 필수 docs-claude | 병렬 |
+|------|------|-----------------|------|
+| 1 | AI_SYSTEM_ARCHITECT | 01_architecture, 04_backend/SYSTEM, 05_infra | N |
+| 2 | AI_SYSTEM_ENGINEER | 01_architecture, 02_security, 03_data, 04_backend/CODE_CONVENTION, 04_backend/SYSTEM, 05_infra | N |
+| 3 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | Y (with 4) |
+| 4 | AI_SECURITY_ENGINEER | 01_architecture, 02_security | Y (with 3) |
+
+### 핸드오프 흐름
+
+```
+prompt.md → task_prompt.md
+→ result_AI_SYSTEM_ARCHITECT.md → result_AI_SYSTEM_ENGINEER.md
+→ result_AI_REVIEWER.md + result_AI_SECURITY_ENGINEER.md (병렬)
+→ result_VERIFICATION.md
+```
+
+---
+
 END OF FILE

@@ -53,7 +53,7 @@ Event Driven 시스템을 구현할 때 사용한다.
 
 | 순서 | 역할 | 책임 |
 |------|------|------|
-| 1 | AI_EVENTFLOW_ARCHITECT | MQ topology 설계 |
+| 1 | AI_EVENT_ARCHITECT | MQ topology 설계 |
 | 2 | AI_APPLICATION_ENGINEER | Producer 구현 |
 | 3 | AI_SYSTEM_ENGINEER | Consumer 구현 |
 | 4 | AI_REVIEWER | 코드 리뷰 |
@@ -89,9 +89,8 @@ Event Driven 시스템을 구현할 때 사용한다.
 
 | 순서 | 역할 | 책임 |
 |------|------|------|
-| 1 | AI_TECH_LEAD | 요구사항 분석 |
-| 2 | AI_ARCHITECT | 전체 아키텍처 설계 |
-| 3 | AI_EVENT_ARCHITECT | 이벤트 아키텍처 설계 (필요 시) |
+| 1 | AI_TECH_LEAD | 요구사항 분석 + 전체 아키텍처 설계 |
+| 2 | AI_EVENT_ARCHITECT | 이벤트 아키텍처 설계 (필요 시) |
 | 4 | AI_REVIEWER | 설계 검토 |
 
 트리거 조건:
@@ -361,7 +360,7 @@ END IF
 | 순서 | 역할 | 서버 | 작업 |
 |------|------|------|------|
 | 1 | AI_APPLICATION_ARCHITECT | Application | API 설계 |
-| 2 | AI_EVENTFLOW_ARCHITECT | - | MQ 설계 |
+| 2 | AI_EVENT_ARCHITECT | - | MQ 설계 |
 | 3 | AI_APPLICATION_ENGINEER | Application | API + Producer 구현 |
 | 4 | AI_SYSTEM_ENGINEER | System | Consumer 구현 |
 | 5 | AI_REVIEWER | - | 전체 코드 리뷰 |
@@ -435,7 +434,7 @@ Team 선택: EVENTFLOW_TEAM
 
 실행 순서:
 ```
-1. AI_EVENTFLOW_ARCHITECT
+1. AI_EVENT_ARCHITECT
    - MQ topology 설계
    - Exchange/Queue 정의
    - DLQ 정책 설계
@@ -524,6 +523,35 @@ prompt-result/{team-name}-{timestamp}.html
 
 4. 피드백 무시
    - Reviewer 피드백 반영 없이 진행
+
+---
+
+## Team 수행 프로토콜
+
+모든 Team은 TEAM_EXECUTION_PROTOCOL.md에 정의된 프로세스를 따른다.
+
+### 핵심 프로세스
+
+1. prompt.md 저장 → task_prompt.md 생성 → 역할 순차/병렬 수행 → 검증 → Build/Test
+2. 각 역할은 AGENT_DOCS_MAPPING.md에 따른 docs-claude 문서를 참조한다
+3. 역할 간 핸드오프는 result_{역할명}.md를 통해 이루어진다
+4. 검증은 연속 2회 이상 이상없음 도출 시까지 반복한다
+5. 병렬 가능한 단계는 task_prompt.md에 명시하여 병렬 수행한다
+
+### 결과물 위치
+
+```
+01_docs/docs-agents/result-docs/{prompt-id}/
+├── prompt.md
+├── task_prompt.md
+├── result_{역할명}.md (역할별)
+└── result_VERIFICATION.md
+```
+
+### 참조 문서
+
+- TEAM_EXECUTION_PROTOCOL.md: 상세 프로세스
+- AGENT_DOCS_MAPPING.md: 역할별 docs-claude 매핑
 
 ---
 

@@ -15,7 +15,7 @@ Producer(Application)와 Consumer(System) 간의 협업을 관리한다.
 
 | 순서 | 역할 | 책임 |
 |------|------|------|
-| 1 | AI_EVENTFLOW_ARCHITECT | MQ topology 설계 |
+| 1 | AI_EVENT_ARCHITECT | MQ topology 설계 |
 | 2 | AI_APPLICATION_ENGINEER | Producer 구현 |
 | 3 | AI_SYSTEM_ENGINEER | Consumer 구현 |
 | 4 | AI_REVIEWER | 코드 리뷰 |
@@ -39,7 +39,7 @@ Producer(Application)와 Consumer(System) 간의 협업을 관리한다.
 
 ```
 ┌──────────────────────┐
-│ AI_EVENTFLOW_ARCHITECT│ MQ topology 설계
+│ AI_EVENT_ARCHITECT│ MQ topology 설계
 └──────────┬───────────┘
            ▼
     ┌──────┴──────┐
@@ -124,7 +124,7 @@ EVENTFLOW_ARCHITECT
 ### 실행
 
 ```
-[STEP 1] AI_EVENTFLOW_ARCHITECT
+[STEP 1] AI_EVENT_ARCHITECT
 - Exchange: ef.notification.exchange
 - Queue: ef.notification.welcome.queue
 - DLQ: ef.notification.welcome.dlq
@@ -160,12 +160,45 @@ EVENTFLOW_ARCHITECT
 
 ## 10. 관련 문서
 
-- [AI_EVENTFLOW_ARCHITECT](../agent/AI_EVENTFLOW_ARCHITECT.md)
+- [AI_EVENT_ARCHITECT](../agent/AI_EVENT_ARCHITECT.md)
 - [AI_APPLICATION_ENGINEER](../agent/AI_APPLICATION_ENGINEER.md)
 - [AI_SYSTEM_ENGINEER](../agent/AI_SYSTEM_ENGINEER.md)
 - [AI_REVIEWER](../agent/AI_REVIEWER.md)
 - [AI_SECURITY_ENGINEER](../agent/AI_SECURITY_ENGINEER.md)
 - 01_docs/docs-spec/mq/*.md
+
+---
+
+## Team 수행 프로토콜
+
+TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
+
+### 수행 순서 및 docs-claude 매핑
+
+| 순서 | 역할 | 필수 docs-claude | 병렬 |
+|------|------|-----------------|------|
+| 1 | AI_EVENT_ARCHITECT | 01_architecture, 05_infra, 04_backend/SYSTEM | N |
+| 2 | AI_APPLICATION_ENGINEER | 01_architecture, 02_security, 03_data, 04_backend/CODE_CONVENTION, 04_backend/APPLICATION, 05_infra | N |
+| 3 | AI_SYSTEM_ENGINEER | 01_architecture, 02_security, 03_data, 04_backend/CODE_CONVENTION, 04_backend/SYSTEM, 05_infra | N |
+| 4 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | Y (with 5) |
+| 5 | AI_SECURITY_ENGINEER | 01_architecture, 02_security | Y (with 4) |
+
+### 핸드오프 흐름
+
+```
+prompt.md → task_prompt.md
+→ result_AI_EVENT_ARCHITECT.md
+→ result_AI_APPLICATION_ENGINEER.md (Producer)
+→ result_AI_SYSTEM_ENGINEER.md (Consumer)
+→ result_AI_REVIEWER.md + result_AI_SECURITY_ENGINEER.md (병렬)
+→ result_VERIFICATION.md
+```
+
+### 특수 규칙
+
+- AI_APPLICATION_ENGINEER는 Producer만 구현 (Consumer 금지)
+- AI_SYSTEM_ENGINEER는 Consumer만 구현 (Producer 금지)
+- MQ 리소스 변경 시 05_infra/INFRASTRUCTURE.md 업데이트 필수
 
 ---
 

@@ -50,6 +50,13 @@ Gateway는 Edge / Policy Server다.
 - Stateless Architecture
 - Reactive Stack (Spring WebFlux)
 
+### 4.3 MEMON 필수 패턴
+
+- Header Injection: X-Gateway-Verified, X-Gateway-Secret, X-Request-Id
+- Route 설정: /app/v1/** → Application, /web/v1/** → Application, /sys/v1/** → System
+- Circuit Breaker: System 서버 대상 (60% failure threshold, 60s wait, Fallback 503)
+- JWT: OAuth2 Client + JWT 발급, Refresh Token은 Redis 기반 (14일 TTL, rotation)
+
 ---
 
 ## 5. 역할 추천 조건
@@ -68,11 +75,21 @@ Gateway는 Edge / Policy Server다.
 
 ---
 
-## 7. 관련 문서
+## docs-claude 참조
 
-- 31_gateway/CLAUDE.md
-- 31_gateway/docs-claude/IMPLEMENTATION_PRINCIPLES.md
-- 31_gateway/docs-claude/SECURITY.md
+단독 수행 시 다음 문서를 로드한다.
+- 01_architecture/ARCHITECTURE.md (필수)
+- 02_security/SECURITY.md (필수)
+- 04_backend/CODE_CONVENTION.md (필수)
+- 04_backend/GATEWAY.md (필수)
+
+---
+
+## Team 수행 시 프로토콜
+
+TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
+- prompt.md + task_prompt.md + 이전 역할 result 파일을 읽고 수행한다
+- 수행 완료 후 result_AI_GATEWAY_ENGINEER.md를 생성한다
 
 ---
 

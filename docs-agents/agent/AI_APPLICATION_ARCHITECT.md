@@ -59,10 +59,21 @@ Application은 Business Logic Server다.
 
 ---
 
-## 7. 관련 문서
+## docs-claude 참조
 
-- 32_application/CLAUDE.md
-- 32_application/docs-claude/**
+단독 수행 시 다음 문서를 로드한다.
+- 01_architecture/ARCHITECTURE.md (필수)
+- 04_backend/CODE_CONVENTION.md (필수)
+- 04_backend/APPLICATION.md (필수)
+- 03_data/DATABASE.md (선택)
+
+---
+
+## Team 수행 시 프로토콜
+
+TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
+- prompt.md + task_prompt.md + 이전 역할 result 파일을 읽고 수행한다
+- 수행 완료 후 result_AI_APPLICATION_ARCHITECT.md를 생성한다
 
 ---
 
