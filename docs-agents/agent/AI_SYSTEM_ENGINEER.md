@@ -77,11 +77,8 @@ System은 Worker / MQ / Batch Server다.
 
 ```
 AI_EVENT_ARCHITECT
-→ AI_APPLICATION_ENGINEER (Producer 구현)
-→ AI_SYSTEM_ENGINEER (Consumer 구현)
-→ AI_REVIEWER
-→ AI_SECURITY_ENGINEER
-→ AI_REFACTOR_ENGINEER
+→ AI_APPLICATION_ENGINEER (Producer) + AI_SYSTEM_ENGINEER (Consumer)  ← 병렬
+→ AI_REVIEWER + AI_SECURITY_ENGINEER  ← 병렬
 ```
 
 ---

@@ -37,21 +37,23 @@ GATEWAY_TEAM은 API Gateway의 설계와 구현을 담당하는 Team이다.
 ## 4. 실행 워크플로우
 
 ```
-┌──────────────────────┐
-│ AI_GATEWAY_ARCHITECT │ Gateway 구조 설계
-└──────────┬───────────┘
-           ▼
-┌──────────────────────┐
-│ AI_GATEWAY_ENGINEER  │ Filter/Routing 구현
-└──────────┬───────────┘
-           ▼
-┌──────────────────────┐
-│ AI_SECURITY_ENGINEER │ 인증/인가 검토
-└──────────┬───────────┘
-           ▼
-┌──────────────────────┐
-│    AI_REVIEWER       │ 코드 리뷰
-└──────────────────────┘
+[A] ┌──────────────────────┐
+    │ AI_GATEWAY_ARCHITECT │ Gateway 구조 설계
+    └──────────┬───────────┘
+               ▼
+[B] ┌──────────────────────┐
+    │ AI_GATEWAY_ENGINEER  │ Filter/Routing 구현
+    └──────────┬───────────┘
+               ▼
+[C] ┌──────────┴──────────┐        ← 병렬 (C-1, C-2)
+    ▼                     ▼
+┌─────────────────┐ ┌─────────────┐
+│AI_SECURITY_ENG  │ │ AI_REVIEWER │
+│ (인증/인가 검토) │ │ (코드 리뷰)  │
+└────────┬────────┘ └──────┬──────┘
+         └────────┬────────┘
+                  ▼  (C-1, C-2 모두 완료 대기)
+[D]      result_VERIFICATION.md
 ```
 
 ---
@@ -168,21 +170,25 @@ TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
 
 ### 수행 순서 및 docs-claude 매핑
 
-| 순서 | 역할 | 필수 docs-claude | 병렬 |
-|------|------|-----------------|------|
-| 1 | AI_GATEWAY_ARCHITECT | 01_architecture, 02_security, 04_backend/GATEWAY | N |
-| 2 | AI_GATEWAY_ENGINEER | 01_architecture, 02_security, 04_backend/CODE_CONVENTION, 04_backend/GATEWAY | N |
-| 3 | AI_SECURITY_ENGINEER | 01_architecture, 02_security | Y (with 4) |
-| 4 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | Y (with 3) |
+| 단계 | 순서 | 역할 | 필수 docs-claude | 병렬 |
+|------|------|------|-----------------|------|
+| A | 1 | AI_GATEWAY_ARCHITECT | 01_architecture, 02_security, 04_backend/GATEWAY | N |
+| B | 2 | AI_GATEWAY_ENGINEER | 01_architecture, 02_security, 04_backend/CODE_CONVENTION, 04_backend/GATEWAY | N |
+| C | 3-1 | AI_SECURITY_ENGINEER | 01_architecture, 02_security | Y (with 3-2) |
+| C | 3-2 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | Y (with 3-1) |
 
 ### 핸드오프 흐름
 
 ```
 prompt.md → task_prompt.md
-→ result_AI_GATEWAY_ARCHITECT.md → result_AI_GATEWAY_ENGINEER.md
-→ result_AI_SECURITY_ENGINEER.md + result_AI_REVIEWER.md (병렬)
-→ result_VERIFICATION.md
+→ [A] result_AI_GATEWAY_ARCHITECT.md
+→ [B] result_AI_GATEWAY_ENGINEER.md
+→ [C] result_AI_SECURITY_ENGINEER.md + result_AI_REVIEWER.md  ← 병렬, 모두 완료 대기
+→ [D] result_VERIFICATION.md
 ```
+
+**병렬 입력 규칙:**
+- C단계 (3-1, 3-2): prompt.md + task_prompt.md + result_AI_GATEWAY_ARCHITECT.md + result_AI_GATEWAY_ENGINEER.md
 
 ---
 

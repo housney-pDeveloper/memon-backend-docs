@@ -36,17 +36,17 @@ QUALITY_ASSURANCE_TEAM은 코드의 품질, 보안, 구조를 검토하고
 ## 4. 실행 워크플로우
 
 ```
-┌─────────────────┐
-│  AI_REVIEWER    │ 코드 품질 검토
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ AI_SECURITY_ENG │ 보안 취약점 검토
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ AI_REFACTOR_ENG │ 코드 개선
-└─────────────────┘
+[A] ┌────────────┬────────────┐        ← 병렬 (A-1, A-2)
+    ▼                        ▼
+┌─────────────┐      ┌─────────────┐
+│ AI_REVIEWER │      │AI_SECURITY  │
+│(코드 품질)   │      │(보안 취약점) │
+└──────┬──────┘      └──────┬──────┘
+       └───────┬─────────────┘
+               ▼  (A-1, A-2 모두 완료 대기)
+[B] ┌─────────────────┐
+    │ AI_REFACTOR_ENG │ 코드 개선
+    └─────────────────┘
 ```
 
 ---
@@ -171,20 +171,24 @@ TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
 
 ### 수행 순서 및 docs-claude 매핑
 
-| 순서 | 역할 | 필수 docs-claude | 병렬 |
-|------|------|-----------------|------|
-| 1 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | Y (with 2) |
-| 2 | AI_SECURITY_ENGINEER | 01_architecture, 02_security | Y (with 1) |
-| 3 | AI_REFACTOR_ENGINEER | 01_architecture, 04_backend/CODE_CONVENTION | N |
+| 단계 | 순서 | 역할 | 필수 docs-claude | 병렬 |
+|------|------|------|-----------------|------|
+| A | 1-1 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | Y (with 1-2) |
+| A | 1-2 | AI_SECURITY_ENGINEER | 01_architecture, 02_security | Y (with 1-1) |
+| B | 2 | AI_REFACTOR_ENGINEER | 01_architecture, 04_backend/CODE_CONVENTION | N |
 
 ### 핸드오프 흐름
 
 ```
 prompt.md → task_prompt.md
-→ result_AI_REVIEWER.md + result_AI_SECURITY_ENGINEER.md (병렬)
-→ result_AI_REFACTOR_ENGINEER.md
+→ [A] result_AI_REVIEWER.md + result_AI_SECURITY_ENGINEER.md  ← 병렬, 모두 완료 대기
+→ [B] result_AI_REFACTOR_ENGINEER.md
 → result_VERIFICATION.md
 ```
+
+**병렬 입력 규칙:**
+- A단계 (1-1, 1-2): prompt.md + task_prompt.md (이전 단계 없음)
+- B단계: prompt.md + task_prompt.md + result_AI_REVIEWER.md + result_AI_SECURITY_ENGINEER.md
 
 ---
 

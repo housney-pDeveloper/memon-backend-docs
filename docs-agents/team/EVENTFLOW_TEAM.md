@@ -38,26 +38,28 @@ Producer(Application)와 Consumer(System) 간의 협업을 관리한다.
 ## 4. 실행 워크플로우
 
 ```
-┌──────────────────────┐
-│ AI_EVENT_ARCHITECT│ MQ topology 설계
-└──────────┬───────────┘
-           ▼
-    ┌──────┴──────┐
-    ▼             ▼
-┌────────┐   ┌────────┐
-│  APP   │   │ SYSTEM │
-│ENGINEER│   │ENGINEER│
-└───┬────┘   └───┬────┘
-    │ Producer   │ Consumer
-    └──────┬─────┘
-           ▼
-┌─────────────────┐
-│   AI_REVIEWER   │ 전체 흐름 검토
-└────────┬────────┘
-         ▼
-┌─────────────────┐
-│ AI_SECURITY_ENG │ 보안 검토
-└─────────────────┘
+[A] ┌──────────────────────┐
+    │ AI_EVENT_ARCHITECT   │ MQ topology 설계
+    └──────────┬───────────┘
+               ▼
+[B] ┌──────────┴──────────┐      ← 병렬 (B-1, B-2)
+    ▼                     ▼
+┌──────────┐       ┌──────────┐
+│  APP     │       │ SYSTEM   │
+│ ENGINEER │       │ ENGINEER │
+│(Producer)│       │(Consumer)│
+└────┬─────┘       └────┬─────┘
+     └────────┬─────────┘
+              ▼  (B-1, B-2 모두 완료 대기)
+[C] ┌─────────┴─────────┐       ← 병렬 (C-1, C-2)
+    ▼                   ▼
+┌─────────────┐  ┌─────────────┐
+│ AI_REVIEWER │  │AI_SECURITY  │
+│ (코드 리뷰)  │  │  (보안 검토) │
+└──────┬──────┘  └──────┬──────┘
+       └────────┬───────┘
+                ▼  (C-1, C-2 모두 완료 대기)
+[D]    result_VERIFICATION.md
 ```
 
 ---
@@ -175,24 +177,27 @@ TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
 
 ### 수행 순서 및 docs-claude 매핑
 
-| 순서 | 역할 | 필수 docs-claude | 병렬 |
-|------|------|-----------------|------|
-| 1 | AI_EVENT_ARCHITECT | 01_architecture, 05_infra, 04_backend/SYSTEM | N |
-| 2 | AI_APPLICATION_ENGINEER | 01_architecture, 02_security, 03_data, 04_backend/CODE_CONVENTION, 04_backend/APPLICATION, 05_infra | N |
-| 3 | AI_SYSTEM_ENGINEER | 01_architecture, 02_security, 03_data, 04_backend/CODE_CONVENTION, 04_backend/SYSTEM, 05_infra | N |
-| 4 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | Y (with 5) |
-| 5 | AI_SECURITY_ENGINEER | 01_architecture, 02_security | Y (with 4) |
+| 단계 | 순서 | 역할 | 필수 docs-claude | 병렬 |
+|------|------|------|-----------------|------|
+| A | 1 | AI_EVENT_ARCHITECT | 01_architecture, 05_infra, 04_backend/SYSTEM | N |
+| B | 2-1 | AI_APPLICATION_ENGINEER | 01_architecture, 02_security, 03_data, 04_backend/CODE_CONVENTION, 04_backend/APPLICATION, 05_infra | Y (with 2-2) |
+| B | 2-2 | AI_SYSTEM_ENGINEER | 01_architecture, 02_security, 03_data, 04_backend/CODE_CONVENTION, 04_backend/SYSTEM, 05_infra | Y (with 2-1) |
+| C | 3-1 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | Y (with 3-2) |
+| C | 3-2 | AI_SECURITY_ENGINEER | 01_architecture, 02_security | Y (with 3-1) |
 
 ### 핸드오프 흐름
 
 ```
 prompt.md → task_prompt.md
-→ result_AI_EVENT_ARCHITECT.md
-→ result_AI_APPLICATION_ENGINEER.md (Producer)
-→ result_AI_SYSTEM_ENGINEER.md (Consumer)
-→ result_AI_REVIEWER.md + result_AI_SECURITY_ENGINEER.md (병렬)
-→ result_VERIFICATION.md
+→ [A] result_AI_EVENT_ARCHITECT.md
+→ [B] result_AI_APPLICATION_ENGINEER.md (Producer) + result_AI_SYSTEM_ENGINEER.md (Consumer)  ← 병렬, 모두 완료 대기
+→ [C] result_AI_REVIEWER.md + result_AI_SECURITY_ENGINEER.md  ← 병렬, 모두 완료 대기
+→ [D] result_VERIFICATION.md
 ```
+
+**병렬 입력 규칙:**
+- B단계 (2-1, 2-2): prompt.md + task_prompt.md + result_AI_EVENT_ARCHITECT.md
+- C단계 (3-1, 3-2): prompt.md + task_prompt.md + result_AI_EVENT_ARCHITECT.md + result_AI_APPLICATION_ENGINEER.md + result_AI_SYSTEM_ENGINEER.md
 
 ### 특수 규칙
 

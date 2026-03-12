@@ -37,21 +37,23 @@ SYSTEM_TEAM은 Worker, MQ Consumer, Background Job을 설계하고 구현하는 
 ## 4. 실행 워크플로우
 
 ```
-┌─────────────────────┐
-│ AI_SYSTEM_ARCHITECT │ Worker/Consumer 설계
-└──────────┬──────────┘
-           ▼
-┌─────────────────────┐
-│ AI_SYSTEM_ENGINEER  │ Worker/Consumer 구현
-└──────────┬──────────┘
-           ▼
-┌─────────────────────┐
-│    AI_REVIEWER      │ 코드 리뷰
-└──────────┬──────────┘
-           ▼
-┌─────────────────────┐
-│ AI_SECURITY_ENGINEER│ 보안 검토
-└─────────────────────┘
+[A] ┌─────────────────────┐
+    │ AI_SYSTEM_ARCHITECT │ Worker/Consumer 설계
+    └──────────┬──────────┘
+               ▼
+[B] ┌─────────────────────┐
+    │ AI_SYSTEM_ENGINEER  │ Worker/Consumer 구현
+    └──────────┬──────────┘
+               ▼
+[C] ┌──────────┴──────────┐        ← 병렬 (C-1, C-2)
+    ▼                     ▼
+┌─────────────┐   ┌─────────────┐
+│ AI_REVIEWER │   │AI_SECURITY  │
+│ (코드 리뷰)  │   │ (보안 검토)  │
+└──────┬──────┘   └──────┬──────┘
+       └────────┬────────┘
+                ▼  (C-1, C-2 모두 완료 대기)
+[D]    result_VERIFICATION.md
 ```
 
 ---
@@ -189,21 +191,25 @@ TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
 
 ### 수행 순서 및 docs-claude 매핑
 
-| 순서 | 역할 | 필수 docs-claude | 병렬 |
-|------|------|-----------------|------|
-| 1 | AI_SYSTEM_ARCHITECT | 01_architecture, 04_backend/SYSTEM, 05_infra | N |
-| 2 | AI_SYSTEM_ENGINEER | 01_architecture, 02_security, 03_data, 04_backend/CODE_CONVENTION, 04_backend/SYSTEM, 05_infra | N |
-| 3 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | Y (with 4) |
-| 4 | AI_SECURITY_ENGINEER | 01_architecture, 02_security | Y (with 3) |
+| 단계 | 순서 | 역할 | 필수 docs-claude | 병렬 |
+|------|------|------|-----------------|------|
+| A | 1 | AI_SYSTEM_ARCHITECT | 01_architecture, 04_backend/SYSTEM, 05_infra | N |
+| B | 2 | AI_SYSTEM_ENGINEER | 01_architecture, 02_security, 03_data, 04_backend/CODE_CONVENTION, 04_backend/SYSTEM, 05_infra | N |
+| C | 3-1 | AI_REVIEWER | 01_architecture, 04_backend/CODE_CONVENTION | Y (with 3-2) |
+| C | 3-2 | AI_SECURITY_ENGINEER | 01_architecture, 02_security | Y (with 3-1) |
 
 ### 핸드오프 흐름
 
 ```
 prompt.md → task_prompt.md
-→ result_AI_SYSTEM_ARCHITECT.md → result_AI_SYSTEM_ENGINEER.md
-→ result_AI_REVIEWER.md + result_AI_SECURITY_ENGINEER.md (병렬)
-→ result_VERIFICATION.md
+→ [A] result_AI_SYSTEM_ARCHITECT.md
+→ [B] result_AI_SYSTEM_ENGINEER.md
+→ [C] result_AI_REVIEWER.md + result_AI_SECURITY_ENGINEER.md  ← 병렬, 모두 완료 대기
+→ [D] result_VERIFICATION.md
 ```
+
+**병렬 입력 규칙:**
+- C단계 (3-1, 3-2): prompt.md + task_prompt.md + result_AI_SYSTEM_ARCHITECT.md + result_AI_SYSTEM_ENGINEER.md
 
 ---
 

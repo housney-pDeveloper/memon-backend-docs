@@ -10,7 +10,7 @@
 |-----------|----------|----------|
 | Gateway 개발 | 01_architecture, 02_security, 04_backend/CODE_CONVENTION, 04_backend/GATEWAY | 07_process |
 | Application 개발 | 01_architecture, 02_security, 03_data, 04_backend/CODE_CONVENTION, 04_backend/APPLICATION | 07_process |
-| System 개발 | 01_architecture, 05_infra, 04_backend/CODE_CONVENTION, 04_backend/SYSTEM | 02_security |
+| System 개발 | 01_architecture, 02_security, 03_data, 05_infra, 04_backend/CODE_CONVENTION, 04_backend/SYSTEM | 07_process |
 | DB 설계/변경 | 03_data | 01_architecture |
 | API 문서 작성 | 06_api-docs | 04_backend/APPLICATION |
 | 보안 점검 | 02_security | 01_architecture |
@@ -42,10 +42,11 @@ docs-claude/
 ## 3. 로딩 원칙
 
 1. 작업 시작 전 이 문서(_INDEX.md)를 먼저 읽는다
-2. 역할에 맞는 필수 문서만 로드한다
-3. 모든 문서를 한 번에 읽지 않는다
-4. 다른 역할의 문서를 임의로 적용하지 않는다
-5. 단순 필드 추가 등 소규모 작업 시 아키텍처 문서 재로딩 금지
+2. Agent 역할 기반 수행 시에는 AGENT_DOCS_MAPPING.md를 우선 참조한다
+3. 역할에 맞는 필수 문서만 로드한다
+4. 모든 문서를 한 번에 읽지 않는다
+5. 다른 역할의 문서를 임의로 적용하지 않는다
+6. 단순 필드 추가 등 소규모 작업 시 아키텍처 문서 재로딩 금지
 
 ---
 
