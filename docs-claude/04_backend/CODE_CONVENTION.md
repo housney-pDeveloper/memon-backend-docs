@@ -81,6 +81,19 @@ tb_client → ClientVO
 - 모든 VO/DTO에 @Alias 필수
 - Alias 값은 클래스명과 동일
 
+### 4.5 Mapper XML 타입 참조 규칙
+
+- parameterType, resultType은 full path가 아닌 @Alias 이름으로 작성한다.
+- type-aliases-package 범위 내의 클래스만 alias 사용 가능
+
+```xml
+O  resultType="UserVO"
+X  resultType="kr.housney.memon.api.biz.vo.mmhr.UserVO"
+
+O  parameterType="OAuthLoginHistoryVO"
+X  parameterType="kr.housney.memon.api.biz.vo.mmauth.OAuthLoginHistoryVO"
+```
+
 ---
 
 ## 5. Validation 규칙

@@ -17,24 +17,30 @@ URL 기반 버저닝만 허용한다.
 
 - Controller는 버전별로 분리하지 않는다.
 - 단일 Controller에서 {version} PathVariable을 사용한다.
-- ServiceFactory에 version을 전달한다.
+- ServiceResolver.resolve(version)으로 구현체를 선택한다.
 
 ```java
-@RequestMapping("/api/{version}/client")
+@RequestMapping("/api/{version}/auth")
 ```
 
 ### 1.3 Service 규칙
 
 - VersionedService 상속 필수
-- getVersion() 구현 필수
+- getVersion()은 String 반환 (ApiVersion.V1 등)
 - 정책 변경 시에만 새 버전 생성
 - 기존 Service 복사 후 v2 생성 금지
 
-### 1.4 ServiceFactory 규칙
+### 1.4 ServiceResolver 규칙
 
-- 모든 구현체 자동 주입
-- getVersion() 값으로 구현체 선택
+- Resolver는 도메인별로 생성한다.
+- Spring 주입된 모든 구현체를 getVersion() 값으로 Map 관리
+- resolve(version) 메서드로 구현체 선택
 - 지원하지 않는 버전 → UNSUPPORTED_VERSION 예외
+
+### 1.5 ApiVersion 상수
+
+- common/share/version/ApiVersion.java에 정의
+- V1 = "v1", V2 = "v2"
 
 ---
 
@@ -51,16 +57,30 @@ root
 │   ├─ dto
 │   ├─ util
 │   ├─ exception
-│   └─ response
+│   ├─ response
+│   └─ share
+│       ├─ service    (VersionedService)
+│       └─ version    (ApiVersion)
 │
 ├─ biz
 │   ├─ vo
 │   │   ├─ mmhr        → scm_mmhr
 │   │   ├─ mmauth      → scm_mmauth
 │   │   └─ mmpublic    → scm_mmpublic
-│   ├─ auth
-│   ├─ calendar
-│   └─ event
+│   │
+│   └─ {domain}
+│       ├─ controller
+│       │   └─ {Domain}Controller
+│       ├─ resolver
+│       │   ├─ {Domain}Service (인터페이스)
+│       │   └─ {Domain}ServiceResolver
+│       └─ v1
+│           ├─ dao
+│           │   └─ {Domain}DaoV1
+│           ├─ dto
+│           │   └─ {Action}{Type}DtoV1 (@Alias 필수)
+│           └─ service
+│               └─ {Domain}ServiceV1
 │
 └─ Application.java
 ```
@@ -68,6 +88,18 @@ root
 ### 2.1 VO 위치 규칙 (필수)
 
 모든 VO는 반드시 `biz/vo/{schema}` 에 생성한다.
+
+### 2.2 Mapper XML 위치 규칙
+
+```
+resources/mapper/{domain}/v1/
+├─ {Domain}MapperV1.xml      (SELECT)
+└─ {Domain}MapperModV1.xml   (INSERT/UPDATE/DELETE)
+```
+
+- Dao:Mapper = 1:2 관계 필수
+- namespace는 해당 DaoV1의 full path
+- parameterType/resultType은 @Alias 이름 사용 (full path 금지)
 
 ---
 

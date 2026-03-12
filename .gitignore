@@ -42,3 +42,6 @@ out/
 
 ### CLAUDE ###
 .claude
+
+### Team Result Docs ###
+docs-agents/result-docs/
