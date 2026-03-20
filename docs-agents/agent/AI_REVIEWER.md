@@ -94,6 +94,31 @@ Pipeline의 Code Review 단계에서 실행된다.
 
 ---
 
+## 8. Claude Code 플러그인 활용
+
+코드 리뷰 수행 시 다음 플러그인을 활용한다.
+
+| 플러그인 | 명령 | 활용 시점 | 용도 |
+|---------|------|----------|------|
+| code-review | `/code-review` | PR 기반 리뷰 시 | 체계적 코드 리뷰 수행, PR diff 분석 |
+| simplify | `/simplify` | 리뷰 완료 후 | 코드 재사용·품질·효율성 개선 점검 |
+| github | `gh` CLI | 리뷰 결과 공유 시 | PR 코멘트 작성, 리뷰 상태 관리 |
+
+### 활용 프로세스
+
+1. PR이 존재하는 경우 → `/code-review`로 체계적 리뷰 수행
+2. 리뷰 완료 후 → `/simplify`로 코드 간소화 및 품질 개선 점검
+3. 리뷰 결과를 GitHub PR에 코멘트로 기록 (`gh pr comment`, `gh pr review`)
+4. 리뷰 결과를 result_AI_REVIEWER.md에 기록 (Team 수행 시)
+
+### 플러그인 미사용 시
+
+PR 없이 코드 리뷰를 수행하는 경우 (Team 수행 등):
+- 섹션 4의 검토 항목을 기준으로 직접 리뷰 수행
+- `/simplify`로 변경 코드의 품질 개선 점검
+
+---
+
 ## docs-claude 참조
 
 단독 수행 시 다음 문서를 로드한다.
@@ -109,6 +134,7 @@ TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
 - prompt.md + task_prompt.md + 이전 역할 result 파일을 읽고 수행한다
 - 수행 완료 후 result_AI_REVIEWER.md를 생성한다
 - AI_SECURITY_ENGINEER와 병렬 수행 가능 (task_prompt.md에 명시된 경우)
+- 코드 리뷰 시 `/code-review`, `/simplify` 플러그인을 활용한다
 
 ---
 

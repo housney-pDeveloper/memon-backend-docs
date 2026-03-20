@@ -334,4 +334,48 @@ cd {module} && ./gradlew test
 
 ---
 
+## 10. Superpowers 플러그인 활용
+
+Team 수행 시 각 STEP에서 적합한 superpowers 플러그인을 활용한다.
+
+### 10.1 STEP별 플러그인 매핑
+
+```
+STEP 2. task_prompt.md 생성
+    ├── /brainstorming → 기획·요구사항 탐색
+    └── /writing-plans → 구현 계획 수립
+
+STEP 3. 역할 순차/병렬 수행
+    ├── /executing-plans → 계획 기반 구현 수행
+    ├── /dispatching-parallel-agents → 병렬 가능 역할 동시 수행
+    └── /test-driven-development → TDD 적용 시
+
+STEP 4. 검증
+    ├── /requesting-code-review → 코드 리뷰 요청
+    ├── /receiving-code-review → 리뷰 피드백 처리
+    ├── /verification-before-completion → 완료 전 최종 검증
+    └── /systematic-debugging → 디버깅 필요 시
+
+STEP 5. Build 완료 후
+    └── /finishing-a-development-branch → 개발 완료 후 통합
+```
+
+### 10.2 플러그인과 기존 프로세스의 관계
+
+| 기존 프로세스 | 플러그인 | 보완 역할 |
+|-------------|---------|----------|
+| AI_TECH_LEAD의 task_prompt.md 생성 | `/brainstorming` + `/writing-plans` | 요구사항 탐색 강화, 계획 구조화 |
+| 역할별 순차 수행 | `/executing-plans` | 계획 기반 체계적 실행 |
+| 병렬 수행 (섹션 6) | `/dispatching-parallel-agents` | 병렬 작업 관리 자동화 |
+| AI_REVIEWER 검증 | `/requesting-code-review` + `/receiving-code-review` | 리뷰 프로세스 체계화 |
+| 검증 완료 판정 | `/verification-before-completion` | 완료 선언 전 증거 기반 검증 |
+
+### 10.3 적용 규칙
+
+- `[team]` 작업 시 superpowers 플러그인 사용은 **필수**이다
+- 플러그인은 기존 TEAM_EXECUTION_PROTOCOL을 **대체하지 않고 보완**한다
+- 기존 result_*.md 생성, 검증 회차, 빌드/테스트 프로세스는 그대로 유지한다
+
+---
+
 END OF FILE

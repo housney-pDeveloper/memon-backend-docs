@@ -77,6 +77,32 @@ Pipeline의 Security Review 단계에서 실행된다.
 
 ---
 
+## 6. Claude Code 플러그인 활용
+
+보안 검수 수행 시 다음 플러그인을 활용한다.
+
+| 플러그인 | 명령 | 활용 시점 | 용도 |
+|---------|------|----------|------|
+| security-guidance | `/security-guidance` | 보안 검수 시작 시 | OWASP Top 10, 보안 모범 사례, 취약점 점검 |
+
+### 활용 프로세스
+
+1. 보안 검수 시작 시 → `/security-guidance`로 OWASP 기반 체계적 보안 점검 수행
+2. MEMON 특화 보안 항목(섹션 3.4)과 함께 `/security-guidance` 결과를 통합 검토
+3. 검수 결과를 result_AI_SECURITY_ENGINEER.md에 기록 (Team 수행 시)
+
+### 점검 순서
+
+```
+/security-guidance 활용 (OWASP 기반 범용 보안 점검)
+    ↓
+MEMON 특화 보안 검토 (섹션 3.4 기준)
+    ↓ Trust Header, AES-256-GCM, Refresh Token, OWNER 권한, Internal API
+통합 보안 검수 보고서 작성
+```
+
+---
+
 ## docs-claude 참조
 
 단독 수행 시 다음 문서를 로드한다.
@@ -92,6 +118,7 @@ TEAM_EXECUTION_PROTOCOL.md에 따라 수행한다.
 - prompt.md + task_prompt.md + 이전 역할 result 파일을 읽고 수행한다
 - 수행 완료 후 result_AI_SECURITY_ENGINEER.md를 생성한다
 - AI_REVIEWER와 병렬 수행 가능 (task_prompt.md에 명시된 경우)
+- 보안 검수 시 `/security-guidance` 플러그인을 활용한다
 
 ---
 
